@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriChef — Génère ta recette santé</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --forest: #2D5016;
+    --sage: #7BAF4E;
+    --leaf: #A8CC6E;
+    --earth: #8B6F47;
+    --charcoal: #1A1A1A;
+    --mist: #E8F0E0;
+    --gold: #C8A84B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--charcoal);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--forest);
+    letter-spacing: -0.02em;
+  }
+
+  .logo span { color: var(--sage); font-style: italic; }
+
+  .nav-badge {
+    background: var(--forest);
+    color: var(--leaf);
+    padding: 6px 16px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 60px 24px 40px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    background: var(--mist);
+    border: 1px solid var(--leaf);
+    color: var(--forest);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 20px;
+    border-radius: 99px;
+    margin-bottom: 28px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--forest);
+    letter-spacing: -0.03em;
+    max-width: 700px;
+    margin: 0 auto 20px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--sage);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--earth);
+    max-width: 440px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* FLOATING LEAVES */
+  .leaf-deco {
+    position: absolute;
+    font-size: 4rem;
+    opacity: 0.12;
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite;
+  }
+  .leaf-deco:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+  .leaf-deco:nth-child(2) { top: 30%; right: 6%; animation-delay: 2s; font-size: 3rem; }
+  .leaf-deco:nth-child(3) { bottom: 10%; left: 8%; animation-delay: 4s; font-size: 2.5rem; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(5deg); }
+  }
+
+  /* MAIN CARD */
+  .main-card {
+    background: white;
+    border-radius: 32px;
+    max-width: 720px;
+    margin: 0 auto 60px;
+    padding: 48px;
+    box-shadow: 0 8px 60px rgba(45, 80, 22, 0.10);
+    position: relative;
+    z-index: 10;
+    border: 1px solid rgba(168, 204, 110, 0.3);
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 12px;
+  }
+
+  /* INGREDIENT INPUT */
+  .ingredient-area {
+    margin-bottom: 32px;
+  }
+
+  .ingredient-area h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 6px;
+  }
+
+  .ingredient-area p {
+    font-size: 0.88rem;
+    color: var(--earth);
+    margin-bottom: 20px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .ingredient-input {
+    flex: 1;
+    border: 2px solid var(--mist);
+    border-radius: 14px;
+    padding: 14px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--charcoal);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .ingredient-input:focus {
+    border-color: var(--sage);
+    background: white;
+  }
+
+  .ingredient-input::placeholder { color: #aaa; }
+
+  .add-btn {
+    background: var(--forest);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    width: 52px;
+    height: 52px;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .add-btn:hover { background: var(--sage); transform: scale(1.05); }
+
+  /* CHIPS */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 40px;
+  }
+
+  .chip {
+    background: var(--mist);
+    border: 1.5px solid var(--leaf);
+    color: var(--forest);
+    padding: 6px 14px 6px 16px;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: popIn 0.2s ease;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .chip-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--sage);
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s;
+  }
+  .chip-remove:hover { color: var(--forest); }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1.5px solid var(--mist);
+    margin: 28px 0;
+  }
+
+  /* PREFERENCES */
+  .prefs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .pref-option {
+    border: 2px solid var(--mist);
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--charcoal);
+    user-select: none;
+  }
+
+  .pref-option:hover { border-color: var(--leaf); background: var(--mist); }
+
+  .pref-option.active {
+    border-color: var(--forest);
+    background: var(--forest);
+    color: white;
+  }
+
+  .pref-emoji { font-size: 1.3rem; }
+
+  /* GENERATE BTN */
+  .generate-btn {
+    width: 100%;
+    background: var(--forest);
+    color: white;
+    border: none;
+    border-radius: 18px;
+    padding: 20px;
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    font-style: italic;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .generate-btn:hover:not(:disabled) {
+    background: var(--sage);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(45, 80, 22, 0.25);
+  }
+
+  .generate-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* LOADER */
+  .loader {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 0 20px;
+    text-align: center;
+  }
+
+  .loader.visible { display: flex; }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--mist);
+    border-top-color: var(--forest);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loader-text {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--forest);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* RECIPE RESULT */
+  .recipe-result {
+    display: none;
+    margin-top: 40px;
+    animation: slideUp 0.4s ease;
+  }
+
+  .recipe-result.visible { display: block; }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .recipe-header {
+    background: linear-gradient(135deg, var(--forest) 0%, #3d6b1f 100%);
+    border-radius: 20px;
+    padding: 32px;
+    color: white;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .recipe-header::after {
+    content: '🌿';
+    position: absolute;
+    right: 24px;
+    bottom: 16px;
+    font-size: 5rem;
+    opacity: 0.15;
+  }
+
+  .recipe-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .recipe-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .meta-pill {
+    background: rgba(255,255,255,0.15);
+    padding: 4px 14px;
+    border-radius: 99px;
+    font-size: 0.82rem;
+  }
+
+  .recipe-body {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--charcoal);
+  }
+
+  .recipe-body h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin: 24px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .recipe-body ul, .recipe-body ol {
+    padding-left: 20px;
+    color: #444;
+  }
+
+  .recipe-body li { margin-bottom: 6px; }
+
+  .recipe-body strong { color: var(--forest); }
+
+  .nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .nutr-card {
+    background: var(--mist);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .nutr-value {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    color: var(--forest);
+  }
+
+  .nutr-label {
+    font-size: 0.72rem;
+    color: var(--earth);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+
+  .try-again-btn {
+    margin-top: 28px;
+    background: transparent;
+    border: 2px solid var(--forest);
+    color: var(--forest);
+    border-radius: 14px;
+    padding: 12px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .try-again-btn:hover { background: var(--forest); color: white; }
+
+  /* ERROR */
+  .error-msg {
+    display: none;
+    background: #fff0f0;
+    border: 1.5px solid #ffcccc;
+    border-radius: 14px;
+    padding: 16px 20px;
+    color: #c0392b;
+    font-size: 0.9rem;
+    margin-top: 16px;
+    text-align: center;
+  }
+  .error-msg.visible { display: block; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.8rem;
+    color: var(--earth);
+    position: relative;
+    z-index: 10;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 20px 24px; }
+    .main-card { padding: 28px 20px; margin: 0 16px 40px; }
+    .prefs-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 2.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<span class="leaf-deco">🌿</span>
+<span class="leaf-deco">🍃</span>
+<span class="leaf-deco">🌱</span>
+
+<nav>
+  <div class="logo">Nutri<span>Chef</span></div>
+  <div class="nav-badge">✦ Recettes Santé IA</div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Propulsé par l'intelligence artificielle</div>
+  <h1>Transforme tes<br><em>ingrédients</em> en<br>recette santé</h1>
+  <p class="hero-sub">Plus besoin de chercher. Entre ce que tu as dans ton frigo et reçois une recette nutritive personnalisée.</p>
+</section>
+
+<div class="main-card">
+
+  <!-- INGREDIENTS -->
+  <div class="ingredient-area">
+    <div class="section-label">Étape 1</div>
+    <h2>Tes ingrédients</h2>
+    <p>Ajoute les ingrédients que tu as sous la main</p>
+
+    <div class="input-row">
+      <input
+        class="ingredient-input"
+        id="ingredientInput"
+        type="text"
+        placeholder="Ex : poulet, brocoli, ail..."
+        autocomplete="off"
+      />
+      <button class="add-btn" onclick="addIngredient()" title="Ajouter">+</button>
+    </div>
+
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PREFERENCES -->
+  <div class="ingredient-area">
+    <div class="section-label">Étape 2</div>
+    <h2>Tes préférences</h2>
+    <p>Sélectionne une ou plusieurs options (facultatif)</p>
+
+    <div class="prefs-grid">
+      <div class="pref-option" onclick="togglePref(this, 'Sans gluten')">
+        <span class="pref-emoji">🌾</span> Sans gluten
+      </div>
+      <div class="pref-option" onclick="togglePref(this, 'Végétarien')">
+        <span class="pref-emoji">🥦</span> Végétarien
+      </div>
+      <div class="pref-option" onclick="togglePref(this, 'Riche en protéines')">
+        <span class="pref-emoji">💪</span> Riche en protéines
+      </div>
+      <div class="pref-option" onclick="togglePref(this, 'Faible en calories')">
+        <span class="pref-emoji">🔥</span> Faible en calories
+      </div>
+      <div class="pref-option" onclick="togglePref(this, 'Anti-inflammatoire')">
+        <span class="pref-emoji">🫐</span> Anti-inflammatoire
+      </div>
+      <div class="pref-option" onclick="togglePref(this, 'Sans lactose')">
+        <span class="pref-emoji">🥛</span> Sans lactose
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- GENERATE -->
+  <button class="generate-btn" id="generateBtn" onclick="generateRecipe()" disabled>
+    <span>✦</span> Générer ma recette santé
+  </button>
+
+  <!-- LOADER -->
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <p class="loader-text">Je prépare ta recette...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-msg" id="errorMsg"></div>
+
+  <!-- RESULT -->
+  <div class="recipe-result" id="recipeResult">
+    <div class="recipe-header" id="recipeHeader">
+      <h2 id="recipeName"></h2>
+      <p id="recipeDesc"></p>
+      <div class="recipe-meta" id="recipeMeta"></div>
+    </div>
+    <div class="recipe-body" id="recipeBody"></div>
+    <button class="try-again-btn" onclick="resetForm()">↩ Générer une autre recette</button>
+  </div>
+
+</div>
+
+<footer>NutriChef · Recettes générées par IA · Pour l'inspiration culinaire seulement</footer>
+
+<script>
+  let ingredients = [];
+  let prefs = new Set();
+
+  const input = document.getElementById('ingredientInput');
+  const chipsEl = document.getElementById('chips');
+  const btn = document.getElementById('generateBtn');
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') addIngredient();
+  });
+
+  function addIngredient() {
+    const val = input.value.trim();
+    if (!val || ingredients.includes(val.toLowerCase())) { input.value = ''; return; }
+    ingredients.push(val.toLowerCase());
+    input.value = '';
+    renderChips();
+    updateBtn();
+  }
+
+  function removeIngredient(i) {
+    ingredients.splice(i, 1);
+    renderChips();
+    updateBtn();
+  }
+
+  function renderChips() {
+    chipsEl.innerHTML = ingredients.map((ing, i) => `
+      <div class="chip">
+        ${ing}
+        <button class="chip-remove" onclick="removeIngredient(${i})" title="Retirer">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function togglePref(el, pref) {
+    if (prefs.has(pref)) {
+      prefs.delete(pref);
+      el.classList.remove('active');
+    } else {
+      prefs.add(pref);
+      el.classList.add('active');
+    }
+  }
+
+  function updateBtn() {
+    btn.disabled = ingredients.length === 0;
+  }
+
+  async function generateRecipe() {
+    if (ingredients.length === 0) return;
+
+    document.getElementById('loader').classList.add('visible');
+    document.getElementById('recipeResult').classList.remove('visible');
+    document.getElementById('errorMsg').classList.remove('visible');
+    btn.disabled = true;
+
+    const prefsText = prefs.size > 0 ? `Préférences: ${[...prefs].join(', ')}.` : '';
+
+    // 🔁 REMPLACE cette URL par celle de ton backend Railway après déploiement
+    const BACKEND_URL = 'https://nutrichef-backend-production.up.railway.app';
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/recipe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ingredients,
+          prefs: [...prefs]
+        })
+      });
+
+      const recipe = await response.json();
+
+      if (!response.ok) throw new Error(recipe.error || 'Erreur serveur');
+
+      renderRecipe(recipe);
+    } catch (err) {
+      showError("Oups ! Une erreur est survenue. Vérifie ta connexion et réessaie.");
+      console.error(err);
+    } finally {
+      document.getElementById('loader').classList.remove('visible');
+      btn.disabled = ingredients.length === 0;
+    }
+  }
+
+  function renderRecipe(r) {
+    document.getElementById('recipeName').textContent = r.name || 'Ma recette santé';
+    document.getElementById('recipeDesc').textContent = r.description || '';
+
+    const meta = document.getElementById('recipeMeta');
+    meta.innerHTML = [
+      r.time ? `⏱ ${r.time}` : '',
+      r.servings ? `👥 ${r.servings}` : '',
+      r.difficulty ? `⚡ ${r.difficulty}` : '',
+      r.calories ? `🔥 ${r.calories}` : ''
+    ].filter(Boolean).map(m => `<span class="meta-pill">${m}</span>`).join('');
+
+    let body = '';
+
+    // Nutrition grid
+    if (r.nutrition) {
+      body += `<h3>📊 Valeurs nutritionnelles</h3><div class="nutrition-grid">`;
+      const nutrMap = { proteines: 'Protéines', glucides: 'Glucides', lipides: 'Lipides', fibres: 'Fibres' };
+      for (const [k, label] of Object.entries(nutrMap)) {
+        if (r.nutrition[k]) {
+          body += `<div class="nutr-card"><div class="nutr-value">${r.nutrition[k]}</div><div class="nutr-label">${label}</div></div>`;
+        }
+      }
+      body += `</div>`;
+    }
+
+    // Ingredients
+    if (r.ingredients?.length) {
+      body += `<h3>🛒 Ingrédients</h3><ul>`;
+      r.ingredients.forEach(i => body += `<li>${i}</li>`);
+      body += `</ul>`;
+    }
+
+    // Steps
+    if (r.steps?.length) {
+      body += `<h3>👨‍🍳 Préparation</h3><ol>`;
+      r.steps.forEach(s => body += `<li>${s}</li>`);
+      body += `</ol>`;
+    }
+
+    // Tip
+    if (r.tip) {
+      body += `<h3>💡 Conseil santé</h3><p style="background:var(--mist);padding:14px 18px;border-radius:12px;border-left:3px solid var(--sage);font-style:italic;color:var(--forest)">${r.tip}</p>`;
+    }
+
+    document.getElementById('recipeBody').innerHTML = body;
+    document.getElementById('recipeResult').classList.add('visible');
+    document.getElementById('recipeResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.add('visible');
+  }
+
+  function resetForm() {
+    document.getElementById('recipeResult').classList.remove('visible');
+    document.getElementById('errorMsg').classList.remove('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
