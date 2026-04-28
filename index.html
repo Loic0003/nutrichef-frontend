@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NutriChef — Génère ta recette santé</title>
+<title>NutriChef — Generate your healthy recipe</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -523,32 +523,32 @@
 
 <nav>
   <div class="logo">Nutri<span>Chef</span></div>
-  <div class="nav-badge">✦ Recettes Santé IA</div>
+  <div class="nav-badge">✦ AI Healthy Recipes</div>
 </nav>
 
 <section class="hero">
-  <div class="hero-eyebrow">Propulsé par l'intelligence artificielle</div>
-  <h1>Transforme tes<br><em>ingrédients</em> en<br>recette santé</h1>
-  <p class="hero-sub">Plus besoin de chercher. Entre ce que tu as dans ton frigo et reçois une recette nutritive personnalisée.</p>
+  <div class="hero-eyebrow">Powered by artificial intelligence</div>
+  <h1>Turn your<br><em>ingredients</em> into<br>a healthy recipe</h1>
+  <p class="hero-sub">No more wondering what to eat. Enter what's in your fridge and get a personalized nutritious recipe.</p>
 </section>
 
 <div class="main-card">
 
   <!-- INGREDIENTS -->
   <div class="ingredient-area">
-    <div class="section-label">Étape 1</div>
-    <h2>Tes ingrédients</h2>
-    <p>Ajoute les ingrédients que tu as sous la main</p>
+    <div class="section-label">Step 1</div>
+    <h2>Your ingredients</h2>
+    <p>Add the ingredients you have on hand</p>
 
     <div class="input-row">
       <input
         class="ingredient-input"
         id="ingredientInput"
         type="text"
-        placeholder="Ex : poulet, brocoli, ail..."
+        placeholder="E.g: chicken, broccoli, garlic..."
         autocomplete="off"
       />
-      <button class="add-btn" onclick="addIngredient()" title="Ajouter">+</button>
+      <button class="add-btn" onclick="addIngredient()" title="Add">+</button>
     </div>
 
     <div class="chips" id="chips"></div>
@@ -558,28 +558,28 @@
 
   <!-- PREFERENCES -->
   <div class="ingredient-area">
-    <div class="section-label">Étape 2</div>
-    <h2>Tes préférences</h2>
-    <p>Sélectionne une ou plusieurs options (facultatif)</p>
+    <div class="section-label">Step 2</div>
+    <h2>Your preferences</h2>
+    <p>Select one or more options (optional)</p>
 
     <div class="prefs-grid">
-      <div class="pref-option" onclick="togglePref(this, 'Sans gluten')">
-        <span class="pref-emoji">🌾</span> Sans gluten
+      <div class="pref-option" onclick="togglePref(this, 'Gluten-free')">
+        <span class="pref-emoji">🌾</span> Gluten-free
       </div>
-      <div class="pref-option" onclick="togglePref(this, 'Végétarien')">
-        <span class="pref-emoji">🥦</span> Végétarien
+      <div class="pref-option" onclick="togglePref(this, 'Vegetarian')">
+        <span class="pref-emoji">🥦</span> Vegetarian
       </div>
-      <div class="pref-option" onclick="togglePref(this, 'Riche en protéines')">
-        <span class="pref-emoji">💪</span> Riche en protéines
+      <div class="pref-option" onclick="togglePref(this, 'High protein')">
+        <span class="pref-emoji">💪</span> High protein
       </div>
-      <div class="pref-option" onclick="togglePref(this, 'Faible en calories')">
-        <span class="pref-emoji">🔥</span> Faible en calories
+      <div class="pref-option" onclick="togglePref(this, 'Low calorie')">
+        <span class="pref-emoji">🔥</span> Low calorie
       </div>
-      <div class="pref-option" onclick="togglePref(this, 'Anti-inflammatoire')">
-        <span class="pref-emoji">🫐</span> Anti-inflammatoire
+      <div class="pref-option" onclick="togglePref(this, 'Anti-inflammatory')">
+        <span class="pref-emoji">🫐</span> Anti-inflammatory
       </div>
-      <div class="pref-option" onclick="togglePref(this, 'Sans lactose')">
-        <span class="pref-emoji">🥛</span> Sans lactose
+      <div class="pref-option" onclick="togglePref(this, 'Dairy-free')">
+        <span class="pref-emoji">🥛</span> Dairy-free
       </div>
     </div>
   </div>
@@ -588,13 +588,13 @@
 
   <!-- GENERATE -->
   <button class="generate-btn" id="generateBtn" onclick="generateRecipe()" disabled>
-    <span>✦</span> Générer ma recette santé
+    <span>✦</span> Generate my healthy recipe
   </button>
 
   <!-- LOADER -->
   <div class="loader" id="loader">
     <div class="spinner"></div>
-    <p class="loader-text">Je prépare ta recette...</p>
+    <p class="loader-text">Preparing your recipe...</p>
   </div>
 
   <!-- ERROR -->
@@ -608,12 +608,12 @@
       <div class="recipe-meta" id="recipeMeta"></div>
     </div>
     <div class="recipe-body" id="recipeBody"></div>
-    <button class="try-again-btn" onclick="resetForm()">↩ Générer une autre recette</button>
+    <button class="try-again-btn" onclick="resetForm()">↩ Generate another recipe</button>
   </div>
 
 </div>
 
-<footer>NutriChef · Recettes générées par IA · Pour l'inspiration culinaire seulement</footer>
+<footer>NutriChef · AI-generated recipes · For culinary inspiration only</footer>
 
 <script>
   let ingredients = [];
@@ -676,7 +676,7 @@
     const prefsText = prefs.size > 0 ? `Préférences: ${[...prefs].join(', ')}.` : '';
 
     // 🔁 REMPLACE cette URL par celle de ton backend Railway après déploiement
-    const BACKEND_URL = 'https://nutrichef-backend-production.up.railway.app';
+    const BACKEND_URL = 'https://nutrichef-backend-production-f290.up.railway.app';
 
     try {
       const response = await fetch(`${BACKEND_URL}/api/recipe`, {
@@ -694,7 +694,7 @@
 
       renderRecipe(recipe);
     } catch (err) {
-      showError("Oups ! Une erreur est survenue. Vérifie ta connexion et réessaie.");
+      showError("Oops! An error occurred. Please check your connection and try again.");
       console.error(err);
     } finally {
       document.getElementById('loader').classList.remove('visible');
@@ -718,8 +718,8 @@
 
     // Nutrition grid
     if (r.nutrition) {
-      body += `<h3>📊 Valeurs nutritionnelles</h3><div class="nutrition-grid">`;
-      const nutrMap = { proteines: 'Protéines', glucides: 'Glucides', lipides: 'Lipides', fibres: 'Fibres' };
+      body += `<h3>📊 Nutritional values</h3><div class="nutrition-grid">`;
+      const nutrMap = { proteines: 'Protein', glucides: 'Carbs', lipides: 'Fats', fibres: 'Fiber' };
       for (const [k, label] of Object.entries(nutrMap)) {
         if (r.nutrition[k]) {
           body += `<div class="nutr-card"><div class="nutr-value">${r.nutrition[k]}</div><div class="nutr-label">${label}</div></div>`;
@@ -730,14 +730,14 @@
 
     // Ingredients
     if (r.ingredients?.length) {
-      body += `<h3>🛒 Ingrédients</h3><ul>`;
+      body += `<h3>🛒 Ingredients</h3><ul>`;
       r.ingredients.forEach(i => body += `<li>${i}</li>`);
       body += `</ul>`;
     }
 
     // Steps
     if (r.steps?.length) {
-      body += `<h3>👨‍🍳 Préparation</h3><ol>`;
+      body += `<h3>👨‍🍳 Preparation</h3><ol>`;
       r.steps.forEach(s => body += `<li>${s}</li>`);
       body += `</ol>`;
     }
