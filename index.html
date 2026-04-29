@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NutriChef — Generate your healthy recipe</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --cream: #F5F0E8;
@@ -16,496 +17,135 @@
     --mist: #E8F0E0;
     --gold: #C8A84B;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background-color: var(--cream);
-    color: var(--charcoal);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* Texture overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-  }
+  body { background-color: var(--cream); color: var(--charcoal); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; }
 
   /* NAV */
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 24px 48px;
-    position: relative;
-    z-index: 10;
-  }
-
-  .logo {
-    font-family: 'Fraunces', serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--forest);
-    letter-spacing: -0.02em;
-  }
-
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 24px 48px; position: relative; z-index: 10; flex-wrap: wrap; gap: 12px; }
+  .logo { font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 700; color: var(--forest); letter-spacing: -0.02em; }
   .logo span { color: var(--sage); font-style: italic; }
-
-  .nav-badge {
-    background: var(--forest);
-    color: var(--leaf);
-    padding: 6px 16px;
-    border-radius: 99px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-  }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-badge { background: var(--forest); color: var(--leaf); padding: 6px 16px; border-radius: 99px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; }
+  .nav-btn { background: transparent; border: 2px solid var(--forest); color: var(--forest); padding: 6px 16px; border-radius: 99px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .nav-btn:hover { background: var(--forest); color: white; }
+  .nav-btn.active { background: var(--forest); color: white; }
+  .nav-user { font-size: 0.82rem; color: var(--earth); }
 
   /* HERO */
-  .hero {
-    text-align: center;
-    padding: 60px 24px 40px;
-    position: relative;
-    z-index: 10;
-  }
+  .hero { text-align: center; padding: 60px 24px 40px; position: relative; z-index: 10; }
+  .hero-eyebrow { display: inline-block; background: var(--mist); border: 1px solid var(--leaf); color: var(--forest); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 20px; border-radius: 99px; margin-bottom: 28px; }
+  h1 { font-family: 'Fraunces', serif; font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 300; line-height: 1.05; color: var(--forest); letter-spacing: -0.03em; max-width: 700px; margin: 0 auto 20px; }
+  h1 em { font-style: italic; color: var(--sage); }
+  .hero-sub { font-size: 1.05rem; color: var(--earth); max-width: 440px; margin: 0 auto; line-height: 1.6; font-weight: 300; }
 
-  .hero-eyebrow {
-    display: inline-block;
-    background: var(--mist);
-    border: 1px solid var(--leaf);
-    color: var(--forest);
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 6px 20px;
-    border-radius: 99px;
-    margin-bottom: 28px;
-  }
-
-  h1 {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(2.8rem, 7vw, 5.5rem);
-    font-weight: 300;
-    line-height: 1.05;
-    color: var(--forest);
-    letter-spacing: -0.03em;
-    max-width: 700px;
-    margin: 0 auto 20px;
-  }
-
-  h1 em {
-    font-style: italic;
-    color: var(--sage);
-  }
-
-  .hero-sub {
-    font-size: 1.05rem;
-    color: var(--earth);
-    max-width: 440px;
-    margin: 0 auto;
-    line-height: 1.6;
-    font-weight: 300;
-  }
-
-  /* FLOATING LEAVES */
-  .leaf-deco {
-    position: absolute;
-    font-size: 4rem;
-    opacity: 0.12;
-    pointer-events: none;
-    animation: float 6s ease-in-out infinite;
-  }
+  .leaf-deco { position: absolute; font-size: 4rem; opacity: 0.12; pointer-events: none; animation: float 6s ease-in-out infinite; }
   .leaf-deco:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
   .leaf-deco:nth-child(2) { top: 30%; right: 6%; animation-delay: 2s; font-size: 3rem; }
   .leaf-deco:nth-child(3) { bottom: 10%; left: 8%; animation-delay: 4s; font-size: 2.5rem; }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-12px) rotate(5deg); }
-  }
+  @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-12px) rotate(5deg); } }
 
   /* MAIN CARD */
-  .main-card {
-    background: white;
-    border-radius: 32px;
-    max-width: 720px;
-    margin: 0 auto 60px;
-    padding: 48px;
-    box-shadow: 0 8px 60px rgba(45, 80, 22, 0.10);
-    position: relative;
-    z-index: 10;
-    border: 1px solid rgba(168, 204, 110, 0.3);
-  }
-
-  .section-label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--sage);
-    margin-bottom: 12px;
-  }
-
-  /* INGREDIENT INPUT */
-  .ingredient-area {
-    margin-bottom: 32px;
-  }
-
-  .ingredient-area h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
-    font-weight: 400;
-    color: var(--forest);
-    margin-bottom: 6px;
-  }
-
-  .ingredient-area p {
-    font-size: 0.88rem;
-    color: var(--earth);
-    margin-bottom: 20px;
-  }
-
-  .input-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .ingredient-input {
-    flex: 1;
-    border: 2px solid var(--mist);
-    border-radius: 14px;
-    padding: 14px 20px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    color: var(--charcoal);
-    background: var(--cream);
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-  }
-
-  .ingredient-input:focus {
-    border-color: var(--sage);
-    background: white;
-  }
-
+  .main-card { background: white; border-radius: 32px; max-width: 720px; margin: 0 auto 60px; padding: 48px; box-shadow: 0 8px 60px rgba(45, 80, 22, 0.10); position: relative; z-index: 10; border: 1px solid rgba(168, 204, 110, 0.3); }
+  .section-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); margin-bottom: 12px; }
+  .ingredient-area { margin-bottom: 32px; }
+  .ingredient-area h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 400; color: var(--forest); margin-bottom: 6px; }
+  .ingredient-area p { font-size: 0.88rem; color: var(--earth); margin-bottom: 20px; }
+  .input-row { display: flex; gap: 10px; margin-bottom: 16px; }
+  .ingredient-input { flex: 1; border: 2px solid var(--mist); border-radius: 14px; padding: 14px 20px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--charcoal); background: var(--cream); outline: none; transition: border-color 0.2s, background 0.2s; }
+  .ingredient-input:focus { border-color: var(--sage); background: white; }
   .ingredient-input::placeholder { color: #aaa; }
-
-  .add-btn {
-    background: var(--forest);
-    color: white;
-    border: none;
-    border-radius: 14px;
-    width: 52px;
-    height: 52px;
-    font-size: 1.6rem;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
+  .add-btn { background: var(--forest); color: white; border: none; border-radius: 14px; width: 52px; height: 52px; font-size: 1.6rem; cursor: pointer; transition: background 0.2s, transform 0.15s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .add-btn:hover { background: var(--sage); transform: scale(1.05); }
 
-  /* CHIPS */
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    min-height: 40px;
-  }
-
-  .chip {
-    background: var(--mist);
-    border: 1.5px solid var(--leaf);
-    color: var(--forest);
-    padding: 6px 14px 6px 16px;
-    border-radius: 99px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    animation: popIn 0.2s ease;
-  }
-
-  @keyframes popIn {
-    from { transform: scale(0.7); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-
-  .chip-remove {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--sage);
-    font-size: 1rem;
-    line-height: 1;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    transition: color 0.15s;
-  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+  .chip { background: var(--mist); border: 1.5px solid var(--leaf); color: var(--forest); padding: 6px 14px 6px 16px; border-radius: 99px; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 8px; animation: popIn 0.2s ease; }
+  @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .chip-remove { background: none; border: none; cursor: pointer; color: var(--sage); font-size: 1rem; line-height: 1; padding: 0; display: flex; align-items: center; transition: color 0.15s; }
   .chip-remove:hover { color: var(--forest); }
 
-  /* DIVIDER */
-  .divider {
-    border: none;
-    border-top: 1.5px solid var(--mist);
-    margin: 28px 0;
-  }
+  .divider { border: none; border-top: 1.5px solid var(--mist); margin: 28px 0; }
 
-  /* PREFERENCES */
-  .prefs-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  .pref-option {
-    border: 2px solid var(--mist);
-    border-radius: 14px;
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.9rem;
-    color: var(--charcoal);
-    user-select: none;
-  }
-
+  .prefs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px; }
+  .pref-option { border: 2px solid var(--mist); border-radius: 14px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--charcoal); user-select: none; }
   .pref-option:hover { border-color: var(--leaf); background: var(--mist); }
-
-  .pref-option.active {
-    border-color: var(--forest);
-    background: var(--forest);
-    color: white;
-  }
-
+  .pref-option.active { border-color: var(--forest); background: var(--forest); color: white; }
   .pref-emoji { font-size: 1.3rem; }
 
-  /* GENERATE BTN */
-  .generate-btn {
-    width: 100%;
-    background: var(--forest);
-    color: white;
-    border: none;
-    border-radius: 18px;
-    padding: 20px;
-    font-family: 'Fraunces', serif;
-    font-size: 1.2rem;
-    font-weight: 400;
-    font-style: italic;
-    cursor: pointer;
-    transition: all 0.25s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    letter-spacing: -0.01em;
-  }
+  .generate-btn { width: 100%; background: var(--forest); color: white; border: none; border-radius: 18px; padding: 20px; font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 400; font-style: italic; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 12px; letter-spacing: -0.01em; }
+  .generate-btn:hover:not(:disabled) { background: var(--sage); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(45, 80, 22, 0.25); }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  .generate-btn:hover:not(:disabled) {
-    background: var(--sage);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(45, 80, 22, 0.25);
-  }
-
-  .generate-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  /* LOADER */
-  .loader {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 40px 0 20px;
-    text-align: center;
-  }
-
+  .loader { display: none; flex-direction: column; align-items: center; gap: 20px; padding: 40px 0 20px; text-align: center; }
   .loader.visible { display: flex; }
-
-  .spinner {
-    width: 48px;
-    height: 48px;
-    border: 3px solid var(--mist);
-    border-top-color: var(--forest);
-    border-radius: 50%;
-    animation: spin 0.9s linear infinite;
-  }
-
+  .spinner { width: 48px; height: 48px; border: 3px solid var(--mist); border-top-color: var(--forest); border-radius: 50%; animation: spin 0.9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loader-text {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 1.1rem;
-    color: var(--forest);
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-
+  .loader-text { font-family: 'Fraunces', serif; font-style: italic; font-size: 1.1rem; color: var(--forest); animation: pulse 1.5s ease-in-out infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-  /* RECIPE RESULT */
-  .recipe-result {
-    display: none;
-    margin-top: 40px;
-    animation: slideUp 0.4s ease;
-  }
-
+  .recipe-result { display: none; margin-top: 40px; animation: slideUp 0.4s ease; }
   .recipe-result.visible { display: block; }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-  @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
+  .recipe-header { background: linear-gradient(135deg, var(--forest) 0%, #3d6b1f 100%); border-radius: 20px; padding: 32px; color: white; margin-bottom: 24px; position: relative; overflow: hidden; }
+  .recipe-header::after { content: '🌿'; position: absolute; right: 24px; bottom: 16px; font-size: 5rem; opacity: 0.15; }
+  .recipe-header h2 { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 400; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .recipe-meta { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 16px; }
+  .meta-pill { background: rgba(255,255,255,0.15); padding: 4px 14px; border-radius: 99px; font-size: 0.82rem; }
 
-  .recipe-header {
-    background: linear-gradient(135deg, var(--forest) 0%, #3d6b1f 100%);
-    border-radius: 20px;
-    padding: 32px;
-    color: white;
-    margin-bottom: 24px;
-    position: relative;
-    overflow: hidden;
-  }
+  /* SAVE BUTTON */
+  .save-btn { margin-top: 16px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.5); color: white; padding: 8px 20px; border-radius: 99px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 6px; }
+  .save-btn:hover { background: rgba(255,255,255,0.35); }
+  .save-btn.saved { background: rgba(255,255,255,0.9); color: var(--forest); }
 
-  .recipe-header::after {
-    content: '🌿';
-    position: absolute;
-    right: 24px;
-    bottom: 16px;
-    font-size: 5rem;
-    opacity: 0.15;
-  }
-
-  .recipe-header h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.8rem;
-    font-weight: 400;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-  }
-
-  .recipe-meta {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 16px;
-  }
-
-  .meta-pill {
-    background: rgba(255,255,255,0.15);
-    padding: 4px 14px;
-    border-radius: 99px;
-    font-size: 0.82rem;
-  }
-
-  .recipe-body {
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: var(--charcoal);
-  }
-
-  .recipe-body h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.15rem;
-    font-weight: 400;
-    color: var(--forest);
-    margin: 24px 0 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .recipe-body ul, .recipe-body ol {
-    padding-left: 20px;
-    color: #444;
-  }
-
+  .recipe-body { font-size: 0.95rem; line-height: 1.8; color: var(--charcoal); }
+  .recipe-body h3 { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; color: var(--forest); margin: 24px 0 10px; display: flex; align-items: center; gap: 8px; }
+  .recipe-body ul, .recipe-body ol { padding-left: 20px; color: #444; }
   .recipe-body li { margin-bottom: 6px; }
 
-  .recipe-body strong { color: var(--forest); }
+  .nutrition-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin-top: 8px; }
+  .nutr-card { background: var(--mist); border-radius: 14px; padding: 14px; text-align: center; }
+  .nutr-value { font-family: 'Fraunces', serif; font-size: 1.5rem; color: var(--forest); }
+  .nutr-label { font-size: 0.72rem; color: var(--earth); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
 
-  .nutrition-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 12px;
-    margin-top: 8px;
-  }
-
-  .nutr-card {
-    background: var(--mist);
-    border-radius: 14px;
-    padding: 14px;
-    text-align: center;
-  }
-
-  .nutr-value {
-    font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
-    color: var(--forest);
-  }
-
-  .nutr-label {
-    font-size: 0.72rem;
-    color: var(--earth);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 2px;
-  }
-
-  .try-again-btn {
-    margin-top: 28px;
-    background: transparent;
-    border: 2px solid var(--forest);
-    color: var(--forest);
-    border-radius: 14px;
-    padding: 12px 28px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+  .try-again-btn { margin-top: 28px; background: transparent; border: 2px solid var(--forest); color: var(--forest); border-radius: 14px; padding: 12px 28px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
   .try-again-btn:hover { background: var(--forest); color: white; }
 
-  /* ERROR */
-  .error-msg {
-    display: none;
-    background: #fff0f0;
-    border: 1.5px solid #ffcccc;
-    border-radius: 14px;
-    padding: 16px 20px;
-    color: #c0392b;
-    font-size: 0.9rem;
-    margin-top: 16px;
-    text-align: center;
-  }
+  .error-msg { display: none; background: #fff0f0; border: 1.5px solid #ffcccc; border-radius: 14px; padding: 16px 20px; color: #c0392b; font-size: 0.9rem; margin-top: 16px; text-align: center; }
   .error-msg.visible { display: block; }
 
-  /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 0.8rem;
-    color: var(--earth);
-    position: relative;
-    z-index: 10;
-    opacity: 0.7;
-  }
+  /* AUTH MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+  .modal-overlay.visible { display: flex; }
+  .modal { background: white; border-radius: 24px; padding: 40px; max-width: 420px; width: 90%; position: relative; }
+  .modal h2 { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 400; color: var(--forest); margin-bottom: 8px; }
+  .modal p { font-size: 0.9rem; color: var(--earth); margin-bottom: 24px; }
+  .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--earth); }
+  .auth-input { width: 100%; border: 2px solid var(--mist); border-radius: 12px; padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--charcoal); background: var(--cream); outline: none; margin-bottom: 12px; transition: border-color 0.2s; }
+  .auth-input:focus { border-color: var(--sage); background: white; }
+  .auth-submit { width: 100%; background: var(--forest); color: white; border: none; border-radius: 12px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 12px; }
+  .auth-submit:hover { background: var(--sage); }
+  .auth-switch { font-size: 0.85rem; color: var(--earth); text-align: center; }
+  .auth-switch a { color: var(--forest); cursor: pointer; font-weight: 500; text-decoration: underline; }
+  .auth-msg { font-size: 0.85rem; padding: 10px; border-radius: 8px; margin-bottom: 12px; text-align: center; display: none; }
+  .auth-msg.error { background: #fff0f0; color: #c0392b; display: block; }
+  .auth-msg.success { background: var(--mist); color: var(--forest); display: block; }
+
+  /* FAVORITES PAGE */
+  .page { display: none; }
+  .page.visible { display: block; }
+  .fav-grid { display: grid; gap: 16px; margin-top: 24px; }
+  .fav-card { background: white; border-radius: 20px; padding: 24px; border: 1px solid rgba(168,204,110,0.3); box-shadow: 0 4px 20px rgba(45,80,22,0.07); }
+  .fav-card h3 { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 400; color: var(--forest); margin-bottom: 6px; }
+  .fav-card p { font-size: 0.85rem; color: var(--earth); margin-bottom: 12px; }
+  .fav-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .fav-pill { background: var(--mist); color: var(--forest); padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; }
+  .fav-delete { background: none; border: 1.5px solid #ffcccc; color: #c0392b; padding: 6px 14px; border-radius: 99px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .fav-delete:hover { background: #fff0f0; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--earth); }
+  .empty-state p { font-family: 'Fraunces', serif; font-size: 1.3rem; font-style: italic; margin-bottom: 8px; color: var(--forest); }
+
+  footer { text-align: center; padding: 20px; font-size: 0.8rem; color: var(--earth); position: relative; z-index: 10; opacity: 0.7; }
 
   @media (max-width: 600px) {
     nav { padding: 20px 24px; }
@@ -523,110 +163,206 @@
 
 <nav>
   <div class="logo">Nutri<span>Chef</span></div>
-  <div class="nav-badge">✦ AI Healthy Recipes</div>
+  <div class="nav-right">
+    <div class="nav-badge">✦ AI Healthy Recipes</div>
+    <span class="nav-user" id="navUser"></span>
+    <button class="nav-btn" id="favBtn" onclick="showFavorites()" style="display:none">❤️ Favorites</button>
+    <button class="nav-btn" id="loginBtn" onclick="openAuth('login')">Login</button>
+    <button class="nav-btn" id="logoutBtn" onclick="logout()" style="display:none">Logout</button>
+  </div>
 </nav>
 
-<section class="hero">
-  <div class="hero-eyebrow">Powered by artificial intelligence</div>
-  <h1>Turn your<br><em>ingredients</em> into<br>a healthy recipe</h1>
-  <p class="hero-sub">No more wondering what to eat. Enter what's in your fridge and get a personalized nutritious recipe.</p>
-</section>
-
-<div class="main-card">
-
-  <!-- INGREDIENTS -->
-  <div class="ingredient-area">
-    <div class="section-label">Step 1</div>
-    <h2>Your ingredients</h2>
-    <p>Add the ingredients you have on hand</p>
-
-    <div class="input-row">
-      <input
-        class="ingredient-input"
-        id="ingredientInput"
-        type="text"
-        placeholder="E.g: chicken, broccoli, garlic..."
-        autocomplete="off"
-      />
-      <button class="add-btn" onclick="addIngredient()" title="Add">+</button>
-    </div>
-
-    <div class="chips" id="chips"></div>
-  </div>
-
-  <hr class="divider">
-
-  <!-- PREFERENCES -->
-  <div class="ingredient-area">
-    <div class="section-label">Step 2</div>
-    <h2>Your preferences</h2>
-    <p>Select one or more options (optional)</p>
-
-    <div class="prefs-grid">
-      <div class="pref-option" onclick="togglePref(this, 'Gluten-free')">
-        <span class="pref-emoji">🌾</span> Gluten-free
-      </div>
-      <div class="pref-option" onclick="togglePref(this, 'Vegetarian')">
-        <span class="pref-emoji">🥦</span> Vegetarian
-      </div>
-      <div class="pref-option" onclick="togglePref(this, 'High protein')">
-        <span class="pref-emoji">💪</span> High protein
-      </div>
-      <div class="pref-option" onclick="togglePref(this, 'Low calorie')">
-        <span class="pref-emoji">🔥</span> Low calorie
-      </div>
-      <div class="pref-option" onclick="togglePref(this, 'Anti-inflammatory')">
-        <span class="pref-emoji">🫐</span> Anti-inflammatory
-      </div>
-      <div class="pref-option" onclick="togglePref(this, 'Dairy-free')">
-        <span class="pref-emoji">🥛</span> Dairy-free
-      </div>
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <h2 id="authTitle">Welcome back</h2>
+    <p id="authSubtitle">Sign in to save your favorite recipes</p>
+    <div class="auth-msg" id="authMsg"></div>
+    <input class="auth-input" type="email" id="authEmail" placeholder="Email address" />
+    <input class="auth-input" type="password" id="authPassword" placeholder="Password" />
+    <button class="auth-submit" id="authSubmit" onclick="handleAuth()">Sign in</button>
+    <div class="auth-switch" id="authSwitch">
+      No account? <a onclick="switchAuth()">Create one</a>
     </div>
   </div>
+</div>
 
-  <hr class="divider">
+<!-- MAIN PAGE -->
+<div class="page visible" id="mainPage">
+  <section class="hero">
+    <div class="hero-eyebrow">Powered by artificial intelligence</div>
+    <h1>Turn your<br><em>ingredients</em> into<br>a healthy recipe</h1>
+    <p class="hero-sub">No more wondering what to eat. Enter what's in your fridge and get a personalized nutritious recipe.</p>
+  </section>
 
-  <!-- GENERATE -->
-  <button class="generate-btn" id="generateBtn" onclick="generateRecipe()" disabled>
-    <span>✦</span> Generate my healthy recipe
-  </button>
-
-  <!-- LOADER -->
-  <div class="loader" id="loader">
-    <div class="spinner"></div>
-    <p class="loader-text">Preparing your recipe...</p>
-  </div>
-
-  <!-- ERROR -->
-  <div class="error-msg" id="errorMsg"></div>
-
-  <!-- RESULT -->
-  <div class="recipe-result" id="recipeResult">
-    <div class="recipe-header" id="recipeHeader">
-      <h2 id="recipeName"></h2>
-      <p id="recipeDesc"></p>
-      <div class="recipe-meta" id="recipeMeta"></div>
+  <div class="main-card">
+    <div class="ingredient-area">
+      <div class="section-label">Step 1</div>
+      <h2>Your ingredients</h2>
+      <p>Add the ingredients you have on hand</p>
+      <div class="input-row">
+        <input class="ingredient-input" id="ingredientInput" type="text" placeholder="E.g: chicken, broccoli, garlic..." autocomplete="off" />
+        <button class="add-btn" onclick="addIngredient()" title="Add">+</button>
+      </div>
+      <div class="chips" id="chips"></div>
     </div>
-    <div class="recipe-body" id="recipeBody"></div>
-    <button class="try-again-btn" onclick="resetForm()">↩ Generate another recipe</button>
-  </div>
 
+    <hr class="divider">
+
+    <div class="ingredient-area">
+      <div class="section-label">Step 2</div>
+      <h2>Your preferences</h2>
+      <p>Select one or more options (optional)</p>
+      <div class="prefs-grid">
+        <div class="pref-option" onclick="togglePref(this, 'Gluten-free')"><span class="pref-emoji">🌾</span> Gluten-free</div>
+        <div class="pref-option" onclick="togglePref(this, 'Vegetarian')"><span class="pref-emoji">🥦</span> Vegetarian</div>
+        <div class="pref-option" onclick="togglePref(this, 'High protein')"><span class="pref-emoji">💪</span> High protein</div>
+        <div class="pref-option" onclick="togglePref(this, 'Low calorie')"><span class="pref-emoji">🔥</span> Low calorie</div>
+        <div class="pref-option" onclick="togglePref(this, 'Anti-inflammatory')"><span class="pref-emoji">🫐</span> Anti-inflammatory</div>
+        <div class="pref-option" onclick="togglePref(this, 'Dairy-free')"><span class="pref-emoji">🥛</span> Dairy-free</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="generateBtn" onclick="generateRecipe()" disabled>
+      <span>✦</span> Generate my healthy recipe
+    </button>
+
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+      <p class="loader-text">Preparing your recipe...</p>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <div class="recipe-result" id="recipeResult">
+      <div class="recipe-header">
+        <h2 id="recipeName"></h2>
+        <p id="recipeDesc"></p>
+        <div class="recipe-meta" id="recipeMeta"></div>
+        <button class="save-btn" id="saveBtn" onclick="saveRecipe()">♡ Save to favorites</button>
+      </div>
+      <div class="recipe-body" id="recipeBody"></div>
+      <button class="try-again-btn" onclick="resetForm()">↩ Generate another recipe</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAVORITES PAGE -->
+<div class="page" id="favPage">
+  <section class="hero">
+    <div class="hero-eyebrow">Your saved recipes</div>
+    <h1>My <em>Favorites</em></h1>
+    <p class="hero-sub">All the recipes you've loved, saved in one place.</p>
+  </section>
+  <div style="max-width:720px; margin: 0 auto 60px; padding: 0 24px;">
+    <button class="try-again-btn" onclick="showMain()">↩ Back to generator</button>
+    <div class="fav-grid" id="favGrid"></div>
+  </div>
 </div>
 
 <footer>NutriChef · AI-generated recipes · For culinary inspiration only</footer>
 
 <script>
+  // ⚠️ REMPLACE CES VALEURS PAR TES INFOS SUPABASE
+  const SUPABASE_URL = 'https://fafxhblmlvbwuxjivoid.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhZnhoYmxtbHZid3V4aml2b2lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDM3NzEsImV4cCI6MjA5Mjk3OTc3MX0.hh6xbuiRbLPaFx_9YYAu3Gvlj-U8X2XckCD9XzmkSUI';
+  const BACKEND_URL = 'https://nutrichef-backend-production.up.railway.app';
+
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
   let ingredients = [];
   let prefs = new Set();
+  let currentRecipe = null;
+  let currentUser = null;
+  let authMode = 'login';
 
   const input = document.getElementById('ingredientInput');
-  const chipsEl = document.getElementById('chips');
-  const btn = document.getElementById('generateBtn');
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') addIngredient(); });
 
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') addIngredient();
+  // AUTH STATE
+  sb.auth.onAuthStateChange((event, session) => {
+    currentUser = session?.user || null;
+    updateNavUI();
   });
 
+  async function updateNavUI() {
+    const { data: { user } } = await sb.auth.getUser();
+    currentUser = user;
+    if (user) {
+      document.getElementById('navUser').textContent = user.email.split('@')[0];
+      document.getElementById('loginBtn').style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'block';
+      document.getElementById('favBtn').style.display = 'block';
+    } else {
+      document.getElementById('navUser').textContent = '';
+      document.getElementById('loginBtn').style.display = 'block';
+      document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('favBtn').style.display = 'none';
+    }
+  }
+
+  function openAuth(mode) {
+    authMode = mode;
+    document.getElementById('authTitle').textContent = mode === 'login' ? 'Welcome back' : 'Create account';
+    document.getElementById('authSubtitle').textContent = mode === 'login' ? 'Sign in to save your favorite recipes' : 'Join NutriChef for free';
+    document.getElementById('authSubmit').textContent = mode === 'login' ? 'Sign in' : 'Create account';
+    document.getElementById('authSwitch').innerHTML = mode === 'login' ? 'No account? <a onclick="switchAuth()">Create one</a>' : 'Already have an account? <a onclick="switchAuth()">Sign in</a>';
+    document.getElementById('authMsg').className = 'auth-msg';
+    document.getElementById('authEmail').value = '';
+    document.getElementById('authPassword').value = '';
+    document.getElementById('authModal').classList.add('visible');
+  }
+
+  function closeAuth() { document.getElementById('authModal').classList.remove('visible'); }
+  function switchAuth() { openAuth(authMode === 'login' ? 'signup' : 'login'); }
+
+  async function handleAuth() {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const msgEl = document.getElementById('authMsg');
+
+    if (!email || !password) {
+      msgEl.className = 'auth-msg error';
+      msgEl.textContent = 'Please fill in all fields.';
+      return;
+    }
+
+    document.getElementById('authSubmit').textContent = 'Loading...';
+
+    let error;
+    if (authMode === 'login') {
+      ({ error } = await sb.auth.signInWithPassword({ email, password }));
+    } else {
+      ({ error } = await sb.auth.signUp({ email, password }));
+      if (!error) {
+        msgEl.className = 'auth-msg success';
+        msgEl.textContent = 'Account created! Check your email to confirm.';
+        document.getElementById('authSubmit').textContent = authMode === 'login' ? 'Sign in' : 'Create account';
+        return;
+      }
+    }
+
+    if (error) {
+      msgEl.className = 'auth-msg error';
+      msgEl.textContent = error.message;
+      document.getElementById('authSubmit').textContent = authMode === 'login' ? 'Sign in' : 'Create account';
+    } else {
+      closeAuth();
+      updateNavUI();
+    }
+  }
+
+  async function logout() {
+    await sb.auth.signOut();
+    updateNavUI();
+    showMain();
+  }
+
+  // INGREDIENTS
   function addIngredient() {
     const val = input.value.trim();
     if (!val || ingredients.includes(val.toLowerCase())) { input.value = ''; return; }
@@ -643,108 +379,81 @@
   }
 
   function renderChips() {
-    chipsEl.innerHTML = ingredients.map((ing, i) => `
-      <div class="chip">
-        ${ing}
-        <button class="chip-remove" onclick="removeIngredient(${i})" title="Retirer">✕</button>
-      </div>
+    document.getElementById('chips').innerHTML = ingredients.map((ing, i) => `
+      <div class="chip">${ing}<button class="chip-remove" onclick="removeIngredient(${i})">✕</button></div>
     `).join('');
   }
 
   function togglePref(el, pref) {
-    if (prefs.has(pref)) {
-      prefs.delete(pref);
-      el.classList.remove('active');
-    } else {
-      prefs.add(pref);
-      el.classList.add('active');
-    }
+    if (prefs.has(pref)) { prefs.delete(pref); el.classList.remove('active'); }
+    else { prefs.add(pref); el.classList.add('active'); }
   }
 
-  function updateBtn() {
-    btn.disabled = ingredients.length === 0;
-  }
+  function updateBtn() { document.getElementById('generateBtn').disabled = ingredients.length === 0; }
 
+  // GENERATE
   async function generateRecipe() {
     if (ingredients.length === 0) return;
-
     document.getElementById('loader').classList.add('visible');
     document.getElementById('recipeResult').classList.remove('visible');
     document.getElementById('errorMsg').classList.remove('visible');
-    btn.disabled = true;
-
-    const prefsText = prefs.size > 0 ? `Préférences: ${[...prefs].join(', ')}.` : '';
-
-    // 🔁 REMPLACE cette URL par celle de ton backend Railway après déploiement
-    const BACKEND_URL = 'https://nutrichef-backend-production-f290.up.railway.app';
+    document.getElementById('generateBtn').disabled = true;
 
     try {
       const response = await fetch(`${BACKEND_URL}/api/recipe`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ingredients,
-          prefs: [...prefs]
-        })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ingredients, prefs: [...prefs] })
       });
-
       const recipe = await response.json();
-
-      if (!response.ok) throw new Error(recipe.error || 'Erreur serveur');
-
+      if (!response.ok) throw new Error(recipe.error || 'Server error');
+      currentRecipe = recipe;
       renderRecipe(recipe);
     } catch (err) {
-      showError("Oops! An error occurred. Please check your connection and try again.");
-      console.error(err);
+      const el = document.getElementById('errorMsg');
+      el.textContent = 'Oops! An error occurred. Please check your connection and try again.';
+      el.classList.add('visible');
     } finally {
       document.getElementById('loader').classList.remove('visible');
-      btn.disabled = ingredients.length === 0;
+      document.getElementById('generateBtn').disabled = ingredients.length === 0;
     }
   }
 
   function renderRecipe(r) {
-    document.getElementById('recipeName').textContent = r.name || 'Ma recette santé';
+    document.getElementById('recipeName').textContent = r.name || 'Healthy Recipe';
     document.getElementById('recipeDesc').textContent = r.description || '';
-
-    const meta = document.getElementById('recipeMeta');
-    meta.innerHTML = [
+    document.getElementById('recipeMeta').innerHTML = [
       r.time ? `⏱ ${r.time}` : '',
       r.servings ? `👥 ${r.servings}` : '',
       r.difficulty ? `⚡ ${r.difficulty}` : '',
       r.calories ? `🔥 ${r.calories}` : ''
     ].filter(Boolean).map(m => `<span class="meta-pill">${m}</span>`).join('');
 
-    let body = '';
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.className = 'save-btn';
+    saveBtn.textContent = '♡ Save to favorites';
 
-    // Nutrition grid
+    let body = '';
     if (r.nutrition) {
       body += `<h3>📊 Nutritional values</h3><div class="nutrition-grid">`;
       const nutrMap = { proteines: 'Protein', glucides: 'Carbs', lipides: 'Fats', fibres: 'Fiber' };
       for (const [k, label] of Object.entries(nutrMap)) {
-        if (r.nutrition[k]) {
-          body += `<div class="nutr-card"><div class="nutr-value">${r.nutrition[k]}</div><div class="nutr-label">${label}</div></div>`;
-        }
+        if (r.nutrition[k]) body += `<div class="nutr-card"><div class="nutr-value">${r.nutrition[k]}</div><div class="nutr-label">${label}</div></div>`;
       }
       body += `</div>`;
     }
-
-    // Ingredients
     if (r.ingredients?.length) {
       body += `<h3>🛒 Ingredients</h3><ul>`;
       r.ingredients.forEach(i => body += `<li>${i}</li>`);
       body += `</ul>`;
     }
-
-    // Steps
     if (r.steps?.length) {
       body += `<h3>👨‍🍳 Preparation</h3><ol>`;
       r.steps.forEach(s => body += `<li>${s}</li>`);
       body += `</ol>`;
     }
-
-    // Tip
     if (r.tip) {
-      body += `<h3>💡 Conseil santé</h3><p style="background:var(--mist);padding:14px 18px;border-radius:12px;border-left:3px solid var(--sage);font-style:italic;color:var(--forest)">${r.tip}</p>`;
+      body += `<h3>💡 Health tip</h3><p style="background:var(--mist);padding:14px 18px;border-radius:12px;border-left:3px solid var(--sage);font-style:italic;color:var(--forest)">${r.tip}</p>`;
     }
 
     document.getElementById('recipeBody').innerHTML = body;
@@ -752,17 +461,86 @@
     document.getElementById('recipeResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function showError(msg) {
-    const el = document.getElementById('errorMsg');
-    el.textContent = msg;
-    el.classList.add('visible');
+  // SAVE FAVORITE
+  async function saveRecipe() {
+    if (!currentUser) { openAuth('login'); return; }
+    if (!currentRecipe) return;
+
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.textContent = 'Saving...';
+
+    const { error } = await sb.from('favorites').insert({
+      user_id: currentUser.id,
+      name: currentRecipe.name,
+      description: currentRecipe.description,
+      time: currentRecipe.time,
+      servings: currentRecipe.servings,
+      difficulty: currentRecipe.difficulty,
+      calories: currentRecipe.calories,
+      data: currentRecipe
+    });
+
+    if (error) {
+      saveBtn.textContent = '✕ Error saving';
+    } else {
+      saveBtn.className = 'save-btn saved';
+      saveBtn.textContent = '♥ Saved!';
+    }
+  }
+
+  // FAVORITES PAGE
+  async function showFavorites() {
+    document.getElementById('mainPage').classList.remove('visible');
+    document.getElementById('favPage').classList.add('visible');
+    await loadFavorites();
+  }
+
+  function showMain() {
+    document.getElementById('favPage').classList.remove('visible');
+    document.getElementById('mainPage').classList.add('visible');
+  }
+
+  async function loadFavorites() {
+    const grid = document.getElementById('favGrid');
+    grid.innerHTML = '<p style="color:var(--earth);padding:20px 0">Loading...</p>';
+
+    const { data, error } = await sb.from('favorites')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false });
+
+    if (error || !data?.length) {
+      grid.innerHTML = `<div class="empty-state"><p>No favorites yet!</p><span>Generate a recipe and save it ♡</span></div>`;
+      return;
+    }
+
+    grid.innerHTML = data.map(fav => `
+      <div class="fav-card">
+        <h3>${fav.name}</h3>
+        <p>${fav.description || ''}</p>
+        <div class="fav-meta">
+          ${fav.time ? `<span class="fav-pill">⏱ ${fav.time}</span>` : ''}
+          ${fav.calories ? `<span class="fav-pill">🔥 ${fav.calories}</span>` : ''}
+          ${fav.difficulty ? `<span class="fav-pill">⚡ ${fav.difficulty}</span>` : ''}
+        </div>
+        <button class="fav-delete" onclick="deleteFavorite('${fav.id}')">🗑 Remove</button>
+      </div>
+    `).join('');
+  }
+
+  async function deleteFavorite(id) {
+    await sb.from('favorites').delete().eq('id', id);
+    await loadFavorites();
   }
 
   function resetForm() {
     document.getElementById('recipeResult').classList.remove('visible');
     document.getElementById('errorMsg').classList.remove('visible');
+    currentRecipe = null;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  updateNavUI();
 </script>
 </body>
 </html>
