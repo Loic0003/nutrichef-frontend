@@ -161,15 +161,61 @@
 
   footer { text-align: center; padding: 20px; font-size: 0.8rem; color: var(--earth); position: relative; z-index: 10; opacity: 0.7; }
 
-  @media (max-width: 600px) {
-    nav { padding: 20px 24px; }
-    .main-card { padding: 28px 20px; margin: 0 16px 40px; }
-    .prefs-grid { grid-template-columns: 1fr; }
-    h1 { font-size: 2.4rem; }
-  }
+  /* LANGUAGE SELECTOR */
+  .lang-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+  .lang-overlay.visible { display: flex; }
+  .lang-modal { background: white; border-radius: 28px; padding: 48px 40px; max-width: 480px; width: 90%; text-align: center; animation: popIn 0.25s ease; }
+  .lang-modal h2 { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 300; color: var(--forest); margin-bottom: 8px; letter-spacing: -0.02em; }
+  .lang-modal p { font-size: 0.9rem; color: var(--earth); margin-bottom: 32px; }
+  .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .lang-btn { border: 2px solid var(--mist); border-radius: 16px; padding: 16px 12px; cursor: pointer; background: white; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .lang-btn:hover { border-color: var(--sage); background: var(--mist); transform: translateY(-2px); }
+  .lang-flag { font-size: 2rem; display: block; margin-bottom: 6px; }
+  .lang-name { font-size: 0.9rem; font-weight: 500; color: var(--charcoal); display: block; }
+  .lang-native { font-size: 0.75rem; color: var(--earth); display: block; margin-top: 2px; }
 </style>
 </head>
 <body>
+
+<!-- LANGUAGE SELECTOR -->
+<div class="lang-overlay" id="langOverlay">
+  <div class="lang-modal">
+    <h2>Welcome to <em style="color:var(--sage);font-style:italic">NutriChef</em></h2>
+    <p>Choose your preferred language to get started</p>
+    <div class="lang-grid">
+      <button class="lang-btn" onclick="selectLanguage('en', 'English')">
+        <span class="lang-flag">🇺🇸</span>
+        <span class="lang-name">English</span>
+        <span class="lang-native">English</span>
+      </button>
+      <button class="lang-btn" onclick="selectLanguage('fr', 'French')">
+        <span class="lang-flag">🇫🇷</span>
+        <span class="lang-name">Français</span>
+        <span class="lang-native">French</span>
+      </button>
+      <button class="lang-btn" onclick="selectLanguage('es', 'Spanish')">
+        <span class="lang-flag">🇪🇸</span>
+        <span class="lang-name">Español</span>
+        <span class="lang-native">Spanish</span>
+      </button>
+      <button class="lang-btn" onclick="selectLanguage('pt', 'Portuguese')">
+        <span class="lang-flag">🇧🇷</span>
+        <span class="lang-name">Português</span>
+        <span class="lang-native">Portuguese</span>
+      </button>
+      <button class="lang-btn" onclick="selectLanguage('de', 'German')">
+        <span class="lang-flag">🇩🇪</span>
+        <span class="lang-name">Deutsch</span>
+        <span class="lang-native">German</span>
+      </button>
+      <button class="lang-btn" onclick="selectLanguage('it', 'Italian')">
+        <span class="lang-flag">🇮🇹</span>
+        <span class="lang-name">Italiano</span>
+        <span class="lang-native">Italian</span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <span class="leaf-deco">🌿</span>
 <span class="leaf-deco">🍃</span>
@@ -350,7 +396,6 @@
 <footer>NutriChef · AI-generated recipes · For culinary inspiration only</footer>
 
 <script>
-  // ⚠️ REMPLACE CES VALEURS PAR TES INFOS SUPABASE
   const SUPABASE_URL = 'https://fafxhblmlvbwuxjivoid.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhZnhoYmxtbHZid3V4aml2b2lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDM3NzEsImV4cCI6MjA5Mjk3OTc3MX0.hh6xbuiRbLPaFx_9YYAu3Gvlj-U8X2XckCD9XzmkSUI';
   const BACKEND_URL = 'https://nutrichef-backend-production.up.railway.app';
@@ -363,6 +408,23 @@
   let currentRecipe = null;
   let currentUser = null;
   let authMode = 'login';
+  let selectedLanguage = localStorage.getItem('nutrichef_lang') || null;
+  let selectedLanguageName = localStorage.getItem('nutrichef_lang_name') || 'English';
+
+  // Show language selector on first visit
+  window.addEventListener('load', () => {
+    if (!selectedLanguage) {
+      document.getElementById('langOverlay').classList.add('visible');
+    }
+  });
+
+  function selectLanguage(code, name) {
+    selectedLanguage = code;
+    selectedLanguageName = name;
+    localStorage.setItem('nutrichef_lang', code);
+    localStorage.setItem('nutrichef_lang_name', name);
+    document.getElementById('langOverlay').classList.remove('visible');
+  }
 
   const input = document.getElementById('ingredientInput');
   input.addEventListener('keydown', e => { if (e.key === 'Enter') addIngredient(); });
@@ -618,7 +680,7 @@
       const response = await fetch(`${BACKEND_URL}/api/recipe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ingredients, prefs: [...prefs] })
+        body: JSON.stringify({ ingredients, prefs: [...prefs], language: selectedLanguageName })
       });
       const recipe = await response.json();
       if (!response.ok) throw new Error(recipe.error || 'Server error');
