@@ -32,6 +32,20 @@
   .nav-btn.active { background: var(--forest); color: white; }
   .nav-user { font-size: 0.82rem; color: var(--earth); }
 
+  /* AVATAR DROPDOWN */
+  .avatar-wrap { position: relative; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--forest); color: white; font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 2px solid var(--leaf); }
+  .avatar:hover { transform: scale(1.08); box-shadow: 0 4px 16px rgba(45,80,22,0.25); }
+  .dropdown { display: none; position: absolute; right: 0; top: 52px; background: white; border-radius: 16px; box-shadow: 0 8px 40px rgba(45,80,22,0.18); border: 1px solid rgba(168,204,110,0.3); min-width: 220px; padding: 8px; z-index: 100; animation: popIn 0.15s ease; }
+  .dropdown.open { display: block; }
+  .dropdown-name { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 400; color: var(--forest); padding: 8px 12px 2px; }
+  .dropdown-email { font-size: 0.78rem; color: var(--earth); padding: 0 12px 8px; }
+  .dropdown-divider { border: none; border-top: 1px solid var(--mist); margin: 4px 0; }
+  .dropdown-item { width: 100%; background: none; border: none; text-align: left; padding: 10px 12px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--charcoal); cursor: pointer; transition: background 0.15s; display: block; }
+  .dropdown-item:hover { background: var(--mist); }
+  .dropdown-item.danger { color: #c0392b; }
+  .dropdown-item.danger:hover { background: #fff0f0; }
+
   /* HERO */
   .hero { text-align: center; padding: 60px 24px 40px; position: relative; z-index: 10; }
   .hero-eyebrow { display: inline-block; background: var(--mist); border: 1px solid var(--leaf); color: var(--forest); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 20px; border-radius: 99px; margin-bottom: 28px; }
@@ -165,10 +179,21 @@
   <div class="logo">Nutri<span>Chef</span></div>
   <div class="nav-right">
     <div class="nav-badge">✦ AI Healthy Recipes</div>
-    <span class="nav-user" id="navUser"></span>
     <button class="nav-btn" id="favBtn" onclick="showFavorites()" style="display:none">❤️ Favorites</button>
     <button class="nav-btn" id="loginBtn" onclick="openAuth('login')">Login</button>
-    <button class="nav-btn" id="logoutBtn" onclick="logout()" style="display:none">Logout</button>
+    <!-- Avatar dropdown -->
+    <div class="avatar-wrap" id="avatarWrap" style="display:none">
+      <div class="avatar" id="avatarBtn" onclick="toggleDropdown()"></div>
+      <div class="dropdown" id="dropdown">
+        <div class="dropdown-name" id="dropdownName"></div>
+        <div class="dropdown-email" id="dropdownEmail"></div>
+        <hr class="dropdown-divider">
+        <button class="dropdown-item" onclick="showAccount()">⚙️ Account settings</button>
+        <button class="dropdown-item" onclick="showFavorites()">❤️ My favorites</button>
+        <hr class="dropdown-divider">
+        <button class="dropdown-item danger" onclick="logout()">🚪 Logout</button>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -179,8 +204,21 @@
     <h2 id="authTitle">Welcome back</h2>
     <p id="authSubtitle">Sign in to save your favorite recipes</p>
     <div class="auth-msg" id="authMsg"></div>
+
+    <!-- Signup only fields -->
+    <div id="signupFields" style="display:none">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:0">
+        <input class="auth-input" type="text" id="authFirstName" placeholder="First name" style="margin-bottom:12px" />
+        <input class="auth-input" type="text" id="authLastName" placeholder="Last name" style="margin-bottom:12px" />
+      </div>
+    </div>
+
     <input class="auth-input" type="email" id="authEmail" placeholder="Email address" />
     <input class="auth-input" type="password" id="authPassword" placeholder="Password" />
+
+    <!-- Confirm password signup only -->
+    <input class="auth-input" type="password" id="authConfirmPassword" placeholder="Confirm password" style="display:none" />
+
     <button class="auth-submit" id="authSubmit" onclick="handleAuth()">Sign in</button>
     <div class="auth-switch" id="authSwitch">
       No account? <a onclick="switchAuth()">Create one</a>
@@ -263,6 +301,52 @@
   </div>
 </div>
 
+<!-- ACCOUNT PAGE -->
+<div class="page" id="accountPage">
+  <section class="hero">
+    <div class="hero-eyebrow">Your profile</div>
+    <h1>Account <em>Settings</em></h1>
+  </section>
+  <div style="max-width:480px; margin: 0 auto 60px; padding: 0 24px;">
+    <button class="try-again-btn" onclick="showMain()" style="margin-bottom:24px">↩ Back</button>
+
+    <div class="main-card" style="margin:0 0 20px">
+      <div class="section-label">Profile</div>
+      <h2 style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;color:var(--forest);margin-bottom:20px">Personal information</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <input class="auth-input" type="text" id="accFirstName" placeholder="First name" style="margin:0" />
+        <input class="auth-input" type="text" id="accLastName" placeholder="Last name" style="margin:0" />
+      </div>
+      <div class="auth-msg" id="profileMsg"></div>
+      <button class="auth-submit" onclick="updateProfile()">Save changes</button>
+    </div>
+
+    <div class="main-card" style="margin:0 0 20px">
+      <div class="section-label">Email</div>
+      <h2 style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;color:var(--forest);margin-bottom:20px">Change email address</h2>
+      <input class="auth-input" type="email" id="accEmail" placeholder="New email address" />
+      <div class="auth-msg" id="emailMsg"></div>
+      <button class="auth-submit" onclick="updateEmail()">Update email</button>
+    </div>
+
+    <div class="main-card" style="margin:0 0 20px">
+      <div class="section-label">Security</div>
+      <h2 style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;color:var(--forest);margin-bottom:20px">Change password</h2>
+      <input class="auth-input" type="password" id="accNewPassword" placeholder="New password" />
+      <input class="auth-input" type="password" id="accConfirmPassword" placeholder="Confirm new password" />
+      <div class="auth-msg" id="passwordMsg"></div>
+      <button class="auth-submit" onclick="updatePassword()">Update password</button>
+    </div>
+
+    <div class="main-card" style="margin:0;border:1.5px solid #ffcccc">
+      <div class="section-label" style="color:#c0392b">Danger zone</div>
+      <h2 style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;color:#c0392b;margin-bottom:8px">Logout</h2>
+      <p style="font-size:0.88rem;color:var(--earth);margin-bottom:16px">You will be signed out of your account.</p>
+      <button onclick="logout()" style="background:#c0392b;color:white;border:none;border-radius:12px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer;width:100%">🚪 Logout</button>
+    </div>
+  </div>
+</div>
+
 <footer>NutriChef · AI-generated recipes · For culinary inspiration only</footer>
 
 <script>
@@ -293,27 +377,84 @@
     const { data: { user } } = await sb.auth.getUser();
     currentUser = user;
     if (user) {
-      document.getElementById('navUser').textContent = user.email.split('@')[0];
+      const firstName = user.user_metadata?.first_name || user.email.split('@')[0];
+      const lastName = user.user_metadata?.last_name || '';
+      const initials = (firstName[0] + (lastName[0] || '')).toUpperCase();
+      document.getElementById('avatarBtn').textContent = initials;
+      document.getElementById('dropdownName').textContent = `👋 Hello, ${firstName}`;
+      document.getElementById('dropdownEmail').textContent = user.email;
       document.getElementById('loginBtn').style.display = 'none';
-      document.getElementById('logoutBtn').style.display = 'block';
-      document.getElementById('favBtn').style.display = 'block';
-    } else {
-      document.getElementById('navUser').textContent = '';
-      document.getElementById('loginBtn').style.display = 'block';
-      document.getElementById('logoutBtn').style.display = 'none';
       document.getElementById('favBtn').style.display = 'none';
+      document.getElementById('avatarWrap').style.display = 'block';
+    } else {
+      document.getElementById('loginBtn').style.display = 'block';
+      document.getElementById('favBtn').style.display = 'none';
+      document.getElementById('avatarWrap').style.display = 'none';
     }
+  }
+
+  function toggleDropdown() {
+    document.getElementById('dropdown').classList.toggle('open');
+  }
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', e => {
+    const wrap = document.getElementById('avatarWrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('dropdown').classList.remove('open');
+    }
+  });
+
+  function showAccount() {
+    document.getElementById('dropdown').classList.remove('open');
+    document.getElementById('mainPage').classList.remove('visible');
+    document.getElementById('favPage').classList.remove('visible');
+    document.getElementById('accountPage').classList.add('visible');
+    if (currentUser) {
+      document.getElementById('accFirstName').value = currentUser.user_metadata?.first_name || '';
+      document.getElementById('accLastName').value = currentUser.user_metadata?.last_name || '';
+      document.getElementById('accEmail').value = currentUser.email || '';
+    }
+  }
+
+  async function updateProfile() {
+    const firstName = document.getElementById('accFirstName').value.trim();
+    const lastName = document.getElementById('accLastName').value.trim();
+    const msgEl = document.getElementById('profileMsg');
+    if (!firstName) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'First name is required.'; return; }
+    const { error } = await sb.auth.updateUser({ data: { first_name: firstName, last_name: lastName, full_name: `${firstName} ${lastName}` } });
+    if (error) { msgEl.className = 'auth-msg error'; msgEl.textContent = error.message; }
+    else { msgEl.className = 'auth-msg success'; msgEl.textContent = '✅ Profile updated!'; updateNavUI(); }
+  }
+
+  async function updatePassword() {
+    const newPass = document.getElementById('accNewPassword').value;
+    const confirmPass = document.getElementById('accConfirmPassword').value;
+    const msgEl = document.getElementById('passwordMsg');
+    if (!newPass || !confirmPass) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Please fill in both fields.'; return; }
+    if (newPass !== confirmPass) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Passwords do not match.'; return; }
+    if (newPass.length < 6) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Password must be at least 6 characters.'; return; }
+    const { error } = await sb.auth.updateUser({ password: newPass });
+    if (error) { msgEl.className = 'auth-msg error'; msgEl.textContent = error.message; }
+    else { msgEl.className = 'auth-msg success'; msgEl.textContent = '✅ Password updated!'; document.getElementById('accNewPassword').value = ''; document.getElementById('accConfirmPassword').value = ''; }
   }
 
   function openAuth(mode) {
     authMode = mode;
-    document.getElementById('authTitle').textContent = mode === 'login' ? 'Welcome back' : 'Create account';
-    document.getElementById('authSubtitle').textContent = mode === 'login' ? 'Sign in to save your favorite recipes' : 'Join NutriChef for free';
-    document.getElementById('authSubmit').textContent = mode === 'login' ? 'Sign in' : 'Create account';
-    document.getElementById('authSwitch').innerHTML = mode === 'login' ? 'No account? <a onclick="switchAuth()">Create one</a>' : 'Already have an account? <a onclick="switchAuth()">Sign in</a>';
+    const isSignup = mode === 'signup';
+    document.getElementById('authTitle').textContent = isSignup ? 'Create account' : 'Welcome back';
+    document.getElementById('authSubtitle').textContent = isSignup ? 'Join NutriChef for free' : 'Sign in to save your favorite recipes';
+    document.getElementById('authSubmit').textContent = isSignup ? 'Create account' : 'Sign in';
+    document.getElementById('authSwitch').innerHTML = isSignup ? 'Already have an account? <a onclick="switchAuth()">Sign in</a>' : 'No account? <a onclick="switchAuth()">Create one</a>';
     document.getElementById('authMsg').className = 'auth-msg';
     document.getElementById('authEmail').value = '';
     document.getElementById('authPassword').value = '';
+    document.getElementById('authConfirmPassword').value = '';
+    document.getElementById('authFirstName').value = '';
+    document.getElementById('authLastName').value = '';
+    // Show/hide signup fields
+    document.getElementById('signupFields').style.display = isSignup ? 'block' : 'none';
+    document.getElementById('authConfirmPassword').style.display = isSignup ? 'block' : 'none';
     document.getElementById('authModal').classList.add('visible');
   }
 
@@ -323,6 +464,9 @@
   async function handleAuth() {
     const email = document.getElementById('authEmail').value.trim();
     const password = document.getElementById('authPassword').value;
+    const confirmPassword = document.getElementById('authConfirmPassword').value;
+    const firstName = document.getElementById('authFirstName').value.trim();
+    const lastName = document.getElementById('authLastName').value.trim();
     const msgEl = document.getElementById('authMsg');
 
     if (!email || !password) {
@@ -331,17 +475,39 @@
       return;
     }
 
+    if (authMode === 'signup') {
+      if (!firstName || !lastName) {
+        msgEl.className = 'auth-msg error';
+        msgEl.textContent = 'Please enter your first and last name.';
+        return;
+      }
+      if (password !== confirmPassword) {
+        msgEl.className = 'auth-msg error';
+        msgEl.textContent = 'Passwords do not match.';
+        return;
+      }
+      if (password.length < 6) {
+        msgEl.className = 'auth-msg error';
+        msgEl.textContent = 'Password must be at least 6 characters.';
+        return;
+      }
+    }
+
     document.getElementById('authSubmit').textContent = 'Loading...';
 
     let error;
     if (authMode === 'login') {
       ({ error } = await sb.auth.signInWithPassword({ email, password }));
     } else {
-      ({ error } = await sb.auth.signUp({ email, password }));
+      ({ error } = await sb.auth.signUp({
+        email,
+        password,
+        options: { data: { first_name: firstName, last_name: lastName, full_name: `${firstName} ${lastName}` } }
+      }));
       if (!error) {
         msgEl.className = 'auth-msg success';
-        msgEl.textContent = 'Account created! Check your email to confirm.';
-        document.getElementById('authSubmit').textContent = authMode === 'login' ? 'Sign in' : 'Create account';
+        msgEl.textContent = '🎉 Account created! You can now sign in.';
+        document.getElementById('authSubmit').textContent = 'Create account';
         return;
       }
     }
@@ -357,9 +523,58 @@
   }
 
   async function logout() {
+    document.getElementById('dropdown').classList.remove('open');
     await sb.auth.signOut();
-    updateNavUI();
+    currentUser = null;
+    await updateNavUI();
     showMain();
+  }
+
+  function showAccount() {
+    document.getElementById('dropdown').classList.remove('open');
+    document.getElementById('mainPage').classList.remove('visible');
+    document.getElementById('favPage').classList.remove('visible');
+    document.getElementById('accountPage').classList.add('visible');
+    // Clear messages
+    ['profileMsg','emailMsg','passwordMsg'].forEach(id => { document.getElementById(id).className = 'auth-msg'; });
+    if (currentUser) {
+      document.getElementById('accFirstName').value = currentUser.user_metadata?.first_name || '';
+      document.getElementById('accLastName').value = currentUser.user_metadata?.last_name || '';
+      document.getElementById('accEmail').value = currentUser.email || '';
+      document.getElementById('accNewPassword').value = '';
+      document.getElementById('accConfirmPassword').value = '';
+    }
+  }
+
+  async function updateProfile() {
+    const firstName = document.getElementById('accFirstName').value.trim();
+    const lastName = document.getElementById('accLastName').value.trim();
+    const msgEl = document.getElementById('profileMsg');
+    if (!firstName) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'First name is required.'; return; }
+    const { error } = await sb.auth.updateUser({ data: { first_name: firstName, last_name: lastName, full_name: `${firstName} ${lastName}` } });
+    if (error) { msgEl.className = 'auth-msg error'; msgEl.textContent = error.message; }
+    else { msgEl.className = 'auth-msg success'; msgEl.textContent = '✅ Profile updated!'; await updateNavUI(); }
+  }
+
+  async function updateEmail() {
+    const newEmail = document.getElementById('accEmail').value.trim();
+    const msgEl = document.getElementById('emailMsg');
+    if (!newEmail) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Please enter a new email.'; return; }
+    const { error } = await sb.auth.updateUser({ email: newEmail });
+    if (error) { msgEl.className = 'auth-msg error'; msgEl.textContent = error.message; }
+    else { msgEl.className = 'auth-msg success'; msgEl.textContent = '✅ Confirmation sent to your new email! Check your inbox.'; }
+  }
+
+  async function updatePassword() {
+    const newPass = document.getElementById('accNewPassword').value;
+    const confirmPass = document.getElementById('accConfirmPassword').value;
+    const msgEl = document.getElementById('passwordMsg');
+    if (!newPass || !confirmPass) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Please fill in both fields.'; return; }
+    if (newPass !== confirmPass) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Passwords do not match.'; return; }
+    if (newPass.length < 6) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Password must be at least 6 characters.'; return; }
+    const { error } = await sb.auth.updateUser({ password: newPass });
+    if (error) { msgEl.className = 'auth-msg error'; msgEl.textContent = error.message; }
+    else { msgEl.className = 'auth-msg success'; msgEl.textContent = '✅ Password updated!'; document.getElementById('accNewPassword').value = ''; document.getElementById('accConfirmPassword').value = ''; }
   }
 
   // INGREDIENTS
@@ -490,13 +705,16 @@
 
   // FAVORITES PAGE
   async function showFavorites() {
+    document.getElementById('dropdown').classList.remove('open');
     document.getElementById('mainPage').classList.remove('visible');
+    document.getElementById('accountPage').classList.remove('visible');
     document.getElementById('favPage').classList.add('visible');
     await loadFavorites();
   }
 
   function showMain() {
     document.getElementById('favPage').classList.remove('visible');
+    document.getElementById('accountPage').classList.remove('visible');
     document.getElementById('mainPage').classList.add('visible');
   }
 
