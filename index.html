@@ -227,17 +227,6 @@
   <div class="main-card">
     <div class="ingredient-area">
       <div class="section-label">Step 1</div>
-      <h2>Your ingredients</h2>
-      <p>Add the ingredients you have on hand</p>
-      <div class="input-row">
-        <input class="ingredient-input" id="ingredientInput" type="text" placeholder="E.g: chicken, broccoli, garlic..." autocomplete="off"/>
-        <button class="add-btn" onclick="addIngredient()">+</button>
-      </div>
-      <div class="chips" id="chips"></div>
-    </div>
-    <hr class="divider">
-    <div class="ingredient-area">
-      <div class="section-label">Step 2</div>
       <h2>Your preferences</h2>
       <p>Select one or more options (optional)</p>
       <div class="prefs-grid">
@@ -248,6 +237,17 @@
         <div class="pref-option" onclick="togglePref(this,'Anti-inflammatory')"><span class="pref-emoji">🫐</span> Anti-inflammatory</div>
         <div class="pref-option" onclick="togglePref(this,'Dairy-free')"><span class="pref-emoji">🥛</span> Dairy-free</div>
       </div>
+    </div>
+    <hr class="divider">
+    <div class="ingredient-area">
+      <div class="section-label">Step 2</div>
+      <h2>Your ingredients</h2>
+      <p>Add the ingredients you have on hand</p>
+      <div class="input-row">
+        <input class="ingredient-input" id="ingredientInput" type="text" placeholder="E.g: chicken, broccoli, garlic..." autocomplete="off"/>
+        <button class="add-btn" onclick="addIngredient()">+</button>
+      </div>
+      <div class="chips" id="chips"></div>
     </div>
     <hr class="divider">
     <button class="generate-btn" id="generateBtn" onclick="generateRecipe()" disabled><span>✦</span> Generate 3 healthy recipes</button>
@@ -360,7 +360,18 @@
   const input = document.getElementById('ingredientInput');
   input.addEventListener('keydown', e => { if (e.key === 'Enter') addIngredient(); });
 
-  sb.auth.onAuthStateChange(() => updateNavUI());
+  sb.auth.onAuthStateChange((event, session) => {
+    currentUser = session?.user || null;
+    if (currentUser) {
+      const firstName = currentUser.user_metadata?.first_name || currentUser.email.split('@')[0];
+      document.getElementById('navGreeting').textContent = '👋 ' + firstName;
+      document.getElementById('loginBtn').style.display = 'none';
+      document.getElementById('userNav').style.display = 'flex';
+    } else {
+      document.getElementById('loginBtn').style.display = 'block';
+      document.getElementById('userNav').style.display = 'none';
+    }
+  });
 
   async function updateNavUI() {
     const { data: { user } } = await sb.auth.getUser();
