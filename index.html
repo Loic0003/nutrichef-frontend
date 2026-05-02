@@ -3,687 +3,1391 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NutriChef — Generate your healthy recipe</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>NutriChef — AI Recipe Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root { --cream: #F5F0E8; --forest: #2D5016; --sage: #7BAF4E; --leaf: #A8CC6E; --earth: #8B6F47; --charcoal: #1A1A1A; --mist: #E8F0E0; }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background-color: var(--cream); color: var(--charcoal); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
-  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f7;
+    --bg3: #fafafa;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.12);
+    --text: #1d1d1f;
+    --text2: #6e6e73;
+    --text3: #a1a1a6;
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+    --accent-light: #e8f0fe;
+    --green: #30d158;
+    --red: #ff3b30;
+    --radius: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 22px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+  }
 
-  /* NAV */
-  nav { display: flex; align-items: center; justify-content: space-between; padding: 24px 48px; position: relative; z-index: 10; flex-wrap: wrap; gap: 12px; }
-  .logo { font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 700; color: var(--forest); letter-spacing: -0.02em; }
-  .logo span { color: var(--sage); font-style: italic; }
-  .nav-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .nav-badge { background: var(--forest); color: var(--leaf); padding: 6px 16px; border-radius: 99px; font-size: 0.75rem; font-weight: 500; }
-  .nav-btn { background: transparent; border: 2px solid var(--forest); color: var(--forest); padding: 6px 16px; border-radius: 99px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
-  .nav-btn:hover { background: var(--forest); color: white; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
-  /* USER NAV */
-  #userNav { display: none; align-items: center; gap: 8px; flex-wrap: wrap; }
-  #navGreeting { font-size: 0.85rem; color: var(--forest); font-weight: 600; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
 
-  /* HERO */
-  .hero { text-align: center; padding: 60px 24px 40px; position: relative; z-index: 10; }
-  .hero-eyebrow { display: inline-block; background: var(--mist); border: 1px solid var(--leaf); color: var(--forest); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 20px; border-radius: 99px; margin-bottom: 28px; }
-  h1 { font-family: 'Fraunces', serif; font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 300; line-height: 1.05; color: var(--forest); letter-spacing: -0.03em; max-width: 700px; margin: 0 auto 20px; }
-  h1 em { font-style: italic; color: var(--sage); }
-  .hero-sub { font-size: 1.05rem; color: var(--earth); max-width: 440px; margin: 0 auto; line-height: 1.6; font-weight: 300; }
-  .leaf-deco { position: absolute; font-size: 4rem; opacity: 0.12; pointer-events: none; animation: float 6s ease-in-out infinite; }
-  .leaf-deco:nth-child(1) { top: 10%; left: 5%; }
-  .leaf-deco:nth-child(2) { top: 30%; right: 6%; animation-delay: 2s; font-size: 3rem; }
-  .leaf-deco:nth-child(3) { bottom: 10%; left: 8%; animation-delay: 4s; font-size: 2.5rem; }
-  @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-12px) rotate(5deg); } }
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 52px;
+  }
 
-  /* MAIN CARD */
-  .main-card { background: white; border-radius: 32px; max-width: 720px; margin: 0 auto 60px; padding: 48px; box-shadow: 0 8px 60px rgba(45,80,22,0.10); position: relative; z-index: 10; border: 1px solid rgba(168,204,110,0.3); }
-  .section-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); margin-bottom: 12px; }
-  .ingredient-area { margin-bottom: 32px; }
-  .ingredient-area h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 400; color: var(--forest); margin-bottom: 6px; }
-  .ingredient-area p { font-size: 0.88rem; color: var(--earth); margin-bottom: 20px; }
-  .input-row { display: flex; gap: 10px; margin-bottom: 16px; }
-  .ingredient-input { flex: 1; border: 2px solid var(--mist); border-radius: 14px; padding: 14px 20px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--charcoal); background: var(--cream); outline: none; transition: border-color 0.2s; }
-  .ingredient-input:focus { border-color: var(--sage); background: white; }
-  .ingredient-input::placeholder { color: #aaa; }
-  .add-btn { background: var(--forest); color: white; border: none; border-radius: 14px; width: 52px; height: 52px; font-size: 1.6rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .add-btn:hover { background: var(--sage); }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
-  .chip { background: var(--mist); border: 1.5px solid var(--leaf); color: var(--forest); padding: 6px 14px 6px 16px; border-radius: 99px; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 8px; animation: popIn 0.2s ease; }
-  @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .chip-remove { background: none; border: none; cursor: pointer; color: var(--sage); font-size: 1rem; padding: 0; }
-  .divider { border: none; border-top: 1.5px solid var(--mist); margin: 28px 0; }
-  .prefs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px; }
-  .pref-option { border: 2px solid var(--mist); border-radius: 14px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--charcoal); user-select: none; }
-  .pref-option:hover { border-color: var(--leaf); background: var(--mist); }
-  .pref-option.active { border-color: var(--forest); background: var(--forest); color: white; }
-  .pref-emoji { font-size: 1.3rem; }
-  .generate-btn { width: 100%; background: var(--forest); color: white; border: none; border-radius: 18px; padding: 20px; font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 400; font-style: italic; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 12px; }
-  .generate-btn:hover:not(:disabled) { background: var(--sage); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(45,80,22,0.25); }
-  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .loader { display: none; flex-direction: column; align-items: center; gap: 20px; padding: 40px 0 20px; text-align: center; }
-  .loader.visible { display: flex; }
-  .spinner { width: 48px; height: 48px; border: 3px solid var(--mist); border-top-color: var(--forest); border-radius: 50%; animation: spin 0.9s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loader-text { font-family: 'Fraunces', serif; font-style: italic; font-size: 1.1rem; color: var(--forest); animation: pulse 1.5s ease-in-out infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .error-msg { display: none; background: #fff0f0; border: 1.5px solid #ffcccc; border-radius: 14px; padding: 16px 20px; color: #c0392b; font-size: 0.9rem; margin-top: 16px; text-align: center; }
+  .logo {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .logo em { color: var(--accent); font-style: normal; }
+
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 980px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: none;
+    white-space: nowrap;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid transparent;
+  }
+  .btn-ghost:hover { background: var(--accent-light); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-secondary {
+    background: var(--bg2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: #e8e8ed; }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid transparent;
+  }
+  .btn-danger:hover { background: rgba(255,59,48,0.08); }
+
+  /* AVATAR */
+  .avatar-wrap { position: relative; }
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0071e3, #30d158);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s;
+  }
+  .avatar:hover { opacity: 0.85; }
+
+  .dropdown {
+    display: none;
+    position: absolute;
+    right: 0; top: 42px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    min-width: 220px;
+    padding: 6px;
+    z-index: 200;
+  }
+  .dropdown.open { display: block; animation: ddIn 0.12s ease; }
+  @keyframes ddIn { from { opacity: 0; transform: translateY(-6px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+  .dd-header { padding: 10px 12px 8px; margin-bottom: 2px; }
+  .dd-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .dd-email { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .dd-sep { height: 1px; background: var(--border); margin: 4px 0; }
+  .dd-item {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px; font-weight: 400;
+    color: var(--text);
+    background: none; border: none;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.1s;
+    text-align: left;
+  }
+  .dd-item:hover { background: var(--bg2); }
+  .dd-item.danger { color: var(--red); }
+  .dd-item.danger:hover { background: rgba(255,59,48,0.06); }
+  .dd-icon { font-size: 15px; width: 20px; text-align: center; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 80px 24px 56px;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg3) 100%);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 5px 14px;
+    border-radius: 980px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 28px;
+    letter-spacing: 0.01em;
+  }
+  .hero-badge span { color: var(--accent); }
+
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #0071e3 0%, #30d158 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 17px;
+    color: var(--text2);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow);
+    max-width: 680px;
+    margin: 0 auto 80px;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .card-section {
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-section:last-child { border-bottom: none; }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .card-section h2 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+
+  .card-section p {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 20px;
+  }
+
+  /* PREFS */
+  .prefs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .pref-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .pref-chip:hover { border-color: var(--accent); background: var(--accent-light); }
+  .pref-chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .pref-icon { font-size: 16px; }
+
+  /* INGREDIENT INPUT */
+  .input-wrap {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .text-input {
+    flex: 1;
+    padding: 11px 16px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg3);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .text-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
+    background: var(--bg);
+  }
+  .text-input::placeholder { color: var(--text3); }
+
+  .add-btn {
+    width: 42px; height: 42px;
+    border-radius: var(--radius);
+    background: var(--text);
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .add-btn:hover { background: #3a3a3c; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px 5px 14px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 980px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    animation: chipIn 0.15s ease;
+  }
+  @keyframes chipIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+  .chip-x {
+    background: none; border: none; cursor: pointer;
+    color: var(--text3); font-size: 12px; padding: 0;
+    display: flex; align-items: center;
+    transition: color 0.1s;
+  }
+  .chip-x:hover { color: var(--red); }
+
+  /* GENERATE BTN */
+  .card-footer { padding: 24px 32px; background: var(--bg3); }
+
+  .generate-btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: var(--radius-lg);
+    background: var(--text);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: -0.01em;
+  }
+  .generate-btn:hover:not(:disabled) {
+    background: #1d1d1f;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .generate-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* LOADER */
+  .loader { display: none; text-align: center; padding: 40px 0; }
+  .loader.visible { display: block; }
+  .loader-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
+  .loader-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: dotPulse 1.4s ease-in-out infinite;
+  }
+  .loader-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loader-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotPulse { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+  .loader p { font-size: 14px; color: var(--text2); font-weight: 500; }
+
+  /* ERROR */
+  .error-msg {
+    display: none;
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(255,59,48,0.06);
+    border: 1px solid rgba(255,59,48,0.2);
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: #c0392b;
+  }
   .error-msg.visible { display: block; }
 
-  /* 3 RECIPE CARDS */
-  .recipes-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 40px; animation: slideUp 0.4s ease; }
-  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .recipe-card { background: white; border-radius: 20px; overflow: hidden; border: 1px solid rgba(168,204,110,0.3); box-shadow: 0 4px 24px rgba(45,80,22,0.08); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-  .recipe-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(45,80,22,0.15); }
-  .recipe-card-header { background: linear-gradient(135deg, var(--forest) 0%, #3d6b1f 100%); padding: 24px; color: white; position: relative; overflow: hidden; }
-  .recipe-card-header::after { content: '🌿'; position: absolute; right: 16px; bottom: 8px; font-size: 3.5rem; opacity: 0.15; }
-  .recipe-card-header h3 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 6px; }
-  .recipe-card-header p { font-size: 0.85rem; opacity: 0.85; line-height: 1.5; }
-  .recipe-card-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-  .meta-pill { background: rgba(255,255,255,0.15); padding: 3px 12px; border-radius: 99px; font-size: 0.78rem; }
-  .recipe-card-footer { padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
-  .view-btn { background: var(--forest); color: white; border: none; border-radius: 99px; padding: 8px 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
-  .view-btn:hover { background: var(--sage); }
-  .save-card-btn { background: transparent; border: 1.5px solid var(--leaf); color: var(--forest); border-radius: 99px; padding: 8px 16px; font-size: 0.82rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
-  .save-card-btn:hover { background: var(--mist); }
-  .save-card-btn.saved { background: var(--mist); color: var(--forest); border-color: var(--sage); }
+  /* RECIPE CARDS */
+  .recipes-section { padding: 0 32px 32px; display: none; }
+  .recipes-section.visible { display: block; animation: fadeUp 0.3s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
-  .try-again-btn { margin-top: 28px; background: transparent; border: 2px solid var(--forest); color: var(--forest); border-radius: 14px; padding: 12px 28px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s; display: block; }
-  .try-again-btn:hover { background: var(--forest); color: white; }
+  .recipes-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 24px 0 16px;
+  }
+
+  .recipe-cards { display: grid; gap: 12px; }
+
+  .recipe-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background: var(--bg);
+  }
+  .recipe-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+
+  .rc-body { padding: 20px 22px 16px; }
+  .rc-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em; }
+  .rc-desc { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 14px; }
+  .rc-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .rc-pill {
+    padding: 4px 10px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 980px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+  .rc-actions { display: flex; gap: 8px; align-items: center; }
+  .rc-view {
+    flex: 1;
+    padding: 9px 18px;
+    background: var(--text);
+    color: white;
+    border: none;
+    border-radius: 980px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .rc-view:hover { background: #3a3a3c; }
+  .rc-save {
+    padding: 9px 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 980px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .rc-save:hover { background: #e8e8ed; }
+  .rc-save.saved { background: rgba(48,209,88,0.1); border-color: var(--green); color: #1a7a35; }
+
+  .try-again {
+    margin-top: 16px;
+    width: 100%;
+    padding: 12px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    display: none;
+  }
+  .try-again:hover { background: #e8e8ed; color: var(--text); }
 
   /* RECIPE DETAIL */
-  .recipe-detail { display: none; margin-top: 40px; animation: slideUp 0.4s ease; }
-  .recipe-detail.visible { display: block; }
-  .recipe-detail-header { background: linear-gradient(135deg, var(--forest) 0%, #3d6b1f 100%); border-radius: 20px; padding: 32px; color: white; margin-bottom: 24px; position: relative; overflow: hidden; }
-  .recipe-detail-header::after { content: '🌿'; position: absolute; right: 24px; bottom: 16px; font-size: 5rem; opacity: 0.15; }
-  .recipe-detail-header h2 { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 400; margin-bottom: 8px; }
-  .recipe-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
-  .save-btn { margin-top: 16px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.5); color: white; padding: 8px 20px; border-radius: 99px; font-size: 0.85rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
-  .save-btn:hover { background: rgba(255,255,255,0.35); }
-  .save-btn.saved { background: rgba(255,255,255,0.9); color: var(--forest); }
-  .back-btn { background: transparent; border: 2px solid var(--forest); color: var(--forest); border-radius: 99px; padding: 8px 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; margin-bottom: 20px; display: inline-block; }
-  .back-btn:hover { background: var(--forest); color: white; }
-  .recipe-body { font-size: 0.95rem; line-height: 1.8; color: var(--charcoal); }
-  .recipe-body h3 { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; color: var(--forest); margin: 24px 0 10px; }
-  .recipe-body ul, .recipe-body ol { padding-left: 20px; color: #444; }
-  .recipe-body li { margin-bottom: 6px; }
-  .nutrition-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin-top: 8px; }
-  .nutr-card { background: var(--mist); border-radius: 14px; padding: 14px; text-align: center; }
-  .nutr-value { font-family: 'Fraunces', serif; font-size: 1.5rem; color: var(--forest); }
-  .nutr-label { font-size: 0.72rem; color: var(--earth); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .recipe-detail { display: none; padding: 0 32px 32px; }
+  .recipe-detail.visible { display: block; animation: fadeUp 0.3s ease; }
 
-  /* AUTH */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
-  .modal-overlay.visible { display: flex; }
-  .modal { background: white; border-radius: 24px; padding: 40px; max-width: 420px; width: 90%; position: relative; }
-  .modal h2 { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 400; color: var(--forest); margin-bottom: 8px; }
-  .modal p { font-size: 0.9rem; color: var(--earth); margin-bottom: 24px; }
-  .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--earth); }
-  .auth-input { width: 100%; border: 2px solid var(--mist); border-radius: 12px; padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--charcoal); background: var(--cream); outline: none; margin-bottom: 12px; transition: border-color 0.2s; }
-  .auth-input:focus { border-color: var(--sage); background: white; }
-  .auth-submit { width: 100%; background: var(--forest); color: white; border: none; border-radius: 12px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 12px; }
-  .auth-submit:hover { background: var(--sage); }
-  .auth-switch { font-size: 0.85rem; color: var(--earth); text-align: center; }
-  .auth-switch a { color: var(--forest); cursor: pointer; font-weight: 500; text-decoration: underline; }
-  .auth-msg { font-size: 0.85rem; padding: 10px; border-radius: 8px; margin-bottom: 12px; text-align: center; display: none; }
-  .auth-msg.error { background: #fff0f0; color: #c0392b; display: block; }
-  .auth-msg.success { background: var(--mist); color: var(--forest); display: block; }
+  .detail-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 0 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+  .detail-back:hover { opacity: 0.7; }
 
-  /* PAGES */
+  .detail-hero {
+    background: linear-gradient(135deg, #1d1d1f 0%, #3a3a3c 100%);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    color: white;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .detail-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top right, rgba(0,113,227,0.3) 0%, transparent 60%);
+  }
+  .detail-hero-content { position: relative; z-index: 1; }
+  .detail-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
+  .detail-desc { font-size: 14px; opacity: 0.75; line-height: 1.5; margin-bottom: 16px; }
+  .detail-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .detail-pill { padding: 5px 12px; background: rgba(255,255,255,0.15); border-radius: 980px; font-size: 12px; font-weight: 500; }
+  .detail-save {
+    padding: 9px 20px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 980px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .detail-save:hover { background: rgba(255,255,255,0.25); }
+  .detail-save.saved { background: rgba(48,209,88,0.2); border-color: var(--green); }
+
+  .detail-body { display: grid; gap: 20px; }
+
+  .detail-block {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+  }
+  .detail-block-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+
+  .nutr-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .nutr-item { text-align: center; }
+  .nutr-value { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+  .nutr-label { font-size: 11px; font-weight: 500; color: var(--text3); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .ing-list { display: grid; gap: 8px; }
+  .ing-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .ing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+  .steps-list { display: grid; gap: 16px; }
+  .step-item { display: flex; gap: 14px; }
+  .step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--text);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-text { font-size: 14px; line-height: 1.6; color: var(--text); padding-top: 3px; }
+
+  .tip-box {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  .tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+  /* MODAL */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .overlay.visible { display: flex; }
+
+  .modal {
+    background: var(--bg);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalIn 0.2s ease;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .modal-header {
+    padding: 24px 24px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .modal-close {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--bg2);
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--text2);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .modal-close:hover { background: #e8e8ed; }
+  .modal-title { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+  .modal-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .modal-body { padding: 20px 24px 24px; }
+
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg3);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
+    background: var(--bg);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .form-msg {
+    display: none;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .form-msg.error { display: block; background: rgba(255,59,48,0.06); border: 1px solid rgba(255,59,48,0.2); color: var(--red); }
+  .form-msg.success { display: block; background: rgba(48,209,88,0.08); border: 1px solid rgba(48,209,88,0.25); color: #1a7a35; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 4px;
+  }
+  .submit-btn:hover { background: var(--accent-hover); }
+
+  .auth-switch { text-align: center; margin-top: 14px; font-size: 13px; color: var(--text2); }
+  .auth-switch a { color: var(--accent); cursor: pointer; font-weight: 500; text-decoration: none; }
+  .auth-switch a:hover { text-decoration: underline; }
+
+  .modal-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  /* LANG PICKER */
+  .lang-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .lang-opt {
+    text-align: center;
+    padding: 14px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--bg);
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .lang-opt:hover { border-color: var(--accent); background: var(--accent-light); }
+  .lang-opt.active { border-color: var(--accent); background: var(--accent-light); }
+  .lang-opt .flag { font-size: 24px; display: block; margin-bottom: 6px; }
+  .lang-opt .lname { font-size: 12px; font-weight: 600; color: var(--text); }
+
+  /* FAVS PAGE */
   .page { display: none; }
   .page.visible { display: block; }
-  .fav-grid { display: grid; gap: 16px; margin-top: 24px; }
-  .fav-card { background: white; border-radius: 20px; padding: 24px; border: 1px solid rgba(168,204,110,0.3); box-shadow: 0 4px 20px rgba(45,80,22,0.07); }
-  .fav-card h3 { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 400; color: var(--forest); margin-bottom: 6px; }
-  .fav-card p { font-size: 0.85rem; color: var(--earth); margin-bottom: 12px; }
-  .fav-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
-  .fav-pill { background: var(--mist); color: var(--forest); padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; }
-  .fav-delete { background: none; border: 1.5px solid #ffcccc; color: #c0392b; padding: 6px 14px; border-radius: 99px; font-size: 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  .empty-state { text-align: center; padding: 60px 20px; color: var(--earth); }
-  .empty-state p { font-family: 'Fraunces', serif; font-size: 1.3rem; font-style: italic; color: var(--forest); margin-bottom: 8px; }
 
-  /* LANG */
-  .lang-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-  .lang-overlay.visible { display: flex; }
-  .lang-modal { background: white; border-radius: 28px; padding: 48px 40px; max-width: 480px; width: 90%; text-align: center; }
-  .lang-modal h2 { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 300; color: var(--forest); margin-bottom: 8px; }
-  .lang-modal p { font-size: 0.9rem; color: var(--earth); margin-bottom: 32px; }
-  .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .lang-btn { border: 2px solid var(--mist); border-radius: 16px; padding: 16px 12px; cursor: pointer; background: white; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
-  .lang-btn:hover { border-color: var(--sage); background: var(--mist); transform: translateY(-2px); }
-  .lang-flag { font-size: 2rem; display: block; margin-bottom: 6px; }
-  .lang-name { font-size: 0.9rem; font-weight: 500; color: var(--charcoal); display: block; }
-  .lang-native { font-size: 0.75rem; color: var(--earth); display: block; margin-top: 2px; }
+  .page-hero {
+    padding: 52px 24px 40px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .page-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 8px; }
+  .page-title { font-size: 32px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; margin-bottom: 6px; }
+  .page-sub { font-size: 15px; color: var(--text2); }
 
-  footer { text-align: center; padding: 20px; font-size: 0.8rem; color: var(--earth); position: relative; z-index: 10; opacity: 0.7; }
-  @media (max-width: 600px) { nav { padding: 20px 24px; } .main-card { padding: 28px 20px; margin: 0 16px 40px; } .prefs-grid { grid-template-columns: 1fr; } h1 { font-size: 2.4rem; } }
+  .favs-wrap { max-width: 680px; margin: 0 auto; padding: 0 24px 80px; }
+  .fav-grid { display: grid; gap: 10px; margin-top: 20px; }
+  .fav-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    transition: box-shadow 0.15s;
+  }
+  .fav-card:hover { box-shadow: var(--shadow-sm); }
+  .fav-info { flex: 1; }
+  .fav-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .fav-desc { font-size: 13px; color: var(--text2); margin-bottom: 10px; line-height: 1.4; }
+  .fav-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .fav-pill { padding: 3px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 980px; font-size: 11px; font-weight: 500; color: var(--text2); }
+  .fav-del { padding: 7px 14px; background: none; border: 1px solid var(--border); border-radius: 980px; font-size: 12px; font-weight: 500; color: var(--text2); cursor: pointer; font-family: inherit; flex-shrink: 0; transition: all 0.15s; }
+  .fav-del:hover { border-color: var(--red); color: var(--red); background: rgba(255,59,48,0.06); }
+
+  .empty-state { text-align: center; padding: 60px 20px; }
+  .empty-icon { font-size: 40px; margin-bottom: 16px; }
+  .empty-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .empty-sub { font-size: 14px; color: var(--text2); }
+
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.01em;
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 0 16px; }
+    .hero { padding: 56px 16px 40px; }
+    .card { margin: 0 16px 60px; }
+    .card-section { padding: 22px 20px; }
+    .card-footer { padding: 20px; }
+    .recipes-section, .recipe-detail { padding-left: 20px; padding-right: 20px; }
+    .prefs-grid { grid-template-columns: 1fr 1fr; }
+    .nutr-row { grid-template-columns: repeat(2, 1fr); }
+    .page-hero { padding: 40px 16px 28px; }
+    .favs-wrap { padding: 0 16px 60px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- LANGUAGE SELECTOR -->
-<div class="lang-overlay" id="langOverlay">
-  <div class="lang-modal">
-    <h2>Welcome to <em style="color:var(--sage);font-style:italic">NutriChef</em></h2>
-    <p>Choose your preferred language to get started</p>
-    <div class="lang-grid">
-      <button class="lang-btn" onclick="selectLanguage('en','English')"><span class="lang-flag">🇺🇸</span><span class="lang-name">English</span><span class="lang-native">English</span></button>
-      <button class="lang-btn" onclick="selectLanguage('fr','French')"><span class="lang-flag">🇫🇷</span><span class="lang-name">Français</span><span class="lang-native">French</span></button>
-      <button class="lang-btn" onclick="selectLanguage('es','Spanish')"><span class="lang-flag">🇪🇸</span><span class="lang-name">Español</span><span class="lang-native">Spanish</span></button>
-      <button class="lang-btn" onclick="selectLanguage('pt','Portuguese')"><span class="lang-flag">🇧🇷</span><span class="lang-name">Português</span><span class="lang-native">Portuguese</span></button>
-      <button class="lang-btn" onclick="selectLanguage('de','German')"><span class="lang-flag">🇩🇪</span><span class="lang-name">Deutsch</span><span class="lang-native">German</span></button>
-      <button class="lang-btn" onclick="selectLanguage('it','Italian')"><span class="lang-flag">🇮🇹</span><span class="lang-name">Italiano</span><span class="lang-native">Italian</span></button>
-    </div>
-  </div>
-</div>
-
-<span class="leaf-deco">🌿</span>
-<span class="leaf-deco">🍃</span>
-<span class="leaf-deco">🌱</span>
-
+<!-- NAV -->
 <nav>
-  <div class="logo">Nutri<span>Chef</span></div>
+  <div class="logo" onclick="showMain()">Nutri<em>Chef</em></div>
   <div class="nav-right">
-    <div class="nav-badge">✦ AI Healthy Recipes</div>
-    <button class="nav-btn" id="loginBtn" onclick="openAuth('login')">Login</button>
-    <div id="userNav">
-      <span id="navGreeting"></span>
-      <button class="nav-btn" onclick="showFavorites()">❤️ Favorites</button>
-      <button class="nav-btn" onclick="showAccount()">⚙️ Settings</button>
-      <button class="nav-btn" style="border-color:#c0392b;color:#c0392b" onclick="logout()">Logout</button>
+    <button class="btn btn-ghost" id="loginBtn" onclick="openAuth('login')" style="display:none">Sign in</button>
+    <div class="avatar-wrap" id="avatarWrap" style="display:none">
+      <div class="avatar" id="avatarCircle" onclick="toggleDropdown()"></div>
+      <div class="dropdown" id="dropdown">
+        <div class="dd-header">
+          <div class="dd-name" id="ddName"></div>
+          <div class="dd-email" id="ddEmail"></div>
+        </div>
+        <div class="dd-sep"></div>
+        <button class="dd-item" onclick="openSettings()"><span class="dd-icon">⚙️</span> Settings</button>
+        <button class="dd-item" onclick="showFavorites()"><span class="dd-icon">❤️</span> My Favorites</button>
+        <div class="dd-sep"></div>
+        <button class="dd-item danger" onclick="logout()"><span class="dd-icon">↗</span> Sign out</button>
+      </div>
     </div>
   </div>
 </nav>
 
 <!-- AUTH MODAL -->
-<div class="modal-overlay" id="authModal">
+<div class="overlay" id="authOverlay">
   <div class="modal">
-    <button class="modal-close" onclick="closeAuth()">✕</button>
-    <h2 id="authTitle">Welcome back</h2>
-    <p id="authSubtitle">Sign in to save your favorite recipes</p>
-    <div class="auth-msg" id="authMsg"></div>
-    <div id="signupFields" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <input class="auth-input" type="text" id="authFirstName" placeholder="First name"/>
-        <input class="auth-input" type="text" id="authLastName" placeholder="Last name"/>
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="authTitle">Sign in</div>
+        <div class="modal-sub" id="authSub">Welcome back to NutriChef</div>
       </div>
+      <button class="modal-close" onclick="closeAuth()">✕</button>
     </div>
-    <input class="auth-input" type="email" id="authEmail" placeholder="Email address"/>
-    <input class="auth-input" type="password" id="authPassword" placeholder="Password"/>
-    <input class="auth-input" type="password" id="authConfirmPassword" placeholder="Confirm password" style="display:none"/>
-    <button class="auth-submit" id="authSubmit" onclick="handleAuth()">Sign in</button>
-    <div class="auth-switch" id="authSwitch">No account? <a onclick="switchAuth()">Create one</a></div>
+    <div class="modal-body">
+      <div class="form-msg" id="authMsg"></div>
+      <div id="signupFields" style="display:none">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First name</label>
+            <input class="form-input" type="text" id="authFirst" placeholder="John"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last name</label>
+            <input class="form-input" type="text" id="authLast" placeholder="Doe"/>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="authEmail" placeholder="you@example.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="authPassword" placeholder="••••••••"/>
+      </div>
+      <div class="form-group" id="confirmWrap" style="display:none">
+        <label class="form-label">Confirm password</label>
+        <input class="form-input" type="password" id="authConfirm" placeholder="••••••••"/>
+      </div>
+      <button class="submit-btn" id="authSubmit" onclick="handleAuth()">Sign in</button>
+      <div class="auth-switch" id="authSwitch">Don't have an account? <a onclick="switchAuth()">Create one</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Settings</div>
+        <div class="modal-sub">Manage your preferences</div>
+      </div>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-label" style="margin-bottom:10px">Language</div>
+      <div class="lang-grid">
+        <button class="lang-opt" id="langEn" onclick="setLang('en','English')">
+          <span class="flag">🇺🇸</span><span class="lname">English</span>
+        </button>
+        <button class="lang-opt" id="langFr" onclick="setLang('fr','French')">
+          <span class="flag">🇫🇷</span><span class="lname">Français</span>
+        </button>
+        <button class="lang-opt" id="langEs" onclick="setLang('es','Spanish')">
+          <span class="flag">🇪🇸</span><span class="lname">Español</span>
+        </button>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="form-label" style="margin-bottom:10px">Change email</div>
+      <div class="form-group">
+        <input class="form-input" type="email" id="sEmail" placeholder="New email address"/>
+      </div>
+      <div class="form-msg" id="emailMsg"></div>
+      <button class="submit-btn" onclick="updateEmail()" style="margin-bottom:0">Update email</button>
+
+      <div class="modal-divider"></div>
+
+      <div class="form-label" style="margin-bottom:10px">Change password</div>
+      <div class="form-group">
+        <input class="form-input" type="password" id="sNewPass" placeholder="New password"/>
+      </div>
+      <div class="form-group">
+        <input class="form-input" type="password" id="sConfPass" placeholder="Confirm new password"/>
+      </div>
+      <div class="form-msg" id="passMsg"></div>
+      <button class="submit-btn" onclick="updatePassword()" style="margin-bottom:0">Update password</button>
+    </div>
   </div>
 </div>
 
 <!-- MAIN PAGE -->
 <div class="page visible" id="mainPage">
-  <section class="hero">
-    <div class="hero-eyebrow">Powered by artificial intelligence</div>
-    <h1>Turn your<br><em>ingredients</em> into<br>a healthy recipe</h1>
-    <p class="hero-sub">No more wondering what to eat. Enter what's in your fridge and get 3 personalized nutritious recipes.</p>
-  </section>
-  <div class="main-card">
-    <div class="ingredient-area">
-      <div class="section-label">Step 1</div>
-      <h2>Your preferences</h2>
-      <p>Select one or more options (optional)</p>
+  <div class="hero">
+    <div class="hero-badge">✦ <span>AI-powered</span> healthy recipes</div>
+    <h1 id="heroTitle">Your ingredients,<br><em>reinvented</em></h1>
+    <p id="heroSub">Tell us what's in your fridge. Get 3 chef-crafted, nutritionist-approved recipes in seconds.</p>
+  </div>
+
+  <div class="card">
+    <!-- PREFS -->
+    <div class="card-section">
+      <div class="section-tag" id="s1tag">Step 1</div>
+      <h2 id="s1title">Dietary preferences</h2>
+      <p id="s1sub">Optional — select what applies to you</p>
       <div class="prefs-grid">
-        <div class="pref-option" onclick="togglePref(this,'Gluten-free')"><span class="pref-emoji">🌾</span> Gluten-free</div>
-        <div class="pref-option" onclick="togglePref(this,'Vegetarian')"><span class="pref-emoji">🥦</span> Vegetarian</div>
-        <div class="pref-option" onclick="togglePref(this,'High protein')"><span class="pref-emoji">💪</span> High protein</div>
-        <div class="pref-option" onclick="togglePref(this,'Low calorie')"><span class="pref-emoji">🔥</span> Low calorie</div>
-        <div class="pref-option" onclick="togglePref(this,'Anti-inflammatory')"><span class="pref-emoji">🫐</span> Anti-inflammatory</div>
-        <div class="pref-option" onclick="togglePref(this,'Dairy-free')"><span class="pref-emoji">🥛</span> Dairy-free</div>
+        <div class="pref-chip" onclick="togglePref(this,'Gluten-free')"><span class="pref-icon">🌾</span><span class="pl">Gluten-free</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Vegetarian')"><span class="pref-icon">🥦</span><span class="pl">Vegetarian</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'High protein')"><span class="pref-icon">💪</span><span class="pl">High protein</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Low calorie')"><span class="pref-icon">🔥</span><span class="pl">Low calorie</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Anti-inflammatory')"><span class="pref-icon">🫐</span><span class="pl">Anti-inflam.</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Dairy-free')"><span class="pref-icon">🥛</span><span class="pl">Dairy-free</span></div>
       </div>
     </div>
-    <hr class="divider">
-    <div class="ingredient-area">
-      <div class="section-label">Step 2</div>
-      <h2>Your ingredients</h2>
-      <p>Add the ingredients you have on hand</p>
-      <div class="input-row">
-        <input class="ingredient-input" id="ingredientInput" type="text" placeholder="E.g: chicken, broccoli, garlic..." autocomplete="off"/>
-        <button class="add-btn" onclick="addIngredient()">+</button>
+
+    <!-- INGREDIENTS -->
+    <div class="card-section">
+      <div class="section-tag" id="s2tag">Step 2</div>
+      <h2 id="s2title">Your ingredients</h2>
+      <p id="s2sub">Add what you have on hand</p>
+      <div class="input-wrap">
+        <input class="text-input" id="ingInput" type="text" placeholder="e.g. chicken, broccoli, garlic…" autocomplete="off"/>
+        <button class="add-btn" onclick="addIng()">+</button>
       </div>
       <div class="chips" id="chips"></div>
     </div>
-    <hr class="divider">
-    <button class="generate-btn" id="generateBtn" onclick="generateRecipe()" disabled><span>✦</span> Generate 3 healthy recipes</button>
-    <div class="loader" id="loader"><div class="spinner"></div><p class="loader-text">Preparing your recipes...</p></div>
-    <div class="error-msg" id="errorMsg"></div>
+
+    <!-- FOOTER -->
+    <div class="card-footer">
+      <button class="generate-btn" id="genBtn" onclick="generate()" disabled>
+        <span id="genBtnText">Generate recipes</span>
+      </button>
+      <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <!-- LOADER -->
+    <div class="loader" id="loader">
+      <div class="loader-dots">
+        <div class="loader-dot"></div>
+        <div class="loader-dot"></div>
+        <div class="loader-dot"></div>
+      </div>
+      <p id="loaderText">Crafting your recipes…</p>
+    </div>
 
     <!-- 3 RECIPE CARDS -->
-    <div class="recipes-grid" id="recipesGrid" style="display:none"></div>
-    <button class="try-again-btn" id="tryAgainBtn" onclick="resetForm()" style="display:none">↩ Generate new recipes</button>
+    <div class="recipes-section" id="recipesSection">
+      <div class="recipes-label" id="recipesLabel">3 recipes for you</div>
+      <div class="recipe-cards" id="recipeCards"></div>
+      <button class="try-again" id="tryAgain" onclick="resetForm()">↩ Start over</button>
+    </div>
 
     <!-- RECIPE DETAIL -->
     <div class="recipe-detail" id="recipeDetail">
-      <button class="back-btn" onclick="backToCards()">← Back to recipes</button>
-      <div class="recipe-detail-header">
-        <h2 id="detailName"></h2>
-        <p id="detailDesc"></p>
-        <div class="recipe-meta" id="detailMeta"></div>
-        <button class="save-btn" id="saveBtn" onclick="saveRecipe()">♡ Save to favorites</button>
+      <button class="detail-back" onclick="backToCards()">← Back to recipes</button>
+      <div class="detail-hero">
+        <div class="detail-hero-content">
+          <div class="detail-title" id="dTitle"></div>
+          <div class="detail-desc" id="dDesc"></div>
+          <div class="detail-pills" id="dPills"></div>
+          <button class="detail-save" id="detailSave" onclick="saveCurrentRecipe()">♡ Save to favorites</button>
+        </div>
       </div>
-      <div class="recipe-body" id="detailBody"></div>
+      <div class="detail-body" id="dBody"></div>
     </div>
   </div>
 </div>
 
 <!-- FAVORITES PAGE -->
 <div class="page" id="favPage">
-  <section class="hero">
-    <div class="hero-eyebrow">Your saved recipes</div>
-    <h1>My <em>Favorites</em></h1>
-    <p class="hero-sub">All the recipes you've loved, saved in one place.</p>
-  </section>
-  <div style="max-width:720px;margin:0 auto 60px;padding:0 24px">
-    <button class="try-again-btn" onclick="showMain()">↩ Back to generator</button>
+  <div class="page-hero">
+    <div class="page-eyebrow">Your collection</div>
+    <div class="page-title">Saved recipes</div>
+    <div class="page-sub">All the recipes you've loved in one place.</div>
+  </div>
+  <div class="favs-wrap">
+    <button class="btn btn-secondary" onclick="showMain()" style="margin-bottom:4px">← Back</button>
     <div class="fav-grid" id="favGrid"></div>
   </div>
 </div>
 
-<!-- ACCOUNT PAGE -->
-<div class="page" id="accountPage">
-  <section class="hero">
-    <div class="hero-eyebrow">Your profile</div>
-    <h1>Account <em>Settings</em></h1>
-  </section>
-  <div style="max-width:480px;margin:0 auto 60px;padding:0 24px">
-    <button class="try-again-btn" onclick="showMain()" style="margin-bottom:24px">↩ Back</button>
-    <div class="main-card" style="margin:0 0 20px">
-      <div class="section-label">Profile</div>
-      <h2 style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;color:var(--forest);margin-bottom:20px">Personal information</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <input class="auth-input" type="text" id="accFirstName" placeholder="First name" style="margin:0"/>
-        <input class="auth-input" type="text" id="accLastName" placeholder="Last name" style="margin:0"/>
-      </div>
-      <div class="auth-msg" id="profileMsg"></div>
-      <button class="auth-submit" onclick="updateProfile()">Save changes</button>
-    </div>
-    <div class="main-card" style="margin:0 0 20px">
-      <div class="section-label">Email</div>
-      <h2 style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;color:var(--forest);margin-bottom:20px">Change email</h2>
-      <input class="auth-input" type="email" id="accEmail" placeholder="New email address"/>
-      <div class="auth-msg" id="emailMsg"></div>
-      <button class="auth-submit" onclick="updateEmail()">Update email</button>
-    </div>
-    <div class="main-card" style="margin:0 0 20px">
-      <div class="section-label">Security</div>
-      <h2 style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;color:var(--forest);margin-bottom:20px">Change password</h2>
-      <input class="auth-input" type="password" id="accNewPassword" placeholder="New password"/>
-      <input class="auth-input" type="password" id="accConfirmPassword" placeholder="Confirm new password"/>
-      <div class="auth-msg" id="passwordMsg"></div>
-      <button class="auth-submit" onclick="updatePassword()">Update password</button>
-    </div>
-    <div class="main-card" style="margin:0;border:1.5px solid #ffcccc">
-      <div class="section-label" style="color:#c0392b">Danger zone</div>
-      <h2 style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;color:#c0392b;margin-bottom:8px">Logout</h2>
-      <p style="font-size:0.88rem;color:var(--earth);margin-bottom:16px">You will be signed out of your account.</p>
-      <button onclick="logout()" style="background:#c0392b;color:white;border:none;border-radius:12px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer;width:100%">🚪 Logout</button>
-    </div>
-  </div>
-</div>
-
-<footer>NutriChef · AI-generated recipes · For culinary inspiration only</footer>
+<footer>NutriChef &nbsp;·&nbsp; AI-generated recipes &nbsp;·&nbsp; For inspiration only</footer>
 
 <script>
-  const SUPABASE_URL = 'https://fafxhblmlvbwuxjivoid.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhZnhoYmxtbHZid3V4aml2b2lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDM3NzEsImV4cCI6MjA5Mjk3OTc3MX0.hh6xbuiRbLPaFx_9YYAu3Gvlj-U8X2XckCD9XzmkSUI';
-  const BACKEND_URL = 'https://nutrichef-backend-production.up.railway.app';
+const SUPABASE_URL = 'https://fafxhblmlvbwuxjivoid.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhZnhoYmxtbHZid3V4aml2b2lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDM3NzEsImV4cCI6MjA5Mjk3OTc3MX0.hh6xbuiRbLPaFx_9YYAu3Gvlj-U8X2XckCD9XzmkSUI';
+const BACKEND = 'https://nutrichef-backend-production.up.railway.app';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const { createClient } = supabase;
-  const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+let ingredients = [], prefs = new Set(), recipes = [], currentRecipe = null, user = null, authMode = 'login';
+let lang = localStorage.getItem('nc_lang') || 'en';
+let langName = localStorage.getItem('nc_lang_name') || 'English';
 
-  let ingredients = [];
-  let prefs = new Set();
-  let currentRecipes = [];
-  let currentRecipe = null;
-  let currentUser = null;
-  let authMode = 'login';
-  let selectedLanguage = localStorage.getItem('nutrichef_lang') || null;
-  let selectedLanguageName = localStorage.getItem('nutrichef_lang_name') || 'English';
+const TX = {
+  en: {
+    heroTitle: 'Your ingredients,<br><em>reinvented</em>',
+    heroSub: "Tell us what's in your fridge. Get 3 chef-crafted, nutritionist-approved recipes in seconds.",
+    s1tag:'Step 1', s1title:'Dietary preferences', s1sub:'Optional — select what applies to you',
+    s2tag:'Step 2', s2title:'Your ingredients', s2sub:'Add what you have on hand',
+    genBtn:'Generate recipes', loader:'Crafting your recipes…', recipesLabel:'3 recipes for you',
+    viewBtn:'View recipe →', saveBtn:'♡ Save', savedBtn:'♥ Saved',
+    detailSave:'♡ Save to favorites', detailSaved:'♥ Saved!',
+    tryAgain:'↩ Start over', backBtn:'← Back to recipes',
+    prefs:['Gluten-free','Vegetarian','High protein','Low calorie','Anti-inflam.','Dairy-free'],
+    nutr:{proteines:'Protein',glucides:'Carbs',lipides:'Fat',fibres:'Fiber'},
+    nutrTitle:'Nutrition', ingTitle:'Ingredients', stepsTitle:'Preparation', tipTitle:'Health tip',
+    loginRequired:'Sign in to generate recipes.',
+    error:'Something went wrong. Please try again.',
+    favEmpty:'No saved recipes yet',favEmptySub:'Generate recipes and save your favorites.',
+    loading:'Loading…', signIn:'Sign in', signUp:'Create account',
+    noAccount:"Don't have an account?", createOne:'Create one',
+    alreadyHave:'Already have an account?',
+  },
+  fr: {
+    heroTitle: 'Tes ingrédients,<br><em>réinventés</em>',
+    heroSub: "Dis-nous ce que tu as dans ton frigo. Reçois 3 recettes santé personnalisées en quelques secondes.",
+    s1tag:'Étape 1', s1title:'Tes préférences', s1sub:'Optionnel — sélectionne ce qui te correspond',
+    s2tag:'Étape 2', s2title:'Tes ingrédients', s2sub:'Ajoute ce que tu as sous la main',
+    genBtn:'Générer les recettes', loader:'On prépare tes recettes…', recipesLabel:'3 recettes pour toi',
+    viewBtn:'Voir la recette →', saveBtn:'♡ Sauver', savedBtn:'♥ Sauvé',
+    detailSave:'♡ Ajouter aux favoris', detailSaved:'♥ Ajouté !',
+    tryAgain:'↩ Recommencer', backBtn:'← Retour aux recettes',
+    prefs:['Sans gluten','Végétarien','Riche en protéines','Faible en calories','Anti-inflammatoire','Sans lactose'],
+    nutr:{proteines:'Protéines',glucides:'Glucides',lipides:'Lipides',fibres:'Fibres'},
+    nutrTitle:'Nutrition', ingTitle:'Ingrédients', stepsTitle:'Préparation', tipTitle:'Conseil santé',
+    loginRequired:'Connecte-toi pour générer des recettes.',
+    error:'Une erreur est survenue. Réessaie.',
+    favEmpty:'Aucun favori pour l\'instant', favEmptySub:'Génère des recettes et sauvegarde tes favorites.',
+    loading:'Chargement…', signIn:'Se connecter', signUp:'Créer un compte',
+    noAccount:'Pas de compte ?', createOne:'En créer un',
+    alreadyHave:'Déjà un compte ?',
+  },
+  es: {
+    heroTitle: 'Tus ingredientes,<br><em>reinventados</em>',
+    heroSub: "Dinos qué tienes en tu nevera. Obtén 3 recetas saludables personalizadas en segundos.",
+    s1tag:'Paso 1', s1title:'Tus preferencias', s1sub:'Opcional — selecciona lo que aplica',
+    s2tag:'Paso 2', s2title:'Tus ingredientes', s2sub:'Añade lo que tengas a mano',
+    genBtn:'Generar recetas', loader:'Preparando tus recetas…', recipesLabel:'3 recetas para ti',
+    viewBtn:'Ver receta →', saveBtn:'♡ Guardar', savedBtn:'♥ Guardado',
+    detailSave:'♡ Guardar en favoritos', detailSaved:'♥ ¡Guardado!',
+    tryAgain:'↩ Empezar de nuevo', backBtn:'← Volver a las recetas',
+    prefs:['Sin gluten','Vegetariano','Alto en proteína','Bajo en calorías','Antiinflamatorio','Sin lactosa'],
+    nutr:{proteines:'Proteínas',glucides:'Carbohidratos',lipides:'Grasas',fibres:'Fibra'},
+    nutrTitle:'Nutrición', ingTitle:'Ingredientes', stepsTitle:'Preparación', tipTitle:'Consejo de salud',
+    loginRequired:'Inicia sesión para generar recetas.',
+    error:'Algo salió mal. Inténtalo de nuevo.',
+    favEmpty:'Sin recetas guardadas aún', favEmptySub:'Genera recetas y guarda tus favoritas.',
+    loading:'Cargando…', signIn:'Iniciar sesión', signUp:'Crear cuenta',
+    noAccount:'¿Sin cuenta?', createOne:'Crear una',
+    alreadyHave:'¿Ya tienes cuenta?',
+  }
+};
 
-  window.addEventListener('load', () => {
-    if (!selectedLanguage) document.getElementById('langOverlay').classList.add('visible');
+const tx = () => TX[lang] || TX.en;
+
+function applyLang() {
+  const t = tx();
+  document.getElementById('heroTitle').innerHTML = t.heroTitle;
+  document.getElementById('heroSub').textContent = t.heroSub;
+  document.getElementById('s1tag').textContent = t.s1tag;
+  document.getElementById('s1title').textContent = t.s1title;
+  document.getElementById('s1sub').textContent = t.s1sub;
+  document.getElementById('s2tag').textContent = t.s2tag;
+  document.getElementById('s2title').textContent = t.s2title;
+  document.getElementById('s2sub').textContent = t.s2sub;
+  document.getElementById('genBtnText').textContent = t.genBtn;
+  document.getElementById('loaderText').textContent = t.loader;
+  document.getElementById('recipesLabel').textContent = t.recipesLabel;
+  document.getElementById('tryAgain').textContent = t.tryAgain;
+  document.querySelectorAll('.pl').forEach((el, i) => { if (t.prefs[i]) el.textContent = t.prefs[i]; });
+  ['En','Fr','Es'].forEach(l => {
+    const el = document.getElementById('lang'+l);
+    if (el) el.classList.toggle('active', lang === l.toLowerCase());
   });
+}
 
-  function selectLanguage(code, name) {
-    selectedLanguage = code; selectedLanguageName = name;
-    localStorage.setItem('nutrichef_lang', code);
-    localStorage.setItem('nutrichef_lang_name', name);
-    document.getElementById('langOverlay').classList.remove('visible');
+function setLang(code, name) {
+  lang = code; langName = name;
+  localStorage.setItem('nc_lang', code);
+  localStorage.setItem('nc_lang_name', name);
+  applyLang();
+}
+
+// AUTH
+sb.auth.onAuthStateChange((e, session) => {
+  user = session?.user || null;
+  renderNav();
+});
+
+function renderNav() {
+  if (user) {
+    const first = user.user_metadata?.first_name || user.email.split('@')[0];
+    const last = user.user_metadata?.last_name || '';
+    const initials = (first[0] + (last ? last[0] : '')).toUpperCase();
+    document.getElementById('avatarCircle').textContent = initials;
+    document.getElementById('ddName').textContent = first + (last ? ' ' + last : '');
+    document.getElementById('ddEmail').textContent = user.email;
+    document.getElementById('loginBtn').style.display = 'none';
+    document.getElementById('avatarWrap').style.display = 'block';
+  } else {
+    document.getElementById('loginBtn').style.display = 'flex';
+    document.getElementById('avatarWrap').style.display = 'none';
   }
+}
 
-  const input = document.getElementById('ingredientInput');
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') addIngredient(); });
+function toggleDropdown() { document.getElementById('dropdown').classList.toggle('open'); }
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('avatarWrap');
+  const dd = document.getElementById('dropdown');
+  if (dd.classList.contains('open') && wrap && !wrap.contains(e.target)) dd.classList.remove('open');
+});
 
-  sb.auth.onAuthStateChange((event, session) => {
-    currentUser = session?.user || null;
-    if (currentUser) {
-      const firstName = currentUser.user_metadata?.first_name || currentUser.email.split('@')[0];
-      document.getElementById('navGreeting').textContent = '👋 ' + firstName;
-      document.getElementById('loginBtn').style.display = 'none';
-      document.getElementById('userNav').style.display = 'flex';
-    } else {
-      document.getElementById('loginBtn').style.display = 'block';
-      document.getElementById('userNav').style.display = 'none';
-    }
-  });
+function openAuth(mode) {
+  authMode = mode; const s = mode==='signup'; const t = tx();
+  document.getElementById('authTitle').textContent = s ? t.signUp : t.signIn;
+  document.getElementById('authSub').textContent = s ? 'Join NutriChef for free' : 'Welcome back to NutriChef';
+  document.getElementById('authSubmit').textContent = s ? t.signUp : t.signIn;
+  document.getElementById('authSwitch').innerHTML = s ? t.alreadyHave+' <a onclick="switchAuth()">'+t.signIn+'</a>' : t.noAccount+' <a onclick="switchAuth()">'+t.createOne+'</a>';
+  document.getElementById('authMsg').className = 'form-msg';
+  document.getElementById('authEmail').value=''; document.getElementById('authPassword').value=''; document.getElementById('authConfirm').value='';
+  document.getElementById('authFirst').value=''; document.getElementById('authLast').value='';
+  document.getElementById('signupFields').style.display = s ? 'block' : 'none';
+  document.getElementById('confirmWrap').style.display = s ? 'block' : 'none';
+  document.getElementById('authOverlay').classList.add('visible');
+}
+function closeAuth() { document.getElementById('authOverlay').classList.remove('visible'); }
+function switchAuth() { openAuth(authMode==='login'?'signup':'login'); }
 
-  async function updateNavUI() {
-    const { data: { user } } = await sb.auth.getUser();
-    currentUser = user;
-    if (user) {
-      const firstName = user.user_metadata?.first_name || user.email.split('@')[0];
-      document.getElementById('navGreeting').textContent = '👋 ' + firstName;
-      document.getElementById('loginBtn').style.display = 'none';
-      document.getElementById('userNav').style.display = 'flex';
-    } else {
-      document.getElementById('loginBtn').style.display = 'block';
-      document.getElementById('userNav').style.display = 'none';
-    }
+async function handleAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const pass = document.getElementById('authPassword').value;
+  const confirm = document.getElementById('authConfirm').value;
+  const first = document.getElementById('authFirst').value.trim();
+  const last = document.getElementById('authLast').value.trim();
+  const msg = document.getElementById('authMsg');
+  if (!email||!pass) { msg.className='form-msg error'; msg.textContent='Please fill in all fields.'; return; }
+  if (authMode==='signup') {
+    if (!first||!last) { msg.className='form-msg error'; msg.textContent='Please enter your name.'; return; }
+    if (pass!==confirm) { msg.className='form-msg error'; msg.textContent='Passwords do not match.'; return; }
+    if (pass.length<6) { msg.className='form-msg error'; msg.textContent='Password must be at least 6 characters.'; return; }
   }
-
-  // PAGES
-  function showMain() {
-    document.getElementById('favPage').classList.remove('visible');
-    document.getElementById('accountPage').classList.remove('visible');
-    document.getElementById('mainPage').classList.add('visible');
+  document.getElementById('authSubmit').textContent = 'Loading…';
+  let error;
+  if (authMode==='login') {
+    ({ error } = await sb.auth.signInWithPassword({ email, password: pass }));
+  } else {
+    ({ error } = await sb.auth.signUp({ email, password: pass, options: { data: { first_name: first, last_name: last, full_name: first+' '+last } } }));
+    if (!error) { msg.className='form-msg success'; msg.textContent='🎉 Account created! You can now sign in.'; document.getElementById('authSubmit').textContent=tx().signUp; return; }
   }
+  if (error) { msg.className='form-msg error'; msg.textContent=error.message; document.getElementById('authSubmit').textContent=authMode==='login'?tx().signIn:tx().signUp; }
+  else { closeAuth(); renderNav(); }
+}
 
-  async function showFavorites() {
-    if (!currentUser) { openAuth('login'); return; }
-    document.getElementById('mainPage').classList.remove('visible');
-    document.getElementById('accountPage').classList.remove('visible');
-    document.getElementById('favPage').classList.add('visible');
-    await loadFavorites();
+async function logout() {
+  document.getElementById('dropdown').classList.remove('open');
+  await sb.auth.signOut(); user=null; renderNav(); showMain();
+}
+
+// SETTINGS
+function openSettings() {
+  document.getElementById('dropdown').classList.remove('open');
+  document.getElementById('sEmail').value = user?.email||'';
+  document.getElementById('sNewPass').value=''; document.getElementById('sConfPass').value='';
+  document.getElementById('emailMsg').className='form-msg'; document.getElementById('passMsg').className='form-msg';
+  ['En','Fr','Es'].forEach(l => { const el=document.getElementById('lang'+l); if(el) el.classList.toggle('active', lang===l.toLowerCase()); });
+  document.getElementById('settingsOverlay').classList.add('visible');
+}
+function closeSettings() { document.getElementById('settingsOverlay').classList.remove('visible'); }
+
+async function updateEmail() {
+  const v=document.getElementById('sEmail').value.trim(); const m=document.getElementById('emailMsg');
+  if(!v){m.className='form-msg error';m.textContent='Enter a new email.';return;}
+  const{error}=await sb.auth.updateUser({email:v});
+  if(error){m.className='form-msg error';m.textContent=error.message;}
+  else{m.className='form-msg success';m.textContent='✅ Confirmation email sent!';}
+}
+async function updatePassword() {
+  const np=document.getElementById('sNewPass').value, cp=document.getElementById('sConfPass').value;
+  const m=document.getElementById('passMsg');
+  if(!np||!cp){m.className='form-msg error';m.textContent='Fill in both fields.';return;}
+  if(np!==cp){m.className='form-msg error';m.textContent='Passwords do not match.';return;}
+  if(np.length<6){m.className='form-msg error';m.textContent='Min 6 characters.';return;}
+  const{error}=await sb.auth.updateUser({password:np});
+  if(error){m.className='form-msg error';m.textContent=error.message;}
+  else{m.className='form-msg success';m.textContent='✅ Password updated!';document.getElementById('sNewPass').value='';document.getElementById('sConfPass').value='';}
+}
+
+// PAGES
+function showMain() { document.getElementById('favPage').classList.remove('visible'); document.getElementById('mainPage').classList.add('visible'); }
+async function showFavorites() {
+  document.getElementById('dropdown').classList.remove('open');
+  if(!user){openAuth('login');return;}
+  document.getElementById('mainPage').classList.remove('visible');
+  document.getElementById('favPage').classList.add('visible');
+  await loadFavs();
+}
+
+// INGREDIENTS
+const ingInput = document.getElementById('ingInput');
+ingInput.addEventListener('keydown', e => { if(e.key==='Enter') addIng(); });
+function addIng() {
+  const v=ingInput.value.trim();
+  if(!v||ingredients.includes(v.toLowerCase())){ingInput.value='';return;}
+  ingredients.push(v.toLowerCase()); ingInput.value='';
+  renderChips(); updateGenBtn();
+}
+function removeIng(i) { ingredients.splice(i,1); renderChips(); updateGenBtn(); }
+function renderChips() {
+  document.getElementById('chips').innerHTML = ingredients.map((ing,i)=>
+    '<div class="chip">'+ing+'<button class="chip-x" onclick="removeIng('+i+')">✕</button></div>'
+  ).join('');
+}
+function togglePref(el, pref) {
+  if(prefs.has(pref)){prefs.delete(pref);el.classList.remove('active');}
+  else{prefs.add(pref);el.classList.add('active');}
+}
+function updateGenBtn() { document.getElementById('genBtn').disabled = ingredients.length===0; }
+
+// GENERATE
+async function generate() {
+  if(ingredients.length===0) return;
+  if(!user) {
+    const e=document.getElementById('errorMsg');
+    e.innerHTML=tx().loginRequired+' <a onclick="openAuth(\'login\')" style="color:var(--accent);font-weight:600;cursor:pointer">Sign in</a>';
+    e.classList.add('visible'); return;
   }
+  document.getElementById('loader').classList.add('visible');
+  document.getElementById('recipesSection').classList.remove('visible');
+  document.getElementById('recipeDetail').classList.remove('visible');
+  document.getElementById('tryAgain').style.display='none';
+  document.getElementById('errorMsg').classList.remove('visible');
+  document.getElementById('genBtn').disabled=true;
 
-  function showAccount() {
-    document.getElementById('mainPage').classList.remove('visible');
-    document.getElementById('favPage').classList.remove('visible');
-    document.getElementById('accountPage').classList.add('visible');
-    ['profileMsg','emailMsg','passwordMsg'].forEach(id => { document.getElementById(id).className = 'auth-msg'; });
-    if (currentUser) {
-      document.getElementById('accFirstName').value = currentUser.user_metadata?.first_name || '';
-      document.getElementById('accLastName').value = currentUser.user_metadata?.last_name || '';
-      document.getElementById('accEmail').value = currentUser.email || '';
-      document.getElementById('accNewPassword').value = '';
-      document.getElementById('accConfirmPassword').value = '';
-    }
-  }
-
-  async function logout() {
-    await sb.auth.signOut();
-    currentUser = null;
-    document.getElementById('loginBtn').style.display = 'block';
-    document.getElementById('userNav').style.display = 'none';
-    showMain();
-  }
-
-  // AUTH
-  function openAuth(mode) {
-    authMode = mode;
-    const s = mode === 'signup';
-    document.getElementById('authTitle').textContent = s ? 'Create account' : 'Welcome back';
-    document.getElementById('authSubtitle').textContent = s ? 'Join NutriChef for free' : 'Sign in to save your favorite recipes';
-    document.getElementById('authSubmit').textContent = s ? 'Create account' : 'Sign in';
-    document.getElementById('authSwitch').innerHTML = s ? 'Already have an account? <a onclick="switchAuth()">Sign in</a>' : 'No account? <a onclick="switchAuth()">Create one</a>';
-    document.getElementById('authMsg').className = 'auth-msg';
-    document.getElementById('authEmail').value = '';
-    document.getElementById('authPassword').value = '';
-    document.getElementById('authConfirmPassword').value = '';
-    document.getElementById('authFirstName').value = '';
-    document.getElementById('authLastName').value = '';
-    document.getElementById('signupFields').style.display = s ? 'block' : 'none';
-    document.getElementById('authConfirmPassword').style.display = s ? 'block' : 'none';
-    document.getElementById('authModal').classList.add('visible');
-  }
-
-  function closeAuth() { document.getElementById('authModal').classList.remove('visible'); }
-  function switchAuth() { openAuth(authMode === 'login' ? 'signup' : 'login'); }
-
-  async function handleAuth() {
-    const email = document.getElementById('authEmail').value.trim();
-    const password = document.getElementById('authPassword').value;
-    const confirmPassword = document.getElementById('authConfirmPassword').value;
-    const firstName = document.getElementById('authFirstName').value.trim();
-    const lastName = document.getElementById('authLastName').value.trim();
-    const msgEl = document.getElementById('authMsg');
-    if (!email || !password) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Please fill in all fields.'; return; }
-    if (authMode === 'signup') {
-      if (!firstName || !lastName) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Please enter your first and last name.'; return; }
-      if (password !== confirmPassword) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Passwords do not match.'; return; }
-      if (password.length < 6) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Password must be at least 6 characters.'; return; }
-    }
-    document.getElementById('authSubmit').textContent = 'Loading...';
-    let error;
-    if (authMode === 'login') {
-      ({ error } = await sb.auth.signInWithPassword({ email, password }));
-    } else {
-      ({ error } = await sb.auth.signUp({ email, password, options: { data: { first_name: firstName, last_name: lastName, full_name: firstName + ' ' + lastName } } }));
-      if (!error) { msgEl.className = 'auth-msg success'; msgEl.textContent = '🎉 Account created! You can now sign in.'; document.getElementById('authSubmit').textContent = 'Create account'; return; }
-    }
-    if (error) { msgEl.className = 'auth-msg error'; msgEl.textContent = error.message; document.getElementById('authSubmit').textContent = authMode === 'login' ? 'Sign in' : 'Create account'; }
-    else { closeAuth(); await updateNavUI(); }
-  }
-
-  // ACCOUNT
-  async function updateProfile() {
-    const firstName = document.getElementById('accFirstName').value.trim();
-    const lastName = document.getElementById('accLastName').value.trim();
-    const msgEl = document.getElementById('profileMsg');
-    if (!firstName) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'First name is required.'; return; }
-    const { error } = await sb.auth.updateUser({ data: { first_name: firstName, last_name: lastName, full_name: firstName + ' ' + lastName } });
-    if (error) { msgEl.className = 'auth-msg error'; msgEl.textContent = error.message; }
-    else { msgEl.className = 'auth-msg success'; msgEl.textContent = '✅ Profile updated!'; await updateNavUI(); }
-  }
-
-  async function updateEmail() {
-    const newEmail = document.getElementById('accEmail').value.trim();
-    const msgEl = document.getElementById('emailMsg');
-    if (!newEmail) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Please enter a new email.'; return; }
-    const { error } = await sb.auth.updateUser({ email: newEmail });
-    if (error) { msgEl.className = 'auth-msg error'; msgEl.textContent = error.message; }
-    else { msgEl.className = 'auth-msg success'; msgEl.textContent = '✅ Confirmation sent to your new email!'; }
-  }
-
-  async function updatePassword() {
-    const newPass = document.getElementById('accNewPassword').value;
-    const confirmPass = document.getElementById('accConfirmPassword').value;
-    const msgEl = document.getElementById('passwordMsg');
-    if (!newPass || !confirmPass) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Please fill in both fields.'; return; }
-    if (newPass !== confirmPass) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Passwords do not match.'; return; }
-    if (newPass.length < 6) { msgEl.className = 'auth-msg error'; msgEl.textContent = 'Password must be at least 6 characters.'; return; }
-    const { error } = await sb.auth.updateUser({ password: newPass });
-    if (error) { msgEl.className = 'auth-msg error'; msgEl.textContent = error.message; }
-    else { msgEl.className = 'auth-msg success'; msgEl.textContent = '✅ Password updated!'; document.getElementById('accNewPassword').value = ''; document.getElementById('accConfirmPassword').value = ''; }
-  }
-
-  // INGREDIENTS
-  function addIngredient() {
-    const val = input.value.trim();
-    if (!val || ingredients.includes(val.toLowerCase())) { input.value = ''; return; }
-    ingredients.push(val.toLowerCase()); input.value = '';
-    renderChips(); updateBtn();
-  }
-  function removeIngredient(i) { ingredients.splice(i, 1); renderChips(); updateBtn(); }
-  function renderChips() {
-    document.getElementById('chips').innerHTML = ingredients.map((ing, i) =>
-      '<div class="chip">' + ing + '<button class="chip-remove" onclick="removeIngredient(' + i + ')">✕</button></div>'
-    ).join('');
-  }
-  function togglePref(el, pref) {
-    if (prefs.has(pref)) { prefs.delete(pref); el.classList.remove('active'); }
-    else { prefs.add(pref); el.classList.add('active'); }
-  }
-  function updateBtn() { document.getElementById('generateBtn').disabled = ingredients.length === 0; }
-
-  // GENERATE
-  async function generateRecipe() {
-    if (ingredients.length === 0) return;
-    if (!currentUser) {
-      const el = document.getElementById('errorMsg');
-      el.innerHTML = '🔒 You need to <a onclick="openAuth(\'login\')" style="color:var(--forest);font-weight:600;cursor:pointer;text-decoration:underline">sign in</a> or <a onclick="openAuth(\'signup\')" style="color:var(--forest);font-weight:600;cursor:pointer;text-decoration:underline">create a free account</a> to generate recipes.';
-      el.classList.add('visible');
-      return;
-    }
-    document.getElementById('loader').classList.add('visible');
-    document.getElementById('recipesGrid').style.display = 'none';
-    document.getElementById('recipeDetail').classList.remove('visible');
-    document.getElementById('tryAgainBtn').style.display = 'none';
-    document.getElementById('errorMsg').classList.remove('visible');
-    document.getElementById('generateBtn').disabled = true;
-
-    try {
-      const response = await fetch(BACKEND_URL + '/api/recipe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ingredients, prefs: [...prefs], language: selectedLanguageName })
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Server error');
-      currentRecipes = data.recipes || [data];
-      renderRecipeCards(currentRecipes);
-    } catch (err) {
-      const el = document.getElementById('errorMsg');
-      el.textContent = 'Oops! An error occurred. Please check your connection and try again.';
-      el.classList.add('visible');
-    } finally {
-      document.getElementById('loader').classList.remove('visible');
-      document.getElementById('generateBtn').disabled = ingredients.length === 0;
-    }
-  }
-
-  function renderRecipeCards(recipes) {
-    const grid = document.getElementById('recipesGrid');
-    grid.innerHTML = recipes.map((r, i) =>
-      '<div class="recipe-card">' +
-        '<div class="recipe-card-header">' +
-          '<h3>' + (r.name || 'Recipe') + '</h3>' +
-          '<p>' + (r.description || '') + '</p>' +
-          '<div class="recipe-card-meta">' +
-            (r.time ? '<span class="meta-pill">⏱ ' + r.time + '</span>' : '') +
-            (r.calories ? '<span class="meta-pill">🔥 ' + r.calories + '</span>' : '') +
-            (r.difficulty ? '<span class="meta-pill">⚡ ' + r.difficulty + '</span>' : '') +
-          '</div>' +
-        '</div>' +
-        '<div class="recipe-card-footer">' +
-          '<button class="view-btn" onclick="viewRecipe(' + i + ')">View recipe →</button>' +
-          '<button class="save-card-btn" id="saveCard' + i + '" onclick="saveRecipeByIndex(' + i + ')">♡ Save</button>' +
-        '</div>' +
-      '</div>'
-    ).join('');
-    grid.style.display = 'grid';
-    document.getElementById('tryAgainBtn').style.display = 'block';
-    grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function viewRecipe(index) {
-    currentRecipe = currentRecipes[index];
-    const r = currentRecipe;
-    document.getElementById('detailName').textContent = r.name || 'Recipe';
-    document.getElementById('detailDesc').textContent = r.description || '';
-    document.getElementById('detailMeta').innerHTML = [
-      r.time ? '⏱ ' + r.time : '',
-      r.servings ? '👥 ' + r.servings : '',
-      r.difficulty ? '⚡ ' + r.difficulty : '',
-      r.calories ? '🔥 ' + r.calories : ''
-    ].filter(Boolean).map(m => '<span class="meta-pill">' + m + '</span>').join('');
-
-    const saveBtn = document.getElementById('saveBtn');
-    saveBtn.className = 'save-btn';
-    saveBtn.textContent = '♡ Save to favorites';
-
-    let body = '';
-    if (r.nutrition) {
-      body += '<h3>📊 Nutritional values</h3><div class="nutrition-grid">';
-      const nutrMap = { proteines: 'Protein', glucides: 'Carbs', lipides: 'Fats', fibres: 'Fiber' };
-      for (const [k, label] of Object.entries(nutrMap)) {
-        if (r.nutrition[k]) body += '<div class="nutr-card"><div class="nutr-value">' + r.nutrition[k] + '</div><div class="nutr-label">' + label + '</div></div>';
-      }
-      body += '</div>';
-    }
-    if (r.ingredients?.length) { body += '<h3>🛒 Ingredients</h3><ul>'; r.ingredients.forEach(i => body += '<li>' + i + '</li>'); body += '</ul>'; }
-    if (r.steps?.length) { body += '<h3>👨‍🍳 Preparation</h3><ol>'; r.steps.forEach(s => body += '<li>' + s + '</li>'); body += '</ol>'; }
-    if (r.tip) body += '<h3>💡 Health tip</h3><p style="background:var(--mist);padding:14px 18px;border-radius:12px;border-left:3px solid var(--sage);font-style:italic;color:var(--forest)">' + r.tip + '</p>';
-
-    document.getElementById('detailBody').innerHTML = body;
-    document.getElementById('recipesGrid').style.display = 'none';
-    document.getElementById('tryAgainBtn').style.display = 'none';
-    document.getElementById('recipeDetail').classList.add('visible');
-    document.getElementById('recipeDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function backToCards() {
-    document.getElementById('recipeDetail').classList.remove('visible');
-    document.getElementById('recipesGrid').style.display = 'grid';
-    document.getElementById('tryAgainBtn').style.display = 'block';
-    document.getElementById('recipesGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  async function saveRecipe() {
-    if (!currentUser) { openAuth('login'); return; }
-    if (!currentRecipe) return;
-    const saveBtn = document.getElementById('saveBtn');
-    saveBtn.textContent = 'Saving...';
-    const { error } = await sb.from('favorites').insert({
-      user_id: currentUser.id, name: currentRecipe.name, description: currentRecipe.description,
-      time: currentRecipe.time, servings: currentRecipe.servings, difficulty: currentRecipe.difficulty,
-      calories: currentRecipe.calories, data: currentRecipe
+  try {
+    const res = await fetch(BACKEND+'/api/recipe', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ingredients, prefs:[...prefs], language:langName})
     });
-    if (error) { saveBtn.textContent = '✕ Error'; console.error(error); }
-    else { saveBtn.className = 'save-btn saved'; saveBtn.textContent = '♥ Saved!'; }
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error||'Error');
+    recipes = data.recipes || [data];
+    renderCards();
+  } catch {
+    const e=document.getElementById('errorMsg');
+    e.textContent=tx().error; e.classList.add('visible');
+  } finally {
+    document.getElementById('loader').classList.remove('visible');
+    document.getElementById('genBtn').disabled = ingredients.length===0;
   }
+}
 
-  async function saveRecipeByIndex(index) {
-    if (!currentUser) { openAuth('login'); return; }
-    const r = currentRecipes[index];
-    const btn = document.getElementById('saveCard' + index);
-    btn.textContent = 'Saving...';
-    const { error } = await sb.from('favorites').insert({
-      user_id: currentUser.id, name: r.name, description: r.description,
-      time: r.time, servings: r.servings, difficulty: r.difficulty,
-      calories: r.calories, data: r
-    });
-    if (error) { btn.textContent = '✕ Error'; }
-    else { btn.className = 'save-card-btn saved'; btn.textContent = '♥ Saved!'; }
+function renderCards() {
+  const t=tx();
+  document.getElementById('recipeCards').innerHTML = recipes.map((r,i)=>
+    '<div class="recipe-card">'+
+      '<div class="rc-body">'+
+        '<div class="rc-title">'+(r.name||'Recipe')+'</div>'+
+        '<div class="rc-desc">'+(r.description||'')+'</div>'+
+        '<div class="rc-pills">'+
+          (r.time?'<span class="rc-pill">⏱ '+r.time+'</span>':'')+
+          (r.calories?'<span class="rc-pill">🔥 '+r.calories+'</span>':'')+
+          (r.difficulty?'<span class="rc-pill">⚡ '+r.difficulty+'</span>':'')+
+        '</div>'+
+        '<div class="rc-actions">'+
+          '<button class="rc-view" onclick="viewRecipe('+i+')">'+t.viewBtn+'</button>'+
+          '<button class="rc-save" id="rc'+i+'" onclick="saveByIdx('+i+')">'+t.saveBtn+'</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>'
+  ).join('');
+  document.getElementById('recipesSection').classList.add('visible');
+  document.getElementById('tryAgain').style.display='block';
+  document.getElementById('recipesSection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function viewRecipe(i) {
+  currentRecipe = recipes[i]; const r=currentRecipe; const t=tx();
+  document.getElementById('dTitle').textContent = r.name||'';
+  document.getElementById('dDesc').textContent = r.description||'';
+  document.getElementById('dPills').innerHTML = [
+    r.time?'<span class="detail-pill">⏱ '+r.time+'</span>':'',
+    r.servings?'<span class="detail-pill">👥 '+r.servings+'</span>':'',
+    r.difficulty?'<span class="detail-pill">⚡ '+r.difficulty+'</span>':'',
+    r.calories?'<span class="detail-pill">🔥 '+r.calories+'</span>':'',
+  ].join('');
+  const sv=document.getElementById('detailSave');
+  sv.className='detail-save'; sv.textContent=t.detailSave;
+
+  let body='';
+  if(r.nutrition){
+    body+='<div class="detail-block"><div class="detail-block-title">'+t.nutrTitle+'</div><div class="nutr-row">';
+    for(const[k,label] of Object.entries(t.nutr)){
+      if(r.nutrition[k]) body+='<div class="nutr-item"><div class="nutr-value">'+r.nutrition[k]+'</div><div class="nutr-label">'+label+'</div></div>';
+    }
+    body+='</div></div>';
   }
-
-  function resetForm() {
-    document.getElementById('recipesGrid').style.display = 'none';
-    document.getElementById('recipeDetail').classList.remove('visible');
-    document.getElementById('tryAgainBtn').style.display = 'none';
-    document.getElementById('errorMsg').classList.remove('visible');
-    currentRecipes = []; currentRecipe = null;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  if(r.ingredients?.length){
+    body+='<div class="detail-block"><div class="detail-block-title">'+t.ingTitle+'</div><div class="ing-list">';
+    r.ingredients.forEach(ing=>body+='<div class="ing-item"><div class="ing-dot"></div>'+ing+'</div>');
+    body+='</div></div>';
   }
-
-  async function loadFavorites() {
-    const grid = document.getElementById('favGrid');
-    grid.innerHTML = '<p style="color:var(--earth);padding:20px 0">Loading...</p>';
-    const { data, error } = await sb.from('favorites').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
-    if (error) { grid.innerHTML = '<div class="empty-state"><p>Error loading</p></div>'; return; }
-    if (!data?.length) { grid.innerHTML = '<div class="empty-state"><p>No favorites yet!</p><span>Generate recipes and save them ♡</span></div>'; return; }
-    grid.innerHTML = data.map(fav =>
-      '<div class="fav-card"><h3>' + fav.name + '</h3><p>' + (fav.description || '') + '</p>' +
-      '<div class="fav-meta">' +
-      (fav.time ? '<span class="fav-pill">⏱ ' + fav.time + '</span>' : '') +
-      (fav.calories ? '<span class="fav-pill">🔥 ' + fav.calories + '</span>' : '') +
-      (fav.difficulty ? '<span class="fav-pill">⚡ ' + fav.difficulty + '</span>' : '') +
-      '</div><button class="fav-delete" onclick="deleteFavorite(\'' + fav.id + '\')">🗑 Remove</button></div>'
-    ).join('');
+  if(r.steps?.length){
+    body+='<div class="detail-block"><div class="detail-block-title">'+t.stepsTitle+'</div><div class="steps-list">';
+    r.steps.forEach((s,i)=>body+='<div class="step-item"><div class="step-num">'+(i+1)+'</div><div class="step-text">'+s+'</div></div>');
+    body+='</div></div>';
   }
-
-  async function deleteFavorite(id) {
-    await sb.from('favorites').delete().eq('id', id);
-    await loadFavorites();
+  if(r.tip){
+    body+='<div class="detail-block"><div class="detail-block-title">'+t.tipTitle+'</div><div class="tip-box"><div class="tip-icon">💡</div>'+r.tip+'</div></div>';
   }
+  document.getElementById('dBody').innerHTML=body;
+  document.getElementById('recipesSection').classList.remove('visible');
+  document.getElementById('tryAgain').style.display='none';
+  document.getElementById('recipeDetail').classList.add('visible');
+  document.getElementById('recipeDetail').scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-  updateNavUI();
+function backToCards() {
+  document.getElementById('recipeDetail').classList.remove('visible');
+  document.getElementById('recipesSection').classList.add('visible');
+  document.getElementById('tryAgain').style.display='block';
+}
+
+async function saveCurrentRecipe() {
+  if(!user){openAuth('login');return;}
+  const r=currentRecipe; if(!r) return;
+  const btn=document.getElementById('detailSave'); btn.textContent='Saving…';
+  const{error}=await sb.from('favorites').insert({user_id:user.id,name:r.name,description:r.description,time:r.time,servings:r.servings,difficulty:r.difficulty,calories:r.calories,data:r});
+  if(error){btn.textContent='Error';}
+  else{btn.className='detail-save saved';btn.textContent=tx().detailSaved;}
+}
+
+async function saveByIdx(i) {
+  if(!user){openAuth('login');return;}
+  const r=recipes[i]; const btn=document.getElementById('rc'+i); btn.textContent='Saving…';
+  const{error}=await sb.from('favorites').insert({user_id:user.id,name:r.name,description:r.description,time:r.time,servings:r.servings,difficulty:r.difficulty,calories:r.calories,data:r});
+  if(error){btn.textContent='Error';}
+  else{btn.className='rc-save saved';btn.textContent=tx().savedBtn;}
+}
+
+function resetForm() {
+  document.getElementById('recipesSection').classList.remove('visible');
+  document.getElementById('recipeDetail').classList.remove('visible');
+  document.getElementById('tryAgain').style.display='none';
+  document.getElementById('errorMsg').classList.remove('visible');
+  recipes=[]; currentRecipe=null;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function loadFavs() {
+  const t=tx(); const grid=document.getElementById('favGrid');
+  grid.innerHTML='<div style="color:var(--text2);padding:20px 0;font-size:14px">'+t.loading+'</div>';
+  const{data,error}=await sb.from('favorites').select('*').eq('user_id',user.id).order('created_at',{ascending:false});
+  if(error||!data?.length){
+    grid.innerHTML='<div class="empty-state"><div class="empty-icon">🍽️</div><div class="empty-title">'+t.favEmpty+'</div><div class="empty-sub">'+t.favEmptySub+'</div></div>';
+    return;
+  }
+  grid.innerHTML=data.map(f=>
+    '<div class="fav-card"><div class="fav-info">'+
+    '<div class="fav-name">'+f.name+'</div>'+
+    '<div class="fav-desc">'+(f.description||'')+'</div>'+
+    '<div class="fav-pills">'+
+    (f.time?'<span class="fav-pill">⏱ '+f.time+'</span>':'')+
+    (f.calories?'<span class="fav-pill">🔥 '+f.calories+'</span>':'')+
+    (f.difficulty?'<span class="fav-pill">⚡ '+f.difficulty+'</span>':'')+
+    '</div></div><button class="fav-del" onclick="delFav(\''+f.id+'\')">Remove</button></div>'
+  ).join('');
+}
+
+async function delFav(id) {
+  await sb.from('favorites').delete().eq('id',id); await loadFavs();
+}
+
+// INIT
+document.getElementById('loginBtn').style.display='flex';
+applyLang();
+renderNav();
 </script>
 </body>
 </html>
