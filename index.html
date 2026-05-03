@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -765,6 +765,60 @@
   .empty-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
   .empty-sub { font-size: 14px; color: var(--text2); }
 
+  /* ── PRICING ── */
+  .pricing-wrap { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+  .pricing-hero { text-align: center; padding: 52px 0 48px; }
+  .pricing-title { font-size: 36px; font-weight: 700; color: var(--text); letter-spacing: -0.03em; margin: 8px 0 10px; }
+  .pricing-sub { font-size: 16px; color: var(--text2); }
+  .pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .pricing-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 28px 24px;
+    background: var(--bg);
+    position: relative;
+    transition: box-shadow 0.2s;
+  }
+  .pricing-card:hover { box-shadow: var(--shadow); }
+  .pricing-card-featured {
+    border-color: var(--accent);
+    background: var(--bg);
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.1);
+  }
+  .plan-badge {
+    position: absolute;
+    top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--accent);
+    color: white;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 980px;
+    white-space: nowrap;
+  }
+  .plan-name { font-size: 14px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .plan-price { font-size: 36px; font-weight: 700; color: var(--text); letter-spacing: -0.03em; margin-bottom: 6px; }
+  .plan-period { font-size: 14px; font-weight: 400; color: var(--text3); }
+  .plan-desc { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+  .plan-features { display: grid; gap: 10px; margin-bottom: 28px; }
+  .plan-feature { font-size: 13px; color: var(--text); }
+  .plan-feature.muted { color: var(--text3); }
+  .plan-btn { width: 100%; padding: 12px; border-radius: var(--radius); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.15s; border: none; }
+  .plan-btn-primary { background: var(--accent); color: white; }
+  .plan-btn-primary:hover { background: var(--accent-hover); }
+  .plan-btn-secondary { background: var(--bg2); color: var(--text2); border: 1px solid var(--border); cursor: default; }
+
+  /* Usage bar */
+  .usage-bar-wrap { margin-top: 8px; }
+  .usage-bar-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .usage-bar { height: 4px; background: var(--bg2); border-radius: 99px; overflow: hidden; }
+  .usage-bar-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.4s ease; }
+  .usage-bar-fill.warn { background: #ff9500; }
+  .usage-bar-fill.full { background: var(--red); }
+
+  @media (max-width: 700px) {
+    .pricing-grid { grid-template-columns: 1fr; }
+  }
+
   /* ── CHEF AI ── */
   .chef-wrap {
     display: flex;
@@ -926,6 +980,7 @@
         <div class="dd-sep"></div>
         <button class="dd-item" onclick="openSettings()"><span class="dd-icon">⚙️</span> Settings</button>
         <button class="dd-item" onclick="showFavorites()"><span class="dd-icon">❤️</span> My Favorites</button>
+        <button class="dd-item" onclick="showPricing()"><span class="dd-icon">⭐</span> Upgrade plan</button>
         <div class="dd-sep"></div>
         <button class="dd-item danger" onclick="logout()"><span class="dd-icon">↗</span> Sign out</button>
       </div>
@@ -1146,6 +1201,86 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- PRICING PAGE -->
+<div class="page" id="pricingPage">
+  <div class="pricing-wrap">
+    <div class="pricing-hero">
+      <div class="page-eyebrow">Simple pricing</div>
+      <div class="pricing-title">Choose your plan</div>
+      <div class="pricing-sub">Start free, upgrade when you're ready.</div>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- FREE -->
+      <div class="pricing-card">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0<span class="plan-period">/month</span></div>
+        <div class="plan-desc">Perfect to get started</div>
+        <div class="plan-features">
+          <div class="plan-feature">✓ 3 recipes per day</div>
+          <div class="plan-feature">✓ Save favorites</div>
+          <div class="plan-feature">✓ 3 languages</div>
+          <div class="plan-feature muted">✗ Chef AI</div>
+          <div class="plan-feature muted">✗ Priority generation</div>
+        </div>
+        <button class="plan-btn plan-btn-secondary" onclick="showMain()">Current plan</button>
+      </div>
+
+      <!-- BASIC -->
+      <div class="pricing-card pricing-card-featured">
+        <div class="plan-badge">Most popular</div>
+        <div class="plan-name">Basic</div>
+        <div class="plan-price">$9.99<span class="plan-period">/month</span></div>
+        <div class="plan-desc">For the passionate home cook</div>
+        <div class="plan-features">
+          <div class="plan-feature">✓ 30 recipes per day</div>
+          <div class="plan-feature">✓ Save favorites</div>
+          <div class="plan-feature">✓ 3 languages</div>
+          <div class="plan-feature">✓ Chef AI — 6 messages / 2.5h</div>
+          <div class="plan-feature muted">✗ Priority generation</div>
+        </div>
+        <button class="plan-btn plan-btn-primary" onclick="showComingSoon()">Get Basic</button>
+      </div>
+
+      <!-- PRO -->
+      <div class="pricing-card">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$13.99<span class="plan-period">/month</span></div>
+        <div class="plan-desc">For the serious food enthusiast</div>
+        <div class="plan-features">
+          <div class="plan-feature">✓ Unlimited recipes</div>
+          <div class="plan-feature">✓ Save favorites</div>
+          <div class="plan-feature">✓ 3 languages</div>
+          <div class="plan-feature">✓ Chef AI — unlimited</div>
+          <div class="plan-feature">✓ Priority generation</div>
+        </div>
+        <button class="plan-btn plan-btn-primary" onclick="showComingSoon()">Get Pro</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px">
+      <button class="detail-back" onclick="showMain()">← Back to app</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMING SOON MODAL -->
+<div class="overlay" id="comingSoonOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Coming soon 🚀</div>
+        <div class="modal-sub">Payments are not available yet</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('comingSoonOverlay').classList.remove('visible')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:20px">We're working on setting up payments. In the meantime, enjoy the free plan — all core features are available!</p>
+      <button class="submit-btn" onclick="document.getElementById('comingSoonOverlay').classList.remove('visible');showMain()">Got it</button>
+    </div>
   </div>
 </div>
 
@@ -1390,9 +1525,25 @@ async function updatePassword() {
 }
 
 // PAGES
-function showMain() { document.getElementById('favPage').classList.remove('visible'); document.getElementById('chefPage').classList.remove('visible'); document.getElementById('mainPage').classList.add('visible'); }
+function showMain() {
+  ['favPage','chefPage','pricingPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
+  document.getElementById('mainPage').classList.add('visible');
+}
 async function showFavorites() {
   document.getElementById('dropdown').classList.remove('open');
+  if(!user){openAuth('login');return;}
+  ['mainPage','chefPage','pricingPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
+  document.getElementById('favPage').classList.add('visible');
+  await loadFavs();
+}
+function showPricing() {
+  document.getElementById('dropdown').classList.remove('open');
+  ['mainPage','favPage','chefPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
+  document.getElementById('pricingPage').classList.add('visible');
+}
+function showComingSoon() {
+  document.getElementById('comingSoonOverlay').classList.add('visible');
+}
   if(!user){openAuth('login');return;}
   document.getElementById('mainPage').classList.remove('visible');
   document.getElementById('chefPage').classList.remove('visible');
@@ -1439,9 +1590,17 @@ async function generate() {
   try {
     const res = await fetch(BACKEND+'/api/recipe', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ingredients, prefs:[...prefs], language:langName})
+      body: JSON.stringify({ingredients, prefs:[...prefs], language:langName, userId: user?.id})
     });
     const data = await res.json();
+    if(res.status === 429) {
+      const e=document.getElementById('errorMsg');
+      e.innerHTML = '⏱ ' + data.message + ' <a onclick="showPricing()" style="color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline">Upgrade →</a>';
+      e.classList.add('visible');
+      document.getElementById('loader').classList.remove('visible');
+      document.getElementById('genBtn').disabled = ingredients.length===0;
+      return;
+    }
     if(!res.ok) throw new Error(data.error||'Error');
     recipes = data.recipes || [data];
     renderCards();
@@ -1581,8 +1740,7 @@ let chefUserInitials = 'U';
 
 function showChefAI() {
   document.getElementById('dropdown').classList.remove('open');
-  document.getElementById('mainPage').classList.remove('visible');
-  document.getElementById('favPage').classList.remove('visible');
+  ['mainPage','favPage','pricingPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
   document.getElementById('chefPage').classList.add('visible');
   if (user) {
     const first = user.user_metadata?.first_name || user.email.split('@')[0];
@@ -1668,9 +1826,21 @@ async function sendChef() {
     const res = await fetch(BACKEND + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: chefHistory.slice(-12) })
+      body: JSON.stringify({ messages: chefHistory.slice(-12), userId: user?.id })
     });
     const data = await res.json();
+    if (res.status === 403) {
+      document.getElementById('chefTyping')?.remove();
+      appendAI('🔒 Chef AI is available on **Basic** and **Pro** plans. <a onclick="showPricing()" style="color:var(--accent);cursor:pointer;text-decoration:underline">Upgrade to unlock →</a>');
+      chefHistory.pop();
+      return;
+    }
+    if (res.status === 429) {
+      document.getElementById('chefTyping')?.remove();
+      appendAI('⏱ ' + data.message + ' <a onclick="showPricing()" style="color:var(--accent);cursor:pointer;text-decoration:underline">Upgrade to Pro →</a>');
+      chefHistory.pop();
+      return;
+    }
     const reply = data.reply || 'Sorry, something went wrong. Please try again!';
     chefHistory.push({ role: 'assistant', content: reply });
     document.getElementById('chefTyping')?.remove();
