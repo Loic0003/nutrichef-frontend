@@ -1544,12 +1544,6 @@ function showPricing() {
 function showComingSoon() {
   document.getElementById('comingSoonOverlay').classList.add('visible');
 }
-  if(!user){openAuth('login');return;}
-  document.getElementById('mainPage').classList.remove('visible');
-  document.getElementById('chefPage').classList.remove('visible');
-  document.getElementById('favPage').classList.add('visible');
-  await loadFavs();
-}
 
 // INGREDIENTS
 const ingInput = document.getElementById('ingInput');
