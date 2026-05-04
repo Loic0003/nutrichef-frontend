@@ -1242,7 +1242,7 @@
           <div class="plan-feature">✓ Chef AI — 6 messages / 2.5h</div>
           <div class="plan-feature muted">✗ Priority generation</div>
         </div>
-        <button class="plan-btn plan-btn-primary" onclick="showComingSoon()">Get Basic</button>
+        <button class="plan-btn plan-btn-primary" onclick="checkout('price_1TTTfMCaAJJZTXvh1JcmWTtE')">Get Basic</button>
       </div>
 
       <!-- PRO -->
@@ -1257,7 +1257,7 @@
           <div class="plan-feature">✓ Chef AI — unlimited</div>
           <div class="plan-feature">✓ Priority generation</div>
         </div>
-        <button class="plan-btn plan-btn-primary" onclick="showComingSoon()">Get Pro</button>
+        <button class="plan-btn plan-btn-primary" onclick="checkout('price_1TTTfjCaAJJZTXvhjOaiAxVr')">Get Pro</button>
       </div>
     </div>
 
@@ -1847,6 +1847,50 @@ async function sendChef() {
     input.focus();
   }
 }
+
+// STRIPE CHECKOUT
+async function checkout(priceId) {
+  if (!user) { openAuth('login'); return; }
+  const btn = event.target;
+  btn.textContent = 'Loading…';
+  btn.disabled = true;
+  try {
+    const res = await fetch(BACKEND + '/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ priceId, userId: user.id, userEmail: user.email })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      btn.textContent = 'Error — try again';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = 'Error — try again';
+    btn.disabled = false;
+  }
+}
+
+// Check success/cancel from Stripe redirect
+window.addEventListener('load', () => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('success') === 'true') {
+    setTimeout(() => {
+      const e = document.getElementById('errorMsg');
+      e.style.background = 'rgba(48,209,88,0.08)';
+      e.style.border = '1px solid rgba(48,209,88,0.3)';
+      e.style.color = '#1a7a35';
+      e.innerHTML = '🎉 Payment successful! Your plan is now active.';
+      e.classList.add('visible');
+      window.history.replaceState({}, '', '/');
+    }, 500);
+  }
+  if (params.get('canceled') === 'true') {
+    window.history.replaceState({}, '', '/');
+  }
+});
 
 // INIT
 document.getElementById('loginBtn').style.display='flex';
