@@ -110,9 +110,23 @@
     }
 
     async function setPlan() {
-      const userId = document.getElementById('userId').value;
-      const plan = document.getElementById('newPlan').value;
-      await fetch(`${API}/api/admin/set-plan`, {
+  const userId = document.getElementById('userId').value.trim();
+  const plan = document.getElementById('newPlan').value;
+  if (!userId || !plan) return;
+  try {
+    const res = await fetch(API + '/api/admin/set-plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-secret': secret },
+      body: JSON.stringify({ userId: userId, plan: plan })
+    });
+    const data = await res.json();
+    document.getElementById('planMsg').classList.remove('hidden');
+    setTimeout(() => document.getElementById('planMsg').classList.add('hidden'), 3000);
+    loadDashboard();
+  } catch(err) {
+    console.error('Erreur:', err);
+  }
+}
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-secret': secret },
         body: JSON.stringify({ userId, plan })
