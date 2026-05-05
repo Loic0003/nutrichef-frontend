@@ -51,14 +51,16 @@
     </div>
   </div>
 
-  <script>
+<script>
     const API = 'https://nutrichef-backend-production.up.railway.app';
     let secret = '';
 
-    if (localStorage.getItem('adminSecret')) {
-      secret = localStorage.getItem('adminSecret');
-      loadDashboard();
-    }
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('adminSecret')) {
+        secret = localStorage.getItem('adminSecret');
+        loadDashboard();
+      }
+    });
 
     async function login() {
       secret = document.getElementById('secret').value;
