@@ -55,7 +55,7 @@
     const API = 'https://nutrichef-backend-production.up.railway.app';
     let secret = '';
 
-    window.addEventListener('DOMContentLoaded', () => {
+   window.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('adminSecret')) {
         secret = localStorage.getItem('adminSecret');
         loadDashboard();
