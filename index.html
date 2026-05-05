@@ -1114,7 +1114,20 @@
       </div>
       <div class="chips" id="chips"></div>
     </div>
-
+<!-- OBJECTIF -->
+<div class="card-section">
+  <div class="section-tag" id="s3tag">Step 3</div>
+  <h2 id="s3title">Ton objectif</h2>
+  <p id="s3sub">Optionnel — personnalise tes recettes</p>
+  <div class="prefs-grid">
+    <div class="pref-chip" onclick="toggleGoal(this,'muscle_gain')"><span class="pref-icon">💪</span><span class="pl">Prise de masse</span></div>
+    <div class="pref-chip" onclick="toggleGoal(this,'health')"><span class="pref-icon">🥗</span><span class="pl">Santé générale</span></div>
+    <div class="pref-chip" onclick="toggleGoal(this,'high_protein')"><span class="pref-icon">🥩</span><span class="pl">Hyper protéiné</span></div>
+    <div class="pref-chip" onclick="toggleGoal(this,'low_budget')"><span class="pref-icon">💰</span><span class="pl">Low budget</span></div>
+    <div class="pref-chip" onclick="toggleGoal(this,'weight_loss')"><span class="pref-icon">🔥</span><span class="pl">Perte de poids</span></div>
+    <div class="pref-chip" onclick="toggleGoal(this,'energy')"><span class="pref-icon">⚡</span><span class="pl">Énergie & sport</span></div>
+  </div>
+</div>
     <!-- FOOTER -->
     <div class="card-footer">
       <button class="generate-btn" id="genBtn" onclick="generate()" disabled>
@@ -1314,6 +1327,7 @@ const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let ingredients = [], prefs = new Set(), recipes = [], currentRecipe = null, user = null, authMode = 'login';
+let selectedGoal = null;
 let lang = localStorage.getItem('nc_lang') || 'en';
 let langName = localStorage.getItem('nc_lang_name') || 'English';
 
@@ -1585,7 +1599,15 @@ function togglePref(el, pref) {
   else{prefs.add(pref);el.classList.add('active');}
 }
 function updateGenBtn() { document.getElementById('genBtn').disabled = ingredients.length===0; }
-
+function toggleGoal(el, goal) {
+  document.querySelectorAll('.goal-card-active').forEach(e => e.classList.remove('active', 'goal-card-active'));
+  if (selectedGoal === goal) {
+    selectedGoal = null;
+  } else {
+    selectedGoal = goal;
+    el.classList.add('active', 'goal-card-active');
+  }
+}
 // GENERATE
 async function generate() {
   if(ingredients.length===0) return;
@@ -1604,7 +1626,7 @@ async function generate() {
   try {
     const res = await fetch(BACKEND+'/api/recipe', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ingredients, prefs:[...prefs], language:langName, userId: user?.id})
+     body: JSON.stringify({ingredients, prefs:[...prefs], language:langName, userId: user?.id, goal: selectedGoal})
     });
     const data = await res.json();
     if(res.status === 429) {
