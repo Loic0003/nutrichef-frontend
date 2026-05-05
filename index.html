@@ -1094,12 +1094,12 @@
       <h2 id="s1title">Dietary preferences</h2>
       <p id="s1sub">Optional — select what applies to you</p>
       <div class="prefs-grid">
-        <div class="pref-chip" onclick="togglePref(this,'Gluten-free')"><span class="pref-icon">🌾</span><span class="pl">Gluten-free</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'Vegetarian')"><span class="pref-icon">🥦</span><span class="pl">Vegetarian</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'High protein')"><span class="pref-icon">💪</span><span class="pl">High protein</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'Low calorie')"><span class="pref-icon">🔥</span><span class="pl">Low calorie</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'Anti-inflammatory')"><span class="pref-icon">🫐</span><span class="pl">Anti-inflam.</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'Dairy-free')"><span class="pref-icon">🥛</span><span class="pl">Dairy-free</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Gluten-free')"><span class="pref-icon">🌾<span class="goal-pl">Gluten-free</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Vegetarian')"><span class="pref-icon">🥦<span class="goal-pl">Vegetarian</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'High protein')"><span class="pref-icon">💪<span class="goal-pl">High protein</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Low calorie')"><span class="pref-icon">🔥<span class="goal-pl">Low calorie</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Anti-inflammatory')"><span class="pref-icon">🫐<span class="goal-pl">Anti-inflam.</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Dairy-free')"><span class="pref-icon">🥛<span class="goal-pl">Dairy-free</span></div>
       </div>
     </div>
 
@@ -1337,6 +1337,8 @@ const TX = {
     heroSub: "Tell us what's in your fridge. Get 3 chef-crafted, nutritionist-approved recipes in seconds.",
     s1tag:'Step 1', s1title:'Dietary preferences', s1sub:'Optional — select what applies to you',
     s2tag:'Step 2', s2title:'Your ingredients', s2sub:'Add what you have on hand',
+    s3tag:'Step 3', s3title:'Your goal', s3sub:'Optional — personalize your recipes',
+goals:['Muscle gain','General health','High protein','Low budget','Weight loss','Energy & sport'],
     genBtn:'Generate recipes', loader:'Crafting your recipes…', recipesLabel:'3 recipes for you',
     viewBtn:'View recipe →', saveBtn:'♡ Save', savedBtn:'♥ Saved',
     detailSave:'♡ Save to favorites', detailSaved:'♥ Saved!',
@@ -1363,6 +1365,8 @@ const TX = {
     heroSub: "Dis-nous ce que tu as dans ton frigo. Reçois 3 recettes santé personnalisées en quelques secondes.",
     s1tag:'Étape 1', s1title:'Tes préférences', s1sub:'Optionnel — sélectionne ce qui te correspond',
     s2tag:'Étape 2', s2title:'Tes ingrédients', s2sub:'Ajoute ce que tu as sous la main',
+   s3tag:'Étape 3', s3title:'Ton objectif', s3sub:'Optionnel — personnalise tes recettes',
+goals:['Prise de masse','Santé générale','Hyper protéiné','Low budget','Perte de poids','Énergie & sport'],
     genBtn:'Générer les recettes', loader:'On prépare tes recettes…', recipesLabel:'3 recettes pour toi',
     viewBtn:'Voir la recette →', saveBtn:'♡ Sauver', savedBtn:'♥ Sauvé',
     detailSave:'♡ Ajouter aux favoris', detailSaved:'♥ Ajouté !',
@@ -1389,6 +1393,8 @@ const TX = {
     heroSub: "Dinos qué tienes en tu nevera. Obtén 3 recetas saludables personalizadas en segundos.",
     s1tag:'Paso 1', s1title:'Tus preferencias', s1sub:'Opcional — selecciona lo que aplica',
     s2tag:'Paso 2', s2title:'Tus ingredientes', s2sub:'Añade lo que tengas a mano',
+    s3tag:'Paso 3', s3title:'Tu objetivo', s3sub:'Opcional — personaliza tus recetas',
+goals:['Ganar músculo','Salud general','Alto en proteína','Bajo presupuesto','Pérdida de peso','Energía & deporte'],
     genBtn:'Generar recetas', loader:'Preparando tus recetas…', recipesLabel:'3 recetas para ti',
     viewBtn:'Ver receta →', saveBtn:'♡ Guardar', savedBtn:'♥ Guardado',
     detailSave:'♡ Guardar en favoritos', detailSaved:'♥ ¡Guardado!',
@@ -1424,6 +1430,10 @@ function applyLang() {
   document.getElementById('s2tag').textContent = t.s2tag;
   document.getElementById('s2title').textContent = t.s2title;
   document.getElementById('s2sub').textContent = t.s2sub;
+  document.getElementById('s3tag').textContent = t.s3tag;
+document.getElementById('s3title').textContent = t.s3title;
+document.getElementById('s3sub').textContent = t.s3sub;
+document.querySelectorAll('.goal-pl').forEach((el, i) => { if (t.goals[i]) el.textContent = t.goals[i]; });
   document.getElementById('genBtnText').textContent = t.genBtn;
   document.getElementById('loaderText').textContent = t.loader;
   document.getElementById('recipesLabel').textContent = t.recipesLabel;
