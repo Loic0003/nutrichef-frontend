@@ -25,10 +25,8 @@
       <button onclick="logout()" class="text-red-500 underline">Déconnexion</button>
     </div>
 
-    <!-- Stats -->
     <div id="stats" class="grid grid-cols-3 gap-4 mb-8"></div>
 
-    <!-- Changer plan -->
     <div class="bg-white p-6 rounded-xl shadow mb-8">
       <h2 class="text-xl font-bold mb-4">Changer le plan d'un user</h2>
       <input id="userId" type="text" placeholder="User ID"
@@ -44,7 +42,6 @@
       <p id="planMsg" class="mt-2 text-green-600 hidden">✅ Plan mis à jour!</p>
     </div>
 
-    <!-- Liste users -->
     <div class="bg-white p-6 rounded-xl shadow">
       <h2 class="text-xl font-bold mb-4">Tous les utilisateurs</h2>
       <div id="usersList"></div>
@@ -52,96 +49,88 @@
   </div>
 
 <script>
-    const API = 'https://nutrichef-backend-production.up.railway.app';
-    let secret = '';
+  const API = 'https://nutrichef-backend-production.up.railway.app';
+  let secret = '';
 
-   window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('adminSecret')) {
-        secret = localStorage.getItem('adminSecret');
-        loadDashboard();
-      }
-    });
-
-    async function login() {
-      secret = document.getElementById('secret').value;
-      const res = await fetch(`${API}/api/admin/stats`, {
-        headers: { 'x-admin-secret': secret }
-      });
-      if (res.ok) {
-        localStorage.setItem('adminSecret', secret);
-        loadDashboard();
-      } else {
-        document.getElementById('error').classList.remove('hidden');
-      }
+  window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('adminSecret')) {
+      secret = localStorage.getItem('adminSecret');
+      loadDashboard();
     }
+  });
 
-    async function loadDashboard() {
-      document.getElementById('loginPage').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-
-      const [stats, users] = await Promise.all([
-        fetch(`${API}/api/admin/stats`, { headers: { 'x-admin-secret': secret } }).then(r => r.json()),
-        fetch(`${API}/api/admin/users`, { headers: { 'x-admin-secret': secret } }).then(r => r.json()),
-      ]);
-
-      document.getElementById('stats').innerHTML = `
-        <div class="bg-white p-4 rounded-xl shadow text-center">
-          <p class="text-3xl font-bold">${stats.totalUsers}</p>
-          <p class="text-gray-500">Total users</p>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow text-center">
-          <p class="text-3xl font-bold">${stats.usage?.recipe || 0}</p>
-          <p class="text-gray-500">Recettes générées</p>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow text-center">
-          <p class="text-3xl font-bold">${stats.usage?.chat || 0}</p>
-          <p class="text-gray-500">Messages chat</p>
-        </div>
-      `;
-
-      document.getElementById('usersList').innerHTML = users.map(u => `
-        <div class="flex justify-between items-center border-b py-2">
-          <span class="font-mono text-sm">${u.user_id}</span>
-          <span class="px-2 py-1 rounded text-sm font-bold ${
-            u.plan === 'pro' ? 'bg-purple-100 text-purple-700' :
-            u.plan === 'basic' ? 'bg-blue-100 text-blue-700' :
-            'bg-gray-100 text-gray-600'
-          }">${u.plan}</span>
-        </div>
-      `).join('');
-    }
-
-    async function setPlan() {
-  const userId = document.getElementById('userId').value.trim();
-  const plan = document.getElementById('newPlan').value;
-  if (!userId || !plan) return;
-  try {
-    const res = await fetch(API + '/api/admin/set-plan', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-secret': secret },
-      body: JSON.stringify({ userId: userId, plan: plan })
+  async function login() {
+    secret = document.getElementById('secret').value;
+    const res = await fetch(API + '/api/admin/stats', {
+      headers: { 'x-admin-secret': secret }
     });
-    const data = await res.json();
-    document.getElementById('planMsg').classList.remove('hidden');
-    setTimeout(() => document.getElementById('planMsg').classList.add('hidden'), 3000);
-    loadDashboard();
-  } catch(err) {
-    console.error('Erreur:', err);
+    if (res.ok) {
+      localStorage.setItem('adminSecret', secret);
+      loadDashboard();
+    } else {
+      document.getElementById('error').classList.remove('hidden');
+    }
   }
-}
+
+  async function loadDashboard() {
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+
+    const [stats, users] = await Promise.all([
+      fetch(API + '/api/admin/stats', { headers: { 'x-admin-secret': secret } }).then(r => r.json()),
+      fetch(API + '/api/admin/users', { headers: { 'x-admin-secret': secret } }).then(r => r.json()),
+    ]);
+
+    document.getElementById('stats').innerHTML = `
+      <div class="bg-white p-4 rounded-xl shadow text-center">
+        <p class="text-3xl font-bold">${stats.totalUsers}</p>
+        <p class="text-gray-500">Total users</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow text-center">
+        <p class="text-3xl font-bold">${stats.usage?.recipe || 0}</p>
+        <p class="text-gray-500">Recettes générées</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow text-center">
+        <p class="text-3xl font-bold">${stats.usage?.chat || 0}</p>
+        <p class="text-gray-500">Messages chat</p>
+      </div>
+    `;
+
+    document.getElementById('usersList').innerHTML = users.map(u => `
+      <div class="flex justify-between items-center border-b py-2">
+        <span class="font-mono text-sm">${u.user_id}</span>
+        <span class="px-2 py-1 rounded text-sm font-bold ${
+          u.plan === 'pro' ? 'bg-purple-100 text-purple-700' :
+          u.plan === 'basic' ? 'bg-blue-100 text-blue-700' :
+          'bg-gray-100 text-gray-600'
+        }">${u.plan}</span>
+      </div>
+    `).join('');
+  }
+
+  async function setPlan() {
+    const userId = document.getElementById('userId').value.trim();
+    const plan = document.getElementById('newPlan').value;
+    if (!userId || !plan) return;
+    try {
+      const res = await fetch(API + '/api/admin/set-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-secret': secret },
-        body: JSON.stringify({ userId, plan })
+        body: JSON.stringify({ userId: userId, plan: plan })
       });
+      const data = await res.json();
       document.getElementById('planMsg').classList.remove('hidden');
       setTimeout(() => document.getElementById('planMsg').classList.add('hidden'), 3000);
       loadDashboard();
+    } catch(err) {
+      console.error('Erreur:', err);
     }
+  }
 
-    function logout() {
-      localStorage.removeItem('adminSecret');
-      location.reload();
-    }
-  </script>
+  function logout() {
+    localStorage.removeItem('adminSecret');
+    location.reload();
+  }
+</script>
 </body>
 </html>
