@@ -981,6 +981,7 @@
         <button class="dd-item" onclick="openSettings()"><span class="dd-icon">⚙️</span> Settings</button>
         <button class="dd-item" onclick="showFavorites()"><span class="dd-icon">❤️</span> My Favorites</button>
         <button class="dd-item" onclick="showPricing()"><span class="dd-icon">⭐</span> Upgrade plan</button>
+        <button class="dd-item" onclick="openPlanModal()"><span class="dd-icon">💎</span> My Plan</button>
         <div class="dd-sep"></div>
         <button class="dd-item danger" onclick="logout()"><span class="dd-icon">↗</span> Sign out</button>
       </div>
@@ -1283,7 +1284,26 @@
     </div>
   </div>
 </div>
-
+<div class="overlay" id="planOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">My Plan</div>
+        <div class="modal-sub">Your current subscription</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('planOverlay').classList.remove('visible')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:48px;margin-bottom:12px" id="planEmoji">⏳</div>
+        <div style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px" id="planName">Loading...</div>
+        <div style="font-size:14px;color:var(--text2);margin-bottom:24px" id="planDesc"></div>
+        <div style="background:var(--bg2);border-radius:var(--radius);padding:16px;text-align:left;margin-bottom:20px" id="planLimits"></div>
+        <button class="submit-btn" onclick="document.getElementById('planOverlay').classList.remove('visible');showPricing()" id="planUpgradeBtn">Upgrade plan</button>
+      </div>
+    </div>
+  </div>
+</div>
 <footer>NutriChef &nbsp;·&nbsp; AI-generated recipes &nbsp;·&nbsp; For inspiration only</footer>
 
 <script>
@@ -1891,7 +1911,37 @@ window.addEventListener('load', () => {
     window.history.replaceState({}, '', '/');
   }
 });
-
+async function openPlanModal() {
+  document.getElementById('dropdown').classList.remove('open');
+  document.getElementById('planOverlay').classList.add('visible');
+  if (!user) return;
+  const res = await fetch(BACKEND + '/api/status?userId=' + user.id);
+  const data = await res.json();
+  const plan = data.plan || 'free';
+  const emojis = { free: '🌱', basic: '⭐', pro: '💎' };
+  const names = { free: 'Free Plan', basic: 'Basic Plan', pro: 'Pro Plan' };
+  const descs = { free: 'Perfect to get started', basic: 'For the passionate home cook', pro: 'For the serious food enthusiast' };
+  document.getElementById('planEmoji').textContent = emojis[plan];
+  document.getElementById('planName').textContent = names[plan];
+  document.getElementById('planDesc').textContent = descs[plan];
+  const recipeUsed = data.recipeUsed || 0;
+  const recipeLimit = data.recipeLimit || 3;
+  const pct = Math.min(100, Math.round((recipeUsed / recipeLimit) * 100));
+  const fillClass = pct >= 100 ? 'full' : pct >= 80 ? 'warn' : '';
+  document.getElementById('planLimits').innerHTML = `
+    <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">TODAY'S USAGE</div>
+    <div class="usage-bar-wrap">
+      <div class="usage-bar-label"><span>Recipes</span><span>${recipeUsed} / ${recipeLimit === 9999 ? '∞' : recipeLimit}</span></div>
+      <div class="usage-bar"><div class="usage-bar-fill ${fillClass}" style="width:${recipeLimit === 9999 ? 5 : pct}%"></div></div>
+    </div>
+    ${plan !== 'free' ? `
+    <div class="usage-bar-wrap" style="margin-top:12px">
+      <div class="usage-bar-label"><span>Chef AI messages</span><span>${data.chatUsed || 0} / ${data.chatLimit === 9999 ? '∞' : data.chatLimit}</span></div>
+      <div class="usage-bar"><div class="usage-bar-fill" style="width:${data.chatLimit === 9999 ? 5 : Math.min(100, Math.round(((data.chatUsed||0)/data.chatLimit)*100))}%"></div></div>
+    </div>` : ''}
+  `;
+  document.getElementById('planUpgradeBtn').style.display = plan === 'pro' ? 'none' : 'block';
+}
 // INIT
 document.getElementById('loginBtn').style.display='flex';
 applyLang();
