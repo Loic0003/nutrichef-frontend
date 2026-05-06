@@ -1453,8 +1453,6 @@ async function fetchWebRecipes(query) {
   try {
     const res = await fetch(BACKEND + '/api/web-recipes?query=' + encodeURIComponent(query));
     const data = await res.json();
-    const t = tx();
-    document.getElementById('recipeCards').innerHTML = '';
     if (!data.results?.length) {
       document.getElementById('errorMsg').textContent = tx().error;
       document.getElementById('errorMsg').classList.add('visible');
