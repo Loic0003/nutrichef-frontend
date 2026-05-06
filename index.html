@@ -1416,7 +1416,14 @@ async function generate() {
   document.getElementById('errorMsg').classList.remove('visible');
   document.getElementById('genBtn').disabled = true;
   try {
-    await fetchWebRecipes(ingredients.join(' '));
+   const res = await fetch(BACKEND + '/api/recipe', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ ingredients, goal: selectedGoal, language: langName, userId: user?.id })
+});
+const data = await res.json();
+recipes = data.recipes || [];
+renderCards();
   } catch (err) {
     const e = document.getElementById('errorMsg');
     e.textContent = tx().error; e.classList.add('visible');
@@ -1447,7 +1454,7 @@ function renderCards() {
 document.getElementById('recipesSection').classList.add('visible');
   document.getElementById('tryAgain').style.display = 'block';
   document.getElementById('recipesSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  fetchWebRecipes(ingredients.join(' '));
+ 
 }
 async function fetchWebRecipes(query) {
   try {
