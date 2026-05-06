@@ -1415,34 +1415,16 @@ async function generate() {
   document.getElementById('tryAgain').style.display = 'none';
   document.getElementById('errorMsg').classList.remove('visible');
   document.getElementById('genBtn').disabled = true;
-
   try {
-    const res = await fetch(BACKEND + '/api/recipe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ingredients, prefs: [...prefs], language: langName, userId: user?.id, goal: selectedGoal })
-    });
-    const data = await res.json();
-    if (res.status === 429) {
-      const e = document.getElementById('errorMsg');
-      e.innerHTML = '⏱ ' + data.message + ' <a onclick="showPricing()" style="color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline">Upgrade →</a>';
-      e.classList.add('visible');
-      document.getElementById('loader').classList.remove('visible');
-      document.getElementById('genBtn').disabled = ingredients.length === 0;
-      return;
-    }
-    if (!res.ok) throw new Error(data.error || 'Error');
-    recipes = data.recipes || [data];
-    renderCards();
+    await fetchWebRecipes(ingredients.join(' '));
   } catch (err) {
     const e = document.getElementById('errorMsg');
     e.textContent = tx().error; e.classList.add('visible');
   } finally {
     document.getElementById('loader').classList.remove('visible');
-    document.getElementById('genBtn').disabled = ingredients.length === 0;
+    document.getElementById('genBtn').disabled = false;
   }
 }
-
 function renderCards() {
   const t = tx();
   document.getElementById('recipeCards').innerHTML = recipes.map((r, i) =>
@@ -1471,27 +1453,35 @@ async function fetchWebRecipes(query) {
   try {
     const res = await fetch(BACKEND + '/api/web-recipes?query=' + encodeURIComponent(query));
     const data = await res.json();
-    if (!data.results?.length) return;
-    let html = '<div style="padding:0 32px 32px"><div class="recipes-label" style="padding-top:0">🌐 Recettes du web</div><div style="display:grid;gap:12px;">';
-    data.results.forEach(r => {
-      html += `<div class="recipe-card" style="cursor:default">
+    const t = tx();
+    document.getElementById('recipeCards').innerHTML = '';
+    if (!data.results?.length) {
+      document.getElementById('errorMsg').textContent = tx().error;
+      document.getElementById('errorMsg').classList.add('visible');
+      return;
+    }
+    document.getElementById('recipeCards').innerHTML = data.results.map(r => `
+      <div class="recipe-card">
         ${r.image ? `<img src="${r.image}" style="width:100%;height:180px;object-fit:cover;" onerror="this.style.display='none'"/>` : ''}
         <div class="rc-body">
           <div class="rc-title">${r.title}</div>
           <div class="rc-desc">${r.description || ''}</div>
           <div class="rc-pills">
-            ${r.time ? '<span class="rc-pill">⏱ ' + r.time + '</span>' : ''}
-            ${r.source ? '<span class="rc-pill">🌐 ' + r.source + '</span>' : ''}
+            ${r.source ? `<span class="rc-pill">🌐 ${r.source}</span>` : ''}
           </div>
           <div class="rc-actions">
             <button class="rc-view" onclick="window.open('${r.url}','_blank')">Voir la recette →</button>
           </div>
         </div>
-      </div>`;
-    });
-    html += '</div></div>';
-    document.getElementById('recipesSection').insertAdjacentHTML('beforeend', html);
-  } catch {}
+      </div>
+    `).join('');
+    document.getElementById('recipesSection').classList.add('visible');
+    document.getElementById('tryAgain').style.display = 'block';
+    document.getElementById('recipesSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch {
+    document.getElementById('errorMsg').textContent = tx().error;
+    document.getElementById('errorMsg').classList.add('visible');
+  }
 }
 function viewRecipe(i) {
   currentRecipe = recipes[i]; const r = currentRecipe; const t = tx();
