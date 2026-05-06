@@ -736,10 +736,13 @@
       <div class="input-wrap">
         <input class="text-input" id="ingInput" type="text" placeholder="e.g. chicken, broccoli, garlic…" autocomplete="off"/>
        <button class="add-btn" onclick="addIng()">+</button>
-<button class="add-btn" onclick="document.getElementById('imgInput').click()" style="background:var(--accent);">📷</button>
+<button class="add-btn" onclick="document.getElementById('imgInput').click()" style="background:var(--accent);width:auto;padding:0 14px;font-size:13px;font-weight:600;border-radius:var(--radius);" title="Détecter les ingrédients depuis une photo">📷 Photo</button>
 <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="detectFromPhoto(this)"/>
       </div>
       <div class="chips" id="chips"></div>
+<div onclick="document.getElementById('imgInput').click()" style="margin-top:10px;border:2px dashed var(--border2);border-radius:var(--radius);padding:16px;text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text2);font-size:13px;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+  📷 Prendre une photo &nbsp;·&nbsp; 🖼️ Choisir dans la photothèque &nbsp;·&nbsp; 📁 Déposer un fichier
+</div>
     </div>
 
     <!-- FOOTER -->
