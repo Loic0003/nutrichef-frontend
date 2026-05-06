@@ -696,24 +696,42 @@
   </div>
 
   <div class="card">
-    <!-- PREFS -->
-    <div class="card-section">
-      <div class="section-tag" id="s1tag">Step 1</div>
-      <h2 id="s1title">Dietary preferences</h2>
-      <p id="s1sub">Optional — select what applies to you</p>
-      <div class="prefs-grid">
-        <div class="pref-chip" onclick="togglePref(this,'Gluten-free')"><span class="pref-icon">🌾</span><span class="pl">Gluten-free</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'Vegetarian')"><span class="pref-icon">🥦</span><span class="pl">Vegetarian</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'High protein')"><span class="pref-icon">💪</span><span class="pl">High protein</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'Low calorie')"><span class="pref-icon">🔥</span><span class="pl">Low calorie</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'Muscle gain')"><span class="pref-icon">🏋️</span><span class="pl">Muscle gain</span></div>
-        <div class="pref-chip" onclick="togglePref(this,'Dairy-free')"><span class="pref-icon">🥛</span><span class="pl">Dairy-free</span></div>
+    <!-- PROGRESS BAR -->
+    <div style="padding:20px 32px 0;">
+      <div style="display:flex;align-items:center;gap:0;">
+        <!-- Step 1 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--text);color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;" id="stepCircle1">1</div>
+          <div style="font-size:11px;font-weight:600;color:var(--text);" id="s3tag">Your goal</div>
+        </div>
+        <!-- Line -->
+        <div style="flex:1;height:2px;background:var(--border);margin:0 8px;margin-bottom:16px;position:relative;">
+          <div id="progressLine" style="position:absolute;left:0;top:0;height:100%;width:0%;background:var(--accent);transition:width 0.4s ease;border-radius:99px;"></div>
+        </div>
+        <!-- Step 2 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--border);color:var(--text3);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.3s;" id="stepCircle2">2</div>
+          <div style="font-size:11px;font-weight:600;color:var(--text3);transition:color 0.3s;" id="s2tag">Ingredients</div>
+        </div>
       </div>
     </div>
 
-    <!-- INGREDIENTS -->
+    <!-- GOAL (step 1) -->
     <div class="card-section">
-      <div class="section-tag" id="s2tag">Step 2</div>
+      <h2 id="s3title">Your goal</h2>
+      <p id="s3sub">Optional — personalize your recipes</p>
+      <div class="prefs-grid" id="goalGrid">
+        <div class="pref-chip" onclick="toggleGoal(this,'Weight loss')"><span class="pref-icon">⚖️</span><span class="goal-pl">Weight loss</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'Muscle gain')"><span class="pref-icon">💪</span><span class="goal-pl">Muscle gain</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'High protein')"><span class="pref-icon">🥩</span><span class="goal-pl">High protein</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'Low budget')"><span class="pref-icon">💰</span><span class="goal-pl">Low budget</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'General health')"><span class="pref-icon">🥗</span><span class="goal-pl">General health</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'Vegetarian')"><span class="pref-icon">🥦</span><span class="goal-pl">Vegetarian</span></div>
+      </div>
+    </div>
+
+    <!-- INGREDIENTS (step 2) -->
+    <div class="card-section">
       <h2 id="s2title">Your ingredients</h2>
       <p id="s2sub">Add what you have on hand</p>
       <div class="input-wrap">
@@ -721,21 +739,6 @@
         <button class="add-btn" onclick="addIng()">+</button>
       </div>
       <div class="chips" id="chips"></div>
-    </div>
-
-    <!-- GOAL -->
-    <div class="card-section">
-      <div class="section-tag" id="s3tag">Step 3</div>
-      <h2 id="s3title">Your goal</h2>
-      <p id="s3sub">Optional — personalize your recipes</p>
-      <div class="prefs-grid" id="goalGrid">
-        <div class="pref-chip" onclick="toggleGoal(this,'Muscle gain')"><span class="pref-icon">💪</span><span class="goal-pl">Muscle gain</span></div>
-        <div class="pref-chip" onclick="toggleGoal(this,'General health')"><span class="pref-icon">🥗</span><span class="goal-pl">General health</span></div>
-        <div class="pref-chip" onclick="toggleGoal(this,'High protein')"><span class="pref-icon">🥩</span><span class="goal-pl">High protein</span></div>
-        <div class="pref-chip" onclick="toggleGoal(this,'Low budget')"><span class="pref-icon">💰</span><span class="goal-pl">Low budget</span></div>
-        <div class="pref-chip" onclick="toggleGoal(this,'Weight loss')"><span class="pref-icon">⚖️</span><span class="goal-pl">Weight loss</span></div>
-        <div class="pref-chip" onclick="toggleGoal(this,'Energy & sport')"><span class="pref-icon">⚡</span><span class="goal-pl">Energy & sport</span></div>
-      </div>
     </div>
 
     <!-- FOOTER -->
@@ -995,10 +998,10 @@ const TX = {
   en: {
     heroTitle: 'Your ingredients,<br><em>reinvented</em>',
     heroSub: "Tell us what's in your fridge. Get 3 chef-crafted, nutritionist-approved recipes in seconds.",
-    s1tag:'Step 1', s1title:'Dietary preferences', s1sub:'Optional — select what applies to you',
+    s2tag:'Step 1', s2title:'Your ingredients', s2sub:'Add what you have on hand',
     s2tag:'Step 2', s2title:'Your ingredients', s2sub:'Add what you have on hand',
     s3tag:'Step 3', s3title:'Your goal', s3sub:'Optional — personalize your recipes',
-    goals:['Muscle gain','General health','High protein','Low budget','Weight loss','Energy & sport'],
+    goals:['Weight loss','Muscle gain','High protein','Low budget','General health','Vegetarian'],
     genBtn:'Generate recipes', loader:'Crafting your recipes…', recipesLabel:'3 recipes for you',
     viewBtn:'View recipe →', saveBtn:'♡ Save', savedBtn:'♥ Saved',
     detailSave:'♡ Save to favorites', detailSaved:'♥ Saved!',
@@ -1026,7 +1029,7 @@ const TX = {
     s1tag:'Étape 1', s1title:'Tes préférences', s1sub:'Optionnel — sélectionne ce qui te correspond',
     s2tag:'Étape 2', s2title:'Tes ingrédients', s2sub:'Ajoute ce que tu as sous la main',
     s3tag:'Étape 3', s3title:'Ton objectif', s3sub:'Optionnel — personnalise tes recettes',
-    goals:['Prise de masse','Santé générale','Hyper protéiné','Low budget','Perte de poids','Énergie & sport'],
+    goals:['Perte de poids','Prise de masse','Hyper protéiné','Low budget','Santé générale','Végétarien'],
     genBtn:'Générer les recettes', loader:'On prépare tes recettes…', recipesLabel:'3 recettes pour toi',
     viewBtn:'Voir la recette →', saveBtn:'♡ Sauver', savedBtn:'♥ Sauvé',
     detailSave:'♡ Ajouter aux favoris', detailSaved:'♥ Ajouté !',
@@ -1054,7 +1057,7 @@ const TX = {
     s1tag:'Paso 1', s1title:'Tus preferencias', s1sub:'Opcional — selecciona lo que aplica',
     s2tag:'Paso 2', s2title:'Tus ingredientes', s2sub:'Añade lo que tengas a mano',
     s3tag:'Paso 3', s3title:'Tu objetivo', s3sub:'Opcional — personaliza tus recetas',
-    goals:['Ganar músculo','Salud general','Alto en proteína','Bajo presupuesto','Pérdida de peso','Energía & deporte'],
+    goals:['Pérdida de peso','Ganar músculo','Alto en proteína','Bajo presupuesto','Salud general','Vegetariano'],
     genBtn:'Generar recetas', loader:'Preparando tus recetas…', recipesLabel:'3 recetas para ti',
     viewBtn:'Ver receta →', saveBtn:'♡ Guardar', savedBtn:'♥ Guardado',
     detailSave:'♡ Guardar en favoritos', detailSaved:'♥ ¡Guardado!',
@@ -1087,10 +1090,12 @@ function applyLang() {
   document.getElementById('s1tag').textContent = t.s1tag;
   document.getElementById('s1title').textContent = t.s1title;
   document.getElementById('s1sub').textContent = t.s1sub;
-  document.getElementById('s2tag').textContent = t.s2tag;
+  const s2tagEl = document.getElementById('s2tag');
+  const s3tagEl = document.getElementById('s3tag');
+  if (s2tagEl) s2tagEl.textContent = t.s2title || 'Ingredients';
+  if (s3tagEl) s3tagEl.textContent = t.s3title || 'Your goal';
   document.getElementById('s2title').textContent = t.s2title;
   document.getElementById('s2sub').textContent = t.s2sub;
-  document.getElementById('s3tag').textContent = t.s3tag;
   document.getElementById('s3title').textContent = t.s3title;
   document.getElementById('s3sub').textContent = t.s3sub;
   document.getElementById('genBtnText').textContent = t.genBtn;
@@ -1305,7 +1310,16 @@ function togglePref(el, pref) {
   else { prefs.add(pref); el.classList.add('active'); }
 }
 
-function updateGenBtn() { document.getElementById('genBtn').disabled = ingredients.length === 0; }
+function updateGenBtn() {
+  const hasIng = ingredients.length > 0;
+  document.getElementById('genBtn').disabled = !hasIng;
+  const line = document.getElementById('progressLine');
+  const c2 = document.getElementById('stepCircle2');
+  const l2 = document.getElementById('s2tag');
+  if (line) line.style.width = hasIng ? '100%' : '0%';
+  if (c2) { c2.style.background = hasIng ? 'var(--text)' : 'var(--border)'; c2.style.color = hasIng ? 'white' : 'var(--text3)'; }
+  if (l2) l2.style.color = hasIng ? 'var(--text)' : 'var(--text3)';
+}
 
 function toggleGoal(el, goal) {
   document.querySelectorAll('#goalGrid .pref-chip').forEach(e => e.classList.remove('active'));
