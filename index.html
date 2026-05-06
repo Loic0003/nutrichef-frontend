@@ -966,11 +966,11 @@
 <!-- NAV -->
 <nav>
   <div class="logo" onclick="showMain()">Nutri<em>Chef</em></div>
-  <div class="nav-right">
-    <button class="btn btn-ghost" id="loginBtn" onclick="openAuth('login')" style="display:none">Sign in</button>
-    <button class="btn btn-ghost" onclick="showChefAI()" style="gap:6px">🧑‍🍳 Chef AI</button>
-    <div class="avatar-wrap" id="avatarWrap" style="display:none">
-      <div class="avatar" id="avatarCircle" onclick="toggleDropdown()"></div>
+<div class="nav-right">
+  <button class="btn btn-ghost" onclick="showChefAI()" style="gap:6px">🧑‍🍳 Chef AI</button>
+  <button class="btn btn-ghost" id="loginBtn" onclick="openAuth('login')" style="display:none">Sign in</button>
+  <div class="avatar-wrap" id="avatarWrap" style="display:none">
+  <div class="avatar" id="avatarCircle" onclick="toggleDropdown()"></div>
       <div class="dropdown" id="dropdown">
         <div class="dd-header">
           <div class="dd-name" id="ddName"></div>
@@ -1188,7 +1188,7 @@
         <div class="chef-empty" id="chefEmpty">
           <div class="chef-empty-icon">🧑‍🍳</div>
           <div class="chef-empty-title" id="chefEmptyTitle">Ask me anything about food</div>
-          <div class="chef-empty-sub" id="chefEmptySub">Recipes, techniques, substitutions, nutrition — I'm your personal culinary expert.</div>
+          <div class="chef-empty-sub" id="chefEmptySub">Recipes, techniques, substitutions, nutrition — I'm your personal culinary expert. I always include macros (calories, protein, carbs, fat) when sharing a recipe.</div>
         </div>
       </div>
 
