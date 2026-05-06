@@ -1326,7 +1326,8 @@ function showPricing() {
 document.getElementById('ingInput').addEventListener('keydown', e => { if (e.key === 'Enter') addIng(); });
 
 function addIng() {
-  const v = document.getElementById('ingInput').value.trim();
+  const raw = document.getElementById('ingInput').value.trim();
+const v = raw.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   if (!v || ingredients.includes(v.toLowerCase())) { document.getElementById('ingInput').value = ''; return; }
   ingredients.push(v.toLowerCase());
   document.getElementById('ingInput').value = '';
