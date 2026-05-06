@@ -735,7 +735,9 @@
       <p id="s2sub">Add what you have on hand</p>
       <div class="input-wrap">
         <input class="text-input" id="ingInput" type="text" placeholder="e.g. chicken, broccoli, garlic…" autocomplete="off"/>
-        <button class="add-btn" onclick="addIng()">+</button>
+       <button class="add-btn" onclick="addIng()">+</button>
+<button class="add-btn" onclick="document.getElementById('imgInput').click()" style="background:var(--accent);">📷</button>
+<input type="file" id="imgInput" accept="image/*" style="display:none" onchange="detectFromPhoto(this)"/>
       </div>
       <div class="chips" id="chips"></div>
     </div>
@@ -1334,7 +1336,34 @@ const v = raw.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   document.getElementById('ingInput').value = '';
   renderChips(); updateGenBtn();
 }
-
+async function detectFromPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = '';
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = e.target.result.split(',')[1];
+    const loaderText = document.getElementById('loaderText');
+    document.getElementById('loader').classList.add('visible');
+    try {
+      const res = await fetch(BACKEND + '/api/detect-ingredients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: base64, mimeType: file.type })
+      });
+      const data = await res.json();
+      if (data.ingredients?.length) {
+        data.ingredients.forEach(ing => {
+          const v = ing.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          if (!ingredients.includes(v)) ingredients.push(v);
+        });
+        renderChips(); updateGenBtn();
+      }
+    } catch { alert('Could not detect ingredients.'); }
+    finally { document.getElementById('loader').classList.remove('visible'); }
+  };
+  reader.readAsDataURL(file);
+}
 function removeIng(i) { ingredients.splice(i, 1); renderChips(); updateGenBtn(); }
 
 function renderChips() {
