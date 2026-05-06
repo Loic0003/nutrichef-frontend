@@ -1100,8 +1100,6 @@ step1Label:'Paso 1', step2Label:'Paso 2', planLabel:'📅 Planificar',
 };
 
 const tx = () => TX[lang] || TX.en;
-const photoZone = document.getElementById('photoZone');
-  if (photoZone) photoZone.textContent = t.photoBtn;
 function applyLang() {
   const t = tx();
   document.getElementById('heroTitle').innerHTML = t.heroTitle;
@@ -1149,7 +1147,9 @@ if(spb) spb.textContent = t.settingsPassBtn;
 if(sc1) sc1.textContent = t.step1Label;
 if(sc2) sc2.textContent = t.step2Label;
 document.querySelectorAll('.plan-btn-label').forEach(el => el.textContent = t.planLabel);
-const t2 = tx();
+const photoZone = document.getElementById('photoZone');
+  if (photoZone) photoZone.textContent = t.photoBtn;
+  const t2 = tx();
   const ddItems = document.querySelectorAll('.dd-item');
   if (ddItems[0]) { ddItems[0].innerHTML = '<span class="dd-icon">⚙️</span> ' + t2.ddSettings; ddItems[0].onclick = openSettings; }
   if (ddItems[1]) { ddItems[1].innerHTML = '<span class="dd-icon">❤️</span> ' + t2.ddFavorites; ddItems[1].onclick = showFavorites; }
