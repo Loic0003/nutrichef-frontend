@@ -1158,6 +1158,7 @@
   </div>
 </div>
 <!-- MEAL PLAN PAGE -->
+<!-- MEAL PLAN PAGE -->
 <div class="page" id="mealPage">
   <div class="page-hero">
     <div class="page-eyebrow">Weekly planning</div>
@@ -1166,7 +1167,22 @@
   </div>
   <div class="favs-wrap">
     <button class="btn btn-secondary" onclick="showMain()" style="margin-bottom:16px">← Back</button>
-    <div id="calendarWrap"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-secondary" id="calPrev" onclick="changeCalMonth(-1)">‹</button>
+        <div style="font-size:16px;font-weight:600;color:var(--text);padding:6px 12px;" id="calTitle"></div>
+        <button class="btn btn-secondary" id="calNext" onclick="changeCalMonth(1)">›</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px;" id="calDayLabels"></div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;" id="calGrid"></div>
+    <div id="calDetail" style="display:none;margin-top:16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:15px;font-weight:600;color:var(--text);" id="calDetailTitle"></div>
+        <button onclick="document.getElementById('calDetail').style.display='none'" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);">✕</button>
+      </div>
+      <div id="calMealRows"></div>
+    </div>
   </div>
 </div>
 
@@ -2013,7 +2029,7 @@ function showMealPlan() {
   if (!user) { openAuth('login'); return; }
   ['mainPage','favPage','chefPage','pricingPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
   document.getElementById('mealPage').classList.add('visible');
-  loadCalendar();
+  renderCalendar();
 }
 
 function openPlanPicker(i) {
