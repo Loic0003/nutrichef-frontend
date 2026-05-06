@@ -1598,8 +1598,9 @@ async function updatePassword() {
 }
 
 // PAGES
-function showMain() {
-  ['favPage','chefPage','pricingPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
+
+ function showMain() {
+  ['favPage','chefPage','pricingPage','mealPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
   document.getElementById('mainPage').classList.add('visible');
 }
 async function showFavorites() {
