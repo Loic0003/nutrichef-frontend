@@ -2031,7 +2031,6 @@ function showMealPlan() {
   document.getElementById('mealPage').classList.add('visible');
   renderCalendar();
 }
-
 function openPlanPicker(i) {
   if (!user) { openAuth('login'); return; }
   planRecipe = recipes[i];
