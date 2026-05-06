@@ -1098,9 +1098,6 @@ function applyLang() {
   const t = tx();
   document.getElementById('heroTitle').innerHTML = t.heroTitle;
   document.getElementById('heroSub').textContent = t.heroSub;
-  document.getElementById('s1tag').textContent = t.s1tag;
-  document.getElementById('s1title').textContent = t.s1title;
-  document.getElementById('s1sub').textContent = t.s1sub;
   const s2tagEl = document.getElementById('s2tag');
   const s3tagEl = document.getElementById('s3tag');
   if (s2tagEl) s2tagEl.textContent = t.s2title || 'Ingredients';
