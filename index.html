@@ -740,11 +740,10 @@
 <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="detectFromPhoto(this)"/>
       </div>
       <div class="chips" id="chips"></div>
-<div onclick="document.getElementById('imgInput').click()" style="margin-top:10px;border:2px dashed var(--border2);border-radius:var(--radius);padding:16px;text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text2);font-size:13px;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+<div id="photoZone" onclick="document.getElementById('imgInput').click()" style="margin-top:10px;border:2px dashed var(--border2);border-radius:var(--radius);padding:16px;text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text2);font-size:13px;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
   📷 Prendre une photo &nbsp;·&nbsp; 🖼️ Choisir dans la photothèque &nbsp;·&nbsp; 📁 Déposer un fichier
 </div>
     </div>
-
     <!-- FOOTER -->
     <div class="card-footer">
       <button class="generate-btn" id="genBtn" onclick="generate()" disabled>
@@ -1019,7 +1018,7 @@ const TX = {
     loading:'Loading…', signIn:'Sign in', signUp:'Create account',
     noAccount:"Don't have an account?", createOne:'Create one',
     alreadyHave:'Already have an account?',
-    ddSettings:'Settings', ddFavorites:'My Favorites', ddMeal:'Meal planner', ddUpgrade:'Upgrade plan', ddPlan:'My Plan', ddSignout:'Sign out',
+    ddSettings:'Settings', ddFavorites:'My Favorites', ddMeal:'Meal planner', ddUpgrade:'Upgrade plan', ddPlan:'My Plan', ddSignout:'Sign out',photoBtn:'📷 Take a photo · 🖼️ Choose from library · 📁 Drop a file',
     settingsTitle:'Settings', settingsSub:'Manage your preferences',
 settingsLang:'Language', settingsEmail:'Change email', settingsEmailBtn:'Update email',
 settingsPass:'Change password', settingsPassBtn:'Update password',
@@ -1052,7 +1051,7 @@ step1Label:'Step 1', step2Label:'Step 2', planLabel:'📅 Plan',
     loading:'Chargement…', signIn:'Se connecter', signUp:'Créer un compte',
     noAccount:'Pas de compte ?', createOne:'En créer un',
     alreadyHave:'Déjà un compte ?',
-    ddSettings:'Paramètres', ddFavorites:'Mes favoris', ddMeal:'Planificateur de repas', ddUpgrade:'Améliorer le plan', ddPlan:'Mon plan', ddSignout:'Se déconnecter',
+    ddSettings:'Paramètres', ddFavorites:'Mes favoris', ddMeal:'Planificateur de repas', ddUpgrade:'Améliorer le plan', ddPlan:'Mon plan', ddSignout:'Se déconnecter',photoBtn:'📷 Prendre une photo · 🖼️ Choisir dans la photothèque · 📁 Déposer un fichier',
     settingsTitle:'Paramètres', settingsSub:'Gérez vos préférences',
 settingsLang:'Langue', settingsEmail:'Changer l\'email', settingsEmailBtn:'Mettre à jour',
 settingsPass:'Changer le mot de passe', settingsPassBtn:'Mettre à jour',
@@ -1085,7 +1084,7 @@ step1Label:'Étape 1', step2Label:'Étape 2', planLabel:'📅 Planifier',
     loading:'Cargando…', signIn:'Iniciar sesión', signUp:'Crear cuenta',
     noAccount:'¿Sin cuenta?', createOne:'Crear una',
     alreadyHave:'¿Ya tienes cuenta?',
-    ddSettings:'Configuración', ddFavorites:'Mis favoritos', ddMeal:'Planificador de comidas', ddUpgrade:'Mejorar plan', ddPlan:'Mi plan', ddSignout:'Cerrar sesión',
+    ddSettings:'Configuración', ddFavorites:'Mis favoritos', ddMeal:'Planificador de comidas', ddUpgrade:'Mejorar plan', ddPlan:'Mi plan', ddSignout:'Cerrar sesión',photoBtn:'📷 Tomar una foto · 🖼️ Elegir de la biblioteca · 📁 Soltar un archivo',
     settingsTitle:'Configuración', settingsSub:'Gestiona tus preferencias',
 settingsLang:'Idioma', settingsEmail:'Cambiar email', settingsEmailBtn:'Actualizar',
 settingsPass:'Cambiar contraseña', settingsPassBtn:'Actualizar',
@@ -1101,7 +1100,8 @@ step1Label:'Paso 1', step2Label:'Paso 2', planLabel:'📅 Planificar',
 };
 
 const tx = () => TX[lang] || TX.en;
-
+const photoZone = document.getElementById('photoZone');
+  if (photoZone) photoZone.textContent = t.photoBtn;
 function applyLang() {
   const t = tx();
   document.getElementById('heroTitle').innerHTML = t.heroTitle;
