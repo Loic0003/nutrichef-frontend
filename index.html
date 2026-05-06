@@ -1144,24 +1144,25 @@ if(spb) spb.textContent = t.settingsPassBtn;
 if(sc1) sc1.textContent = t.step1Label;
 if(sc2) sc2.textContent = t.step2Label;
 document.querySelectorAll('.plan-btn-label').forEach(el => el.textContent = t.planLabel);
+const t2 = tx();
+  const ddItems = document.querySelectorAll('.dd-item');
+  if (ddItems[0]) { ddItems[0].innerHTML = '<span class="dd-icon">⚙️</span> ' + t2.ddSettings; ddItems[0].onclick = openSettings; }
+  if (ddItems[1]) { ddItems[1].innerHTML = '<span class="dd-icon">❤️</span> ' + t2.ddFavorites; ddItems[1].onclick = showFavorites; }
+  if (ddItems[2]) { ddItems[2].innerHTML = '<span class="dd-icon">📅</span> ' + t2.ddMeal; ddItems[2].onclick = showMealPlan; }
+  if (ddItems[3]) { ddItems[3].innerHTML = '<span class="dd-icon">⭐</span> ' + t2.ddUpgrade; ddItems[3].onclick = showPricing; }
+  if (ddItems[4]) { ddItems[4].innerHTML = '<span class="dd-icon">💎</span> ' + t2.ddPlan; ddItems[4].onclick = openPlanModal; }
+  if (ddItems[5]) { ddItems[5].innerHTML = '<span class="dd-icon">↗</span> ' + t2.ddSignout; ddItems[5].onclick = logout; }
   ['En','Fr','Es'].forEach(l => {
     const el = document.getElementById('lang' + l);
     if (el) el.classList.toggle('active', lang === l.toLowerCase());
   });
 }
-
 function setLang(code, name) {
   lang = code; langName = name;
   localStorage.setItem('nc_lang', code);
   localStorage.setItem('nc_lang_name', name);
   applyLang();
-const ddItems = document.querySelectorAll('.dd-item');
-  if (ddItems[0]) ddItems[0].innerHTML = '<span class="dd-icon">⚙️</span> ' + t.ddSettings;
-  if (ddItems[1]) ddItems[1].innerHTML = '<span class="dd-icon">❤️</span> ' + t.ddFavorites;
-  if (ddItems[2]) ddItems[2].innerHTML = '<span class="dd-icon">📅</span> ' + t.ddMeal;
-  if (ddItems[3]) ddItems[3].innerHTML = '<span class="dd-icon">⭐</span> ' + t.ddUpgrade;
-  if (ddItems[4]) ddItems[4].innerHTML = '<span class="dd-icon">💎</span> ' + t.ddPlan;
-  if (ddItems[5]) ddItems[5].innerHTML = '<span class="dd-icon">↗</span> ' + t.ddSignout;
+}
 
 // AUTH
 sb.auth.onAuthStateChange((e, session) => {
