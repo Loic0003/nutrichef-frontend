@@ -1462,11 +1462,37 @@ function renderCards() {
 '</div>' +
     '</div>'
   ).join('');
-  document.getElementById('recipesSection').classList.add('visible');
+document.getElementById('recipesSection').classList.add('visible');
   document.getElementById('tryAgain').style.display = 'block';
   document.getElementById('recipesSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  fetchWebRecipes(ingredients.join(' '));
 }
-
+async function fetchWebRecipes(query) {
+  try {
+    const res = await fetch(BACKEND + '/api/web-recipes?query=' + encodeURIComponent(query));
+    const data = await res.json();
+    if (!data.results?.length) return;
+    let html = '<div style="padding:0 32px 32px"><div class="recipes-label" style="padding-top:0">🌐 Recettes du web</div><div style="display:grid;gap:12px;">';
+    data.results.forEach(r => {
+      html += `<div class="recipe-card" style="cursor:default">
+        ${r.image ? `<img src="${r.image}" style="width:100%;height:180px;object-fit:cover;" onerror="this.style.display='none'"/>` : ''}
+        <div class="rc-body">
+          <div class="rc-title">${r.title}</div>
+          <div class="rc-desc">${r.description || ''}</div>
+          <div class="rc-pills">
+            ${r.time ? '<span class="rc-pill">⏱ ' + r.time + '</span>' : ''}
+            ${r.source ? '<span class="rc-pill">🌐 ' + r.source + '</span>' : ''}
+          </div>
+          <div class="rc-actions">
+            <button class="rc-view" onclick="window.open('${r.url}','_blank')">Voir la recette →</button>
+          </div>
+        </div>
+      </div>`;
+    });
+    html += '</div></div>';
+    document.getElementById('recipesSection').insertAdjacentHTML('beforeend', html);
+  } catch {}
+}
 function viewRecipe(i) {
   currentRecipe = recipes[i]; const r = currentRecipe; const t = tx();
   document.getElementById('dTitle').textContent = r.name || '';
