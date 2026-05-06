@@ -979,6 +979,7 @@
         <div class="dd-sep"></div>
         <button class="dd-item" onclick="openSettings()"><span class="dd-icon">⚙️</span> Settings</button>
         <button class="dd-item" onclick="showFavorites()"><span class="dd-icon">❤️</span> My Favorites</button>
+        <button class="dd-item" onclick="showMealPlan()"><span class="dd-icon">📅</span> Meal planner</button>
         <button class="dd-item" onclick="showPricing()"><span class="dd-icon">⭐</span> Upgrade plan</button>
         <button class="dd-item" onclick="openPlanModal()"><span class="dd-icon">💎</span> My Plan</button>
         <div class="dd-sep"></div>
@@ -1156,7 +1157,47 @@
     </div>
   </div>
 </div>
+<!-- MEAL PLAN PAGE -->
+<div class="page" id="mealPage">
+  <div class="page-hero">
+    <div class="page-eyebrow">Weekly planning</div>
+    <div class="page-title">Meal planner</div>
+    <div class="page-sub">Plan your meals for the week.</div>
+  </div>
+  <div class="favs-wrap">
+    <button class="btn btn-secondary" onclick="showMain()" style="margin-bottom:16px">← Back</button>
+    <div id="calendarWrap"></div>
+  </div>
+</div>
 
+<!-- PLAN PICKER MODAL -->
+<div class="overlay" id="planPickerOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Add to plan</div>
+        <div class="modal-sub">Choose a day and meal</div>
+      </div>
+      <button class="modal-close" onclick="closePlanPicker()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Day</label>
+        <input class="form-input" type="date" id="planDate"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Meal</label>
+        <select class="form-input" id="planMeal">
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="snack">Snack</option>
+        </select>
+      </div>
+      <button class="submit-btn" onclick="confirmPlan()">Add to planner</button>
+    </div>
+  </div>
+</div>
 <!-- FAVORITES PAGE -->
 <div class="page" id="favPage">
   <div class="page-hero">
@@ -1662,6 +1703,7 @@ function renderCards() {
         '<div class="rc-actions">'+
           '<button class="rc-view" onclick="viewRecipe('+i+')">'+t.viewBtn+'</button>'+
           '<button class="rc-save" id="rc'+i+'" onclick="saveByIdx('+i+')">'+t.saveBtn+'</button>'+
+    '<button class="rc-save" onclick="openPlanPicker('+i+')">📅 Plan</button>'+
         '</div>'+
       '</div>'+
     '</div>'
@@ -1962,6 +2004,84 @@ async function openPlanModal() {
   `;
   document.getElementById('planUpgradeBtn').style.display = plan === 'pro' ? 'none' : 'block';
 }
+ // MEAL PLANNER
+let planRecipe = null;
+
+function showMealPlan() {
+  document.getElementById('dropdown').classList.remove('open');
+  if (!user) { openAuth('login'); return; }
+  ['mainPage','favPage','chefPage','pricingPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
+  document.getElementById('mealPage').classList.add('visible');
+  loadCalendar();
+}
+
+function openPlanPicker(i) {
+  if (!user) { openAuth('login'); return; }
+  planRecipe = recipes[i];
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('planDate').value = today;
+  document.getElementById('planPickerOverlay').classList.add('visible');
+}
+
+function closePlanPicker() {
+  document.getElementById('planPickerOverlay').classList.remove('visible');
+}
+
+async function confirmPlan() {
+  const date = document.getElementById('planDate').value;
+  const meal_type = document.getElementById('planMeal').value;
+  if (!date || !planRecipe) return;
+  await fetch(BACKEND + '/api/meal-plan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId: user.id, date, meal_type, recipe_data: planRecipe })
+  });
+  closePlanPicker();
+  alert('Added to your meal plan!');
+}
+
+async function loadCalendar() {
+  const wrap = document.getElementById('calendarWrap');
+  wrap.innerHTML = '<p style="color:var(--text2);font-size:14px">Loading…</p>';
+  const today = new Date();
+  const from = new Date(today); from.setDate(today.getDate() - today.getDay() + 1);
+  const to = new Date(from); to.setDate(from.getDate() + 6);
+  const fromStr = from.toISOString().split('T')[0];
+  const toStr = to.toISOString().split('T')[0];
+  const res = await fetch(`${BACKEND}/api/meal-plan?userId=${user.id}&from=${fromStr}&to=${toStr}`);
+  const data = await res.json();
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const meals = ['breakfast','lunch','dinner','snack'];
+  const mealIcons = { breakfast:'🌅', lunch:'☀️', dinner:'🌙', snack:'🍎' };
+  let html = '<div style="display:grid;gap:12px;">';
+  for (let d = 0; d < 7; d++) {
+    const date = new Date(from); date.setDate(from.getDate() + d);
+    const dateStr = date.toISOString().split('T')[0];
+    const dayMeals = data.filter(m => m.date === dateStr);
+    html += `<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;">
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;">${days[d]} <span style="color:var(--text3);font-weight:400">${date.getDate()}/${date.getMonth()+1}</span></div>
+      <div style="display:grid;gap:8px;">`;
+    meals.forEach(meal => {
+      const entry = dayMeals.find(m => m.meal_type === meal);
+      if (entry) {
+        html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg2);border-radius:var(--radius);font-size:13px;">
+          <span>${mealIcons[meal]} <strong>${meal}</strong> — ${entry.recipe_data.name}</span>
+          <button onclick="deleteMeal('${entry.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;">✕</button>
+        </div>`;
+      } else {
+        html += `<div style="padding:8px 12px;background:var(--bg3);border-radius:var(--radius);font-size:13px;color:var(--text3);">${mealIcons[meal]} ${meal}</div>`;
+      }
+    });
+    html += '</div></div>';
+  }
+  html += '</div>';
+  wrap.innerHTML = html;
+}
+
+async function deleteMeal(id) {
+  await fetch(`${BACKEND}/api/meal-plan/${id}`, { method: 'DELETE' });
+  loadCalendar();
+} 
 // INIT
 document.getElementById('loginBtn').style.display='flex';
 applyLang();
