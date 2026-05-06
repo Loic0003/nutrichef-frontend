@@ -644,13 +644,13 @@
   <div class="modal">
     <div class="modal-header">
       <div>
-        <div class="modal-title">Settings</div>
-        <div class="modal-sub">Manage your preferences</div>
+    <div class="modal-title" id="settingsModalTitle">Settings</div>
+       <div class="modal-sub" id="settingsModalSub">Manage your preferences</div>
       </div>
       <button class="modal-close" onclick="closeSettings()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-label" style="margin-bottom:10px">Language</div>
+      <div class="form-label" id="settingsLangLabel" style="margin-bottom:10px">Language</div>
       <div class="lang-grid">
         <button class="lang-opt" id="langEn" onclick="setLang('en','English')">
           <span class="flag">🇺🇸</span><span class="lname">English</span>
@@ -665,16 +665,15 @@
 
       <div class="modal-divider"></div>
 
-      <div class="form-label" style="margin-bottom:10px">Change email</div>
+     <div class="form-label" id="settingsEmailLabel" style="margin-bottom:10px">Change email</div>
       <div class="form-group">
         <input class="form-input" type="email" id="sEmail" placeholder="New email address"/>
       </div>
       <div class="form-msg" id="emailMsg"></div>
-      <button class="submit-btn" onclick="updateEmail()" style="margin-bottom:0">Update email</button>
-
+      <button class="submit-btn" id="settingsEmailBtn" onclick="updateEmail()" style="margin-bottom:0">Update email</button>
       <div class="modal-divider"></div>
 
-      <div class="form-label" style="margin-bottom:10px">Change password</div>
+     <div class="form-label" id="settingsPassLabel" style="margin-bottom:10px">Change password</div>
       <div class="form-group">
         <input class="form-input" type="password" id="sNewPass" placeholder="New password"/>
       </div>
@@ -682,7 +681,7 @@
         <input class="form-input" type="password" id="sConfPass" placeholder="Confirm new password"/>
       </div>
       <div class="form-msg" id="passMsg"></div>
-      <button class="submit-btn" onclick="updatePassword()" style="margin-bottom:0">Update password</button>
+    <button class="submit-btn" id="settingsPassBtn" onclick="updatePassword()" style="margin-bottom:0">Update password</button>
     </div>
   </div>
 </div>
@@ -702,7 +701,7 @@
         <!-- Step 1 -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
           <div style="width:28px;height:28px;border-radius:50%;background:var(--text);color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;" id="stepCircle1">1</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text);" id="s3tag">Your goal</div>
+          <div style="font-size:11px;font-weight:600;color:var(--text);" id="s3tag" id="stepCircle1label">Your goal</div>
         </div>
         <!-- Line -->
         <div style="flex:1;height:2px;background:var(--border);margin:0 8px;margin-bottom:16px;position:relative;">
@@ -711,7 +710,7 @@
         <!-- Step 2 -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
           <div style="width:28px;height:28px;border-radius:50%;background:var(--border);color:var(--text3);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.3s;" id="stepCircle2">2</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text3);transition:color 0.3s;" id="s2tag">Ingredients</div>
+          <div style="font-size:11px;font-weight:600;color:var(--text3);transition:color 0.3s;" id="s2tag" id="stepCircle2label">Ingredients</div>
         </div>
       </div>
     </div>
@@ -1015,6 +1014,10 @@ const TX = {
     loading:'Loading…', signIn:'Sign in', signUp:'Create account',
     noAccount:"Don't have an account?", createOne:'Create one',
     alreadyHave:'Already have an account?',
+    settingsTitle:'Settings', settingsSub:'Manage your preferences',
+settingsLang:'Language', settingsEmail:'Change email', settingsEmailBtn:'Update email',
+settingsPass:'Change password', settingsPassBtn:'Update password',
+step1Label:'Step 1', step2Label:'Step 2', planLabel:'📅 Plan',
     chefEmpty:'Ask me anything about food',
     chefEmptySub:'Recipes, techniques, substitutions, nutrition — I\'m your personal culinary expert.',
     chefSuggs:[
@@ -1043,6 +1046,10 @@ const TX = {
     loading:'Chargement…', signIn:'Se connecter', signUp:'Créer un compte',
     noAccount:'Pas de compte ?', createOne:'En créer un',
     alreadyHave:'Déjà un compte ?',
+    settingsTitle:'Paramètres', settingsSub:'Gérez vos préférences',
+settingsLang:'Langue', settingsEmail:'Changer l\'email', settingsEmailBtn:'Mettre à jour',
+settingsPass:'Changer le mot de passe', settingsPassBtn:'Mettre à jour',
+step1Label:'Étape 1', step2Label:'Étape 2', planLabel:'📅 Planifier',
     chefEmpty:'Pose-moi toutes tes questions sur la cuisine',
     chefEmptySub:'Recettes, techniques, substitutions, nutrition — je suis ton expert culinaire personnel.',
     chefSuggs:[
@@ -1071,6 +1078,10 @@ const TX = {
     loading:'Cargando…', signIn:'Iniciar sesión', signUp:'Crear cuenta',
     noAccount:'¿Sin cuenta?', createOne:'Crear una',
     alreadyHave:'¿Ya tienes cuenta?',
+    settingsTitle:'Configuración', settingsSub:'Gestiona tus preferencias',
+settingsLang:'Idioma', settingsEmail:'Cambiar email', settingsEmailBtn:'Actualizar',
+settingsPass:'Cambiar contraseña', settingsPassBtn:'Actualizar',
+step1Label:'Paso 1', step2Label:'Paso 2', planLabel:'📅 Planificar',
     chefEmpty:'Pregúntame cualquier cosa sobre cocina',
     chefEmptySub:'Recetas, técnicas, sustituciones, nutrición — soy tu experto culinario personal.',
     chefSuggs:[
@@ -1114,6 +1125,25 @@ function applyLang() {
       '<button class="quick-sugg" onclick="sendSugg(\'' + s.q.replace(/'/g, "\\'") + '\')">' + s.icon + ' ' + s.text + '</button>'
     ).join('');
   }
+  const smt = document.getElementById('settingsModalTitle');
+const sms = document.getElementById('settingsModalSub');
+const sll = document.getElementById('settingsLangLabel');
+const sel = document.getElementById('settingsEmailLabel');
+const seb = document.getElementById('settingsEmailBtn');
+const spl = document.getElementById('settingsPassLabel');
+const spb = document.getElementById('settingsPassBtn');
+const sc1 = document.getElementById('stepCircle1label');
+const sc2 = document.getElementById('stepCircle2label');
+if(smt) smt.textContent = t.settingsTitle;
+if(sms) sms.textContent = t.settingsSub;
+if(sll) sll.textContent = t.settingsLang;
+if(sel) sel.textContent = t.settingsEmail;
+if(seb) seb.textContent = t.settingsEmailBtn;
+if(spl) spl.textContent = t.settingsPass;
+if(spb) spb.textContent = t.settingsPassBtn;
+if(sc1) sc1.textContent = t.step1Label;
+if(sc2) sc2.textContent = t.step2Label;
+document.querySelectorAll('.plan-btn-label').forEach(el => el.textContent = t.planLabel);
   ['En','Fr','Es'].forEach(l => {
     const el = document.getElementById('lang' + l);
     if (el) el.classList.toggle('active', lang === l.toLowerCase());
@@ -1388,8 +1418,7 @@ function renderCards() {
         '<div class="rc-actions">' +
           '<button class="rc-view" onclick="viewRecipe(' + i + ')">' + t.viewBtn + '</button>' +
           '<button class="rc-save" id="rc' + i + '" onclick="saveByIdx(' + i + ')">' + t.saveBtn + '</button>' +
-          '<button class="rc-save" onclick="openPlanPicker(' + i + ')">📅 Plan</button>' +
-        '</div>' +
+         '<button class="rc-save plan-btn-label-wrap" onclick="openPlanPicker(' + i + ')"><span class="plan-btn-label">📅 Plan</span></button>'
       '</div>' +
     '</div>'
   ).join('');
