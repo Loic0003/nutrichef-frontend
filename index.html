@@ -1173,10 +1173,10 @@ function renderNav() {
     document.getElementById('ddEmail').textContent = user.email;
     document.getElementById('loginBtn').style.display = 'none';
     document.getElementById('avatarWrap').style.display = 'block';
-  } else {
-    document.getElementById('loginBtn').style.display = 'flex';
+} else {
+    document.getElementById('loginBtn').style.display = 'inline-flex';
     document.getElementById('avatarWrap').style.display = 'none';
-  }
+}
 }
 
 function toggleDropdown() { document.getElementById('dropdown').classList.toggle('open'); }
@@ -1418,8 +1418,8 @@ function renderCards() {
         '<div class="rc-actions">' +
           '<button class="rc-view" onclick="viewRecipe(' + i + ')">' + t.viewBtn + '</button>' +
           '<button class="rc-save" id="rc' + i + '" onclick="saveByIdx(' + i + ')">' + t.saveBtn + '</button>' +
-         '<button class="rc-save plan-btn-label-wrap" onclick="openPlanPicker(' + i + ')"><span class="plan-btn-label">📅 Plan</span></button>'
-      '</div>' +
+       '<button class="rc-save plan-btn-label-wrap" onclick="openPlanPicker(' + i + ')"><span class="plan-btn-label">📅 Plan</span></button>' +
+'</div>' +
     '</div>'
   ).join('');
   document.getElementById('recipesSection').classList.add('visible');
@@ -1866,7 +1866,7 @@ async function openCalDay(key) {
 }
 
 // INIT
-document.getElementById('loginBtn').style.display = 'flex';
+
 applyLang();
 renderNav();
 </script>
