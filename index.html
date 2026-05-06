@@ -1156,12 +1156,12 @@ function setLang(code, name) {
   localStorage.setItem('nc_lang_name', name);
   applyLang();
 const ddItems = document.querySelectorAll('.dd-item');
-  if (ddItems[0]) ddItems[0].childNodes[1].textContent = ' ' + t.ddSettings;
-  if (ddItems[1]) ddItems[1].childNodes[1].textContent = ' ' + t.ddFavorites;
-  if (ddItems[2]) ddItems[2].childNodes[1].textContent = ' ' + t.ddMeal;
-  if (ddItems[3]) ddItems[3].childNodes[1].textContent = ' ' + t.ddUpgrade;
-  if (ddItems[4]) ddItems[4].childNodes[1].textContent = ' ' + t.ddPlan;
-  if (ddItems[5]) ddItems[5].childNodes[1].textContent = ' ' + t.ddSignout;}
+  if (ddItems[0]) ddItems[0].innerHTML = '<span class="dd-icon">⚙️</span> ' + t.ddSettings;
+  if (ddItems[1]) ddItems[1].innerHTML = '<span class="dd-icon">❤️</span> ' + t.ddFavorites;
+  if (ddItems[2]) ddItems[2].innerHTML = '<span class="dd-icon">📅</span> ' + t.ddMeal;
+  if (ddItems[3]) ddItems[3].innerHTML = '<span class="dd-icon">⭐</span> ' + t.ddUpgrade;
+  if (ddItems[4]) ddItems[4].innerHTML = '<span class="dd-icon">💎</span> ' + t.ddPlan;
+  if (ddItems[5]) ddItems[5].innerHTML = '<span class="dd-icon">↗</span> ' + t.ddSignout;
 
 // AUTH
 sb.auth.onAuthStateChange((e, session) => {
