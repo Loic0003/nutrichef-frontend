@@ -29,7 +29,6 @@
     --shadow-lg: 0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
   }
 
-
   body {
     background: var(--bg);
     color: var(--text);
@@ -39,7 +38,6 @@
     min-height: 100vh;
   }
 
-  /* ── NAV ── */
   nav {
     position: sticky;
     top: 0;
@@ -63,7 +61,6 @@
     cursor: pointer;
     user-select: none;
   }
-
   .logo em { color: var(--accent); font-style: normal; }
 
   .nav-right { display: flex; align-items: center; gap: 8px; }
@@ -83,36 +80,16 @@
     border: none;
     white-space: nowrap;
   }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--accent);
-    border: 1px solid transparent;
-  }
+  .btn-ghost { background: transparent; color: var(--accent); border: 1px solid transparent; }
   .btn-ghost:hover { background: var(--accent-light); }
-
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-  }
+  .btn-primary { background: var(--accent); color: white; }
   .btn-primary:hover { background: var(--accent-hover); }
   .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .btn-secondary {
-    background: var(--bg2);
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
+  .btn-secondary { background: var(--bg2); color: var(--text); border: 1px solid var(--border); }
   .btn-secondary:hover { background: #e8e8ed; }
-
-  .btn-danger {
-    background: transparent;
-    color: var(--red);
-    border: 1px solid transparent;
-  }
+  .btn-danger { background: transparent; color: var(--red); border: 1px solid transparent; }
   .btn-danger:hover { background: rgba(255,59,48,0.08); }
 
-  /* AVATAR */
   .avatar-wrap { position: relative; }
   .avatar {
     width: 32px; height: 32px;
@@ -164,13 +141,11 @@
   .dd-item.danger:hover { background: rgba(255,59,48,0.06); }
   .dd-icon { font-size: 15px; width: 20px; text-align: center; }
 
-  /* ── HERO ── */
   .hero {
     text-align: center;
     padding: 80px 24px 56px;
     background: linear-gradient(180deg, var(--bg) 0%, var(--bg3) 100%);
   }
-
   .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -186,7 +161,6 @@
     letter-spacing: 0.01em;
   }
   .hero-badge span { color: var(--accent); }
-
   .hero h1 {
     font-size: clamp(36px, 6vw, 64px);
     font-weight: 600;
@@ -195,7 +169,6 @@
     color: var(--text);
     margin-bottom: 18px;
   }
-
   .hero h1 em {
     font-style: normal;
     background: linear-gradient(135deg, #0071e3 0%, #30d158 100%);
@@ -203,7 +176,6 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-
   .hero p {
     font-size: 17px;
     color: var(--text2);
@@ -213,7 +185,6 @@
     font-weight: 400;
   }
 
-  /* ── CARD ── */
   .card {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -224,11 +195,7 @@
     padding: 0;
     overflow: hidden;
   }
-
-  .card-section {
-    padding: 28px 32px;
-    border-bottom: 1px solid var(--border);
-  }
+  .card-section { padding: 28px 32px; border-bottom: 1px solid var(--border); }
   .card-section:last-child { border-bottom: none; }
 
   .section-tag {
@@ -240,85 +207,46 @@
     color: var(--accent);
     margin-bottom: 8px;
   }
+  .card-section h2 { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 4px; letter-spacing: -0.02em; }
+  .card-section p { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
 
-  .card-section h2 {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 4px;
-    letter-spacing: -0.02em;
-  }
-
-  .card-section p {
-    font-size: 13px;
-    color: var(--text2);
-    margin-bottom: 20px;
-  }
-
-  /* PREFS */
-  .prefs-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-  }
-
+  .prefs-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .pref-chip {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: flex; align-items: center; gap: 8px;
     padding: 10px 14px;
     border-radius: var(--radius);
     border: 1px solid var(--border);
     background: var(--bg);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
+    font-size: 13px; font-weight: 500; color: var(--text);
     cursor: pointer;
     transition: all 0.15s ease;
     user-select: none;
   }
   .pref-chip:hover { border-color: var(--accent); background: var(--accent-light); }
-  .pref-chip.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-  }
+  .pref-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
   .pref-icon { font-size: 16px; }
 
-  /* INGREDIENT INPUT */
-  .input-wrap {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
+  .input-wrap { display: flex; gap: 8px; margin-bottom: 12px; }
   .text-input {
     flex: 1;
     padding: 11px 16px;
     border: 1px solid var(--border2);
     border-radius: var(--radius);
-    font-size: 15px;
-    font-family: inherit;
+    font-size: 15px; font-family: inherit;
     color: var(--text);
     background: var(--bg3);
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .text-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
-    background: var(--bg);
-  }
+  .text-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,0.12); background: var(--bg); }
   .text-input::placeholder { color: var(--text3); }
 
   .add-btn {
     width: 42px; height: 42px;
     border-radius: var(--radius);
     background: var(--text);
-    color: white;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
+    color: white; border: none;
+    font-size: 20px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
     transition: background 0.15s;
@@ -327,16 +255,10 @@
 
   .chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px; }
   .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
     padding: 5px 12px 5px 14px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 980px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 980px; font-size: 13px; font-weight: 500; color: var(--text);
     animation: chipIn 0.15s ease;
   }
   @keyframes chipIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
@@ -348,220 +270,105 @@
   }
   .chip-x:hover { color: var(--red); }
 
-  /* GENERATE BTN */
   .card-footer { padding: 24px 32px; background: var(--bg3); }
-
   .generate-btn {
-    width: 100%;
-    padding: 15px;
+    width: 100%; padding: 15px;
     border-radius: var(--radius-lg);
-    background: var(--text);
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    font-family: inherit;
-    border: none;
-    cursor: pointer;
+    background: var(--text); color: white;
+    font-size: 16px; font-weight: 600; font-family: inherit;
+    border: none; cursor: pointer;
     transition: all 0.2s ease;
     letter-spacing: -0.01em;
   }
-  .generate-btn:hover:not(:disabled) {
-    background: #1d1d1f;
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  }
+  .generate-btn:hover:not(:disabled) { background: #1d1d1f; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
   .generate-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
 
-  /* LOADER */
   .loader { display: none; text-align: center; padding: 40px 0; }
   .loader.visible { display: block; }
   .loader-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
-  .loader-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: dotPulse 1.4s ease-in-out infinite;
-  }
+  .loader-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: dotPulse 1.4s ease-in-out infinite; }
   .loader-dot:nth-child(2) { animation-delay: 0.2s; }
   .loader-dot:nth-child(3) { animation-delay: 0.4s; }
   @keyframes dotPulse { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
   .loader p { font-size: 14px; color: var(--text2); font-weight: 500; }
 
-  /* ERROR */
   .error-msg {
     display: none;
-    margin-top: 16px;
-    padding: 14px 18px;
+    margin-top: 16px; padding: 14px 18px;
     background: rgba(255,59,48,0.06);
     border: 1px solid rgba(255,59,48,0.2);
     border-radius: var(--radius);
-    font-size: 14px;
-    color: #c0392b;
+    font-size: 14px; color: #c0392b;
   }
   .error-msg.visible { display: block; }
 
-  /* RECIPE CARDS */
   .recipes-section { padding: 0 32px 32px; display: none; }
   .recipes-section.visible { display: block; animation: fadeUp 0.3s ease; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
   .recipes-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text3);
-    padding: 24px 0 16px;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text3); padding: 24px 0 16px;
   }
-
   .recipe-cards { display: grid; gap: 12px; }
-
   .recipe-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    background: var(--bg);
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    overflow: hidden; transition: all 0.2s ease; cursor: pointer; background: var(--bg);
   }
-  .recipe-card:hover {
-    border-color: var(--accent);
-    box-shadow: var(--shadow);
-    transform: translateY(-2px);
-  }
+  .recipe-card:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-2px); }
 
   .rc-body { padding: 20px 22px 16px; }
   .rc-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em; }
   .rc-desc { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 14px; }
   .rc-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-  .rc-pill {
-    padding: 4px 10px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 980px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text2);
-  }
+  .rc-pill { padding: 4px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 980px; font-size: 12px; font-weight: 500; color: var(--text2); }
   .rc-actions { display: flex; gap: 8px; align-items: center; }
-  .rc-view {
-    flex: 1;
-    padding: 9px 18px;
-    background: var(--text);
-    color: white;
-    border: none;
-    border-radius: 980px;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
+  .rc-view { flex: 1; padding: 9px 18px; background: var(--text); color: white; border: none; border-radius: 980px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.15s; }
   .rc-view:hover { background: #3a3a3c; }
-  .rc-save {
-    padding: 9px 16px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 980px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
+  .rc-save { padding: 9px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 980px; font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
   .rc-save:hover { background: #e8e8ed; }
   .rc-save.saved { background: rgba(48,209,88,0.1); border-color: var(--green); color: #1a7a35; }
 
   .try-again {
-    margin-top: 16px;
-    width: 100%;
-    padding: 12px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text2);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-    display: none;
+    margin-top: 16px; width: 100%; padding: 12px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); font-size: 14px; font-weight: 500;
+    color: var(--text2); cursor: pointer; font-family: inherit;
+    transition: all 0.15s; display: none;
   }
   .try-again:hover { background: #e8e8ed; color: var(--text); }
 
-  /* RECIPE DETAIL */
   .recipe-detail { display: none; padding: 0 32px 32px; }
   .recipe-detail.visible { display: block; animation: fadeUp 0.3s ease; }
 
   .detail-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
     padding: 10px 0 20px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--accent);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
+    font-size: 13px; font-weight: 500; color: var(--accent);
+    background: none; border: none; cursor: pointer; font-family: inherit;
     transition: opacity 0.15s;
   }
   .detail-back:hover { opacity: 0.7; }
 
   .detail-hero {
     background: linear-gradient(135deg, #1d1d1f 0%, #3a3a3c 100%);
-    border-radius: var(--radius-lg);
-    padding: 28px;
-    color: white;
-    margin-bottom: 24px;
-    position: relative;
-    overflow: hidden;
+    border-radius: var(--radius-lg); padding: 28px; color: white;
+    margin-bottom: 24px; position: relative; overflow: hidden;
   }
-  .detail-hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at top right, rgba(0,113,227,0.3) 0%, transparent 60%);
-  }
+  .detail-hero::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at top right, rgba(0,113,227,0.3) 0%, transparent 60%); }
   .detail-hero-content { position: relative; z-index: 1; }
   .detail-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
   .detail-desc { font-size: 14px; opacity: 0.75; line-height: 1.5; margin-bottom: 16px; }
   .detail-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
   .detail-pill { padding: 5px 12px; background: rgba(255,255,255,0.15); border-radius: 980px; font-size: 12px; font-weight: 500; }
-  .detail-save {
-    padding: 9px 20px;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 980px;
-    color: white;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
+  .detail-save { padding: 9px 20px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 980px; color: white; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.15s; }
   .detail-save:hover { background: rgba(255,255,255,0.25); }
   .detail-save.saved { background: rgba(48,209,88,0.2); border-color: var(--green); }
 
   .detail-body { display: grid; gap: 20px; }
-
-  .detail-block {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 22px 24px;
-  }
-  .detail-block-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 16px;
-  }
+  .detail-block { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 24px; }
+  .detail-block-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
 
   .nutr-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
   .nutr-item { text-align: center; }
@@ -569,86 +376,25 @@
   .nutr-label { font-size: 11px; font-weight: 500; color: var(--text3); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
 
   .ing-list { display: grid; gap: 8px; }
-  .ing-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: var(--text);
-  }
+  .ing-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); }
   .ing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
 
   .steps-list { display: grid; gap: 16px; }
   .step-item { display: flex; gap: 14px; }
-  .step-num {
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    background: var(--text);
-    color: white;
-    font-size: 12px;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
+  .step-num { width: 26px; height: 26px; border-radius: 50%; background: var(--text); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .step-text { font-size: 14px; line-height: 1.6; color: var(--text); padding-top: 3px; }
 
-  .tip-box {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    font-size: 14px;
-    color: var(--text2);
-    line-height: 1.6;
-  }
+  .tip-box { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--text2); line-height: 1.6; }
   .tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
 
-  /* MODAL */
-  .overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(4px);
-    z-index: 300;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 300; align-items: center; justify-content: center; padding: 20px; }
   .overlay.visible { display: flex; }
 
-  .modal {
-    background: var(--bg);
-    border-radius: var(--radius-xl);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-lg);
-    width: 100%;
-    max-width: 420px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    animation: modalIn 0.2s ease;
-  }
+  .modal { background: var(--bg); border-radius: var(--radius-xl); border: 1px solid var(--border); box-shadow: var(--shadow-lg); width: 100%; max-width: 420px; max-height: 90vh; overflow-y: auto; position: relative; animation: modalIn 0.2s ease; }
   @keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: none; } }
 
-  .modal-header {
-    padding: 24px 24px 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-  .modal-close {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: var(--bg2);
-    border: none;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    color: var(--text2);
-    flex-shrink: 0;
-    transition: background 0.15s;
-  }
+  .modal-header { padding: 24px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; }
+  .modal-close { width: 28px; height: 28px; border-radius: 50%; background: var(--bg2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text2); flex-shrink: 0; transition: background 0.15s; }
   .modal-close:hover { background: #e8e8ed; }
   .modal-title { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
   .modal-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
@@ -656,49 +402,15 @@
 
   .form-group { margin-bottom: 14px; }
   .form-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; display: block; }
-  .form-input {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    font-size: 15px;
-    font-family: inherit;
-    color: var(--text);
-    background: var(--bg3);
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .form-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
-    background: var(--bg);
-  }
+  .form-input { width: 100%; padding: 11px 14px; border: 1px solid var(--border2); border-radius: var(--radius); font-size: 15px; font-family: inherit; color: var(--text); background: var(--bg3); outline: none; transition: border-color 0.15s, box-shadow 0.15s; box-sizing: border-box; }
+  .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,0.12); background: var(--bg); }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  .form-msg {
-    display: none;
-    padding: 10px 14px;
-    border-radius: var(--radius);
-    font-size: 13px;
-    margin-bottom: 14px;
-  }
+  .form-msg { display: none; padding: 10px 14px; border-radius: var(--radius); font-size: 13px; margin-bottom: 14px; }
   .form-msg.error { display: block; background: rgba(255,59,48,0.06); border: 1px solid rgba(255,59,48,0.2); color: var(--red); }
   .form-msg.success { display: block; background: rgba(48,209,88,0.08); border: 1px solid rgba(48,209,88,0.25); color: #1a7a35; }
 
-  .submit-btn {
-    width: 100%;
-    padding: 13px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 15px;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    transition: background 0.15s;
-    margin-top: 4px;
-  }
+  .submit-btn { width: 100%; padding: 13px; background: var(--accent); color: white; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.15s; margin-top: 4px; }
   .submit-btn:hover { background: var(--accent-hover); }
 
   .auth-switch { text-align: center; margin-top: 14px; font-size: 13px; color: var(--text2); }
@@ -707,49 +419,24 @@
 
   .modal-divider { height: 1px; background: var(--border); margin: 20px 0; }
 
-  /* LANG PICKER */
   .lang-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .lang-opt {
-    text-align: center;
-    padding: 14px 8px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    background: var(--bg);
-    transition: all 0.15s;
-    font-family: inherit;
-  }
+  .lang-opt { text-align: center; padding: 14px 8px; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; background: var(--bg); transition: all 0.15s; font-family: inherit; }
   .lang-opt:hover { border-color: var(--accent); background: var(--accent-light); }
   .lang-opt.active { border-color: var(--accent); background: var(--accent-light); }
   .lang-opt .flag { font-size: 24px; display: block; margin-bottom: 6px; }
   .lang-opt .lname { font-size: 12px; font-weight: 600; color: var(--text); }
 
-  /* FAVS PAGE */
   .page { display: none; }
   .page.visible { display: block; }
 
-  .page-hero {
-    padding: 52px 24px 40px;
-    max-width: 680px;
-    margin: 0 auto;
-  }
+  .page-hero { padding: 52px 24px 40px; max-width: 680px; margin: 0 auto; }
   .page-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 8px; }
   .page-title { font-size: 32px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; margin-bottom: 6px; }
   .page-sub { font-size: 15px; color: var(--text2); }
 
   .favs-wrap { max-width: 680px; margin: 0 auto; padding: 0 24px 80px; }
   .fav-grid { display: grid; gap: 10px; margin-top: 20px; }
-  .fav-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px 22px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    transition: box-shadow 0.15s;
-  }
+  .fav-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; transition: box-shadow 0.15s; }
   .fav-card:hover { box-shadow: var(--shadow-sm); }
   .fav-info { flex: 1; }
   .fav-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
@@ -764,36 +451,15 @@
   .empty-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
   .empty-sub { font-size: 14px; color: var(--text2); }
 
-  /* ── PRICING ── */
   .pricing-wrap { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
   .pricing-hero { text-align: center; padding: 52px 0 48px; }
   .pricing-title { font-size: 36px; font-weight: 700; color: var(--text); letter-spacing: -0.03em; margin: 8px 0 10px; }
   .pricing-sub { font-size: 16px; color: var(--text2); }
   .pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-  .pricing-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: 28px 24px;
-    background: var(--bg);
-    position: relative;
-    transition: box-shadow 0.2s;
-  }
+  .pricing-card { border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 28px 24px; background: var(--bg); position: relative; transition: box-shadow 0.2s; }
   .pricing-card:hover { box-shadow: var(--shadow); }
-  .pricing-card-featured {
-    border-color: var(--accent);
-    background: var(--bg);
-    box-shadow: 0 0 0 3px rgba(0,113,227,0.1);
-  }
-  .plan-badge {
-    position: absolute;
-    top: -12px; left: 50%; transform: translateX(-50%);
-    background: var(--accent);
-    color: white;
-    font-size: 11px; font-weight: 600;
-    padding: 4px 14px;
-    border-radius: 980px;
-    white-space: nowrap;
-  }
+  .pricing-card-featured { border-color: var(--accent); background: var(--bg); box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
+  .plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; font-size: 11px; font-weight: 600; padding: 4px 14px; border-radius: 980px; white-space: nowrap; }
   .plan-name { font-size: 14px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
   .plan-price { font-size: 36px; font-weight: 700; color: var(--text); letter-spacing: -0.03em; margin-bottom: 6px; }
   .plan-period { font-size: 14px; font-weight: 400; color: var(--text3); }
@@ -806,7 +472,6 @@
   .plan-btn-primary:hover { background: var(--accent-hover); }
   .plan-btn-secondary { background: var(--bg2); color: var(--text2); border: 1px solid var(--border); cursor: default; }
 
-  /* Usage bar */
   .usage-bar-wrap { margin-top: 8px; }
   .usage-bar-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; display: flex; justify-content: space-between; }
   .usage-bar { height: 4px; background: var(--bg2); border-radius: 99px; overflow: hidden; }
@@ -814,66 +479,16 @@
   .usage-bar-fill.warn { background: #ff9500; }
   .usage-bar-fill.full { background: var(--red); }
 
-  @media (max-width: 700px) {
-    .pricing-grid { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 700px) { .pricing-grid { grid-template-columns: 1fr; } }
 
-  /* ── CHEF AI ── */
-  .chef-wrap {
-    display: flex;
-    height: calc(100vh - 52px);
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-  .chef-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .chef-top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 0 16px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
+  .chef-wrap { display: flex; height: calc(100vh - 52px); max-width: 720px; margin: 0 auto; padding: 0 24px; }
+  .chef-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .chef-top-bar { display: flex; align-items: center; justify-content: space-between; padding: 20px 0 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
   .chef-top-title { font-size: 15px; font-weight: 600; color: var(--text); }
-  .chef-clear-btn {
-    padding: 6px 14px;
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 980px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text2);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
+  .chef-clear-btn { padding: 6px 14px; background: none; border: 1px solid var(--border); border-radius: 980px; font-size: 12px; font-weight: 500; color: var(--text2); cursor: pointer; font-family: inherit; transition: all 0.15s; }
   .chef-clear-btn:hover { background: var(--bg2); color: var(--text); }
-  .chef-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
-  .chef-empty {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 40px 0;
-    text-align: center;
-  }
+  .chef-messages { flex: 1; overflow-y: auto; padding: 24px 0; display: flex; flex-direction: column; gap: 24px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .chef-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 40px 0; text-align: center; }
   .chef-empty-icon { font-size: 40px; margin-bottom: 4px; }
   .chef-empty-title { font-size: 17px; font-weight: 600; color: var(--text); }
   .chef-empty-sub { font-size: 14px; color: var(--text2); max-width: 320px; line-height: 1.5; }
@@ -899,30 +514,11 @@
   .typing-dot:nth-child(2) { animation-delay: 0.2s; }
   .typing-dot:nth-child(3) { animation-delay: 0.4s; }
 
-  /* Quick suggestions above input */
-  .chef-quick-suggs {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-  }
+  .chef-quick-suggs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
   .chef-quick-suggs.hidden { display: none; }
-  .quick-sugg {
-    padding: 8px 14px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 980px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
+  .quick-sugg { padding: 8px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 980px; font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
   .quick-sugg:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
 
-  /* Input bar */
   .chef-input-bar { padding: 12px 0 24px; flex-shrink: 0; }
   .chef-input-inner { display: flex; align-items: center; gap: 10px; background: var(--bg3); border: 1.5px solid var(--border2); border-radius: 16px; padding: 10px 10px 10px 18px; transition: border-color 0.15s, box-shadow 0.15s; }
   .chef-input-inner:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,0.1); background: var(--bg); }
@@ -938,14 +534,26 @@
     .quick-sugg { white-space: nowrap; }
   }
 
-  footer {
-    text-align: center;
-    padding: 32px 24px;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--text3);
-    letter-spacing: 0.01em;
+  footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text3); letter-spacing: 0.01em; }
+
+  /* CALENDAR */
+  .cal-day {
+    min-height: 56px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s;
   }
+  .cal-day:hover { border-color: var(--accent); }
+  .cal-day.today { border: 1.5px solid var(--accent); background: rgba(0,113,227,0.05); }
+  .cal-day.selected { border: 2px solid var(--text); }
+  .cal-day.prev-month { opacity: 0.4; background: var(--bg3); cursor: default; }
+  .cal-day-num { font-size: 12px; font-weight: 500; color: var(--text); }
+  .cal-day.today .cal-day-num { font-weight: 700; color: var(--accent); }
+  .cal-dots { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 4px; }
+  .cal-dot { width: 6px; height: 6px; border-radius: 50%; }
 
   @media (max-width: 640px) {
     nav { padding: 0 16px; }
@@ -966,11 +574,11 @@
 <!-- NAV -->
 <nav>
   <div class="logo" onclick="showMain()">Nutri<em>Chef</em></div>
-<div class="nav-right">
-  <button class="btn btn-ghost" onclick="showChefAI()" style="gap:6px">🧑‍🍳 Chef AI</button>
-  <button class="btn btn-ghost" id="loginBtn" onclick="openAuth('login')" style="display:none">Sign in</button>
-  <div class="avatar-wrap" id="avatarWrap" style="display:none">
-  <div class="avatar" id="avatarCircle" onclick="toggleDropdown()"></div>
+  <div class="nav-right">
+    <button class="btn btn-ghost" onclick="showChefAI()">🧑‍🍳 Chef AI</button>
+    <button class="btn btn-ghost" id="loginBtn" onclick="openAuth('login')" style="display:none">Sign in</button>
+    <div class="avatar-wrap" id="avatarWrap" style="display:none">
+      <div class="avatar" id="avatarCircle" onclick="toggleDropdown()"></div>
       <div class="dropdown" id="dropdown">
         <div class="dd-header">
           <div class="dd-name" id="ddName"></div>
@@ -1088,42 +696,55 @@
   </div>
 
   <div class="card">
- 
+    <!-- PREFS -->
+    <div class="card-section">
+      <div class="section-tag" id="s1tag">Step 1</div>
+      <h2 id="s1title">Dietary preferences</h2>
+      <p id="s1sub">Optional — select what applies to you</p>
+      <div class="prefs-grid">
+        <div class="pref-chip" onclick="togglePref(this,'Gluten-free')"><span class="pref-icon">🌾</span><span class="pl">Gluten-free</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Vegetarian')"><span class="pref-icon">🥦</span><span class="pl">Vegetarian</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'High protein')"><span class="pref-icon">💪</span><span class="pl">High protein</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Low calorie')"><span class="pref-icon">🔥</span><span class="pl">Low calorie</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Muscle gain')"><span class="pref-icon">🏋️</span><span class="pl">Muscle gain</span></div>
+        <div class="pref-chip" onclick="togglePref(this,'Dairy-free')"><span class="pref-icon">🥛</span><span class="pl">Dairy-free</span></div>
+      </div>
+    </div>
 
-<!-- PREFS -->
-<div class="card-section">
-  <div class="section-tag" id="s1tag"> 1</div>
-  <h2 id="s1title">Dietary preferences</h2>
-  <p id="s1sub">Optional — select what applies to you</p>
-  <div class="prefs-grid">
-    <div class="pref-chip" onclick="togglePref(this,'Gluten-free')"><span class="pref-icon">🌾</span><span class="goal-pl">Gluten-free</span></div>
-    <div class="pref-chip" onclick="togglePref(this,'Vegetarian')"><span class="pref-icon">🥦</span><span class="goal-pl">Vegetarian</span></div>
-    <div class="pref-chip" onclick="togglePref(this,'High protein')"><span class="pref-icon">💪</span><span class="goal-pl">High protein</span></div>
-    <div class="pref-chip" onclick="togglePref(this,'Low calorie')"><span class="pref-icon">🔥</span><span class="goal-pl">Low calorie</span></div>
-    <div class="pref-chip" onclick="togglePref(this,'Muscle gain')"><span class="pref-icon">💪</span><span class="goal-pl">Muscle gain</span></div>
-    <div class="pref-chip" onclick="togglePref(this,'Dairy-free')"><span class="pref-icon">🥛</span><span class="goal-pl">Dairy-free</span></div>
-  </div>
-</div>
+    <!-- INGREDIENTS -->
+    <div class="card-section">
+      <div class="section-tag" id="s2tag">Step 2</div>
+      <h2 id="s2title">Your ingredients</h2>
+      <p id="s2sub">Add what you have on hand</p>
+      <div class="input-wrap">
+        <input class="text-input" id="ingInput" type="text" placeholder="e.g. chicken, broccoli, garlic…" autocomplete="off"/>
+        <button class="add-btn" onclick="addIng()">+</button>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
 
-<!-- INGREDIENTS -->
-<div class="card-section">
-  <div class="section-tag" id="s2tag"> 2</div>
-  <h2 id="s2title">Your ingredients</h2>
-  <p id="s2sub">Add what you have on hand</p>
-  <div class="input-wrap">
-    <input class="text-input" id="ingInput" type="text" placeholder="e.g. chicken, broccoli, garlic…" autocomplete="off"/>
-    <button class="add-btn" onclick="addIng()">+</button>
-  </div>
-  <div class="chips" id="chips"></div>
-</div>
+    <!-- GOAL -->
+    <div class="card-section">
+      <div class="section-tag" id="s3tag">Step 3</div>
+      <h2 id="s3title">Your goal</h2>
+      <p id="s3sub">Optional — personalize your recipes</p>
+      <div class="prefs-grid" id="goalGrid">
+        <div class="pref-chip" onclick="toggleGoal(this,'Muscle gain')"><span class="pref-icon">💪</span><span class="goal-pl">Muscle gain</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'General health')"><span class="pref-icon">🥗</span><span class="goal-pl">General health</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'High protein')"><span class="pref-icon">🥩</span><span class="goal-pl">High protein</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'Low budget')"><span class="pref-icon">💰</span><span class="goal-pl">Low budget</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'Weight loss')"><span class="pref-icon">⚖️</span><span class="goal-pl">Weight loss</span></div>
+        <div class="pref-chip" onclick="toggleGoal(this,'Energy & sport')"><span class="pref-icon">⚡</span><span class="goal-pl">Energy & sport</span></div>
+      </div>
+    </div>
 
-<!-- FOOTER -->
-<div class="card-footer">
-  <button class="generate-btn" id="genBtn" onclick="generate()" disabled>
-    <span id="genBtnText">Generate recipes</span>
-  </button>
-  <div class="error-msg" id="errorMsg"></div>
-</div>
+    <!-- FOOTER -->
+    <div class="card-footer">
+      <button class="generate-btn" id="genBtn" onclick="generate()" disabled>
+        <span id="genBtnText">Generate recipes</span>
+      </button>
+      <div class="error-msg" id="errorMsg"></div>
+    </div>
 
     <!-- LOADER -->
     <div class="loader" id="loader">
@@ -1135,7 +756,7 @@
       <p id="loaderText">Crafting your recipes…</p>
     </div>
 
-    <!-- 3 RECIPE CARDS -->
+    <!-- RECIPE CARDS -->
     <div class="recipes-section" id="recipesSection">
       <div class="recipes-label" id="recipesLabel">3 recipes for you</div>
       <div class="recipe-cards" id="recipeCards"></div>
@@ -1157,7 +778,7 @@
     </div>
   </div>
 </div>
-<!-- MEAL PLAN PAGE -->
+
 <!-- MEAL PLAN PAGE -->
 <div class="page" id="mealPage">
   <div class="page-hero">
@@ -1168,13 +789,13 @@
   <div class="favs-wrap">
     <button class="btn btn-secondary" onclick="showMain()" style="margin-bottom:16px">← Back</button>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <div style="display:flex;gap:6px;">
-        <button class="btn btn-secondary" id="calPrev" onclick="changeCalMonth(-1)">‹</button>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button class="btn btn-secondary" onclick="changeCalMonth(-1)">‹</button>
         <div style="font-size:16px;font-weight:600;color:var(--text);padding:6px 12px;" id="calTitle"></div>
-        <button class="btn btn-secondary" id="calNext" onclick="changeCalMonth(1)">›</button>
+        <button class="btn btn-secondary" onclick="changeCalMonth(1)">›</button>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px;" id="calDayLabels"></div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px;" id="calDayLabels"></div>
     <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;" id="calGrid"></div>
     <div id="calDetail" style="display:none;margin-top:16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
       <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
@@ -1214,6 +835,7 @@
     </div>
   </div>
 </div>
+
 <!-- FAVORITES PAGE -->
 <div class="page" id="favPage">
   <div class="page-hero">
@@ -1230,8 +852,6 @@
 <!-- CHEF AI PAGE -->
 <div class="page" id="chefPage">
   <div class="chef-wrap">
-
-    <!-- MAIN -->
     <div class="chef-main" style="padding-left:0">
       <div class="chef-top-bar">
         <div style="display:flex;align-items:center;gap:10px">
@@ -1245,7 +865,7 @@
         <div class="chef-empty" id="chefEmpty">
           <div class="chef-empty-icon">🧑‍🍳</div>
           <div class="chef-empty-title" id="chefEmptyTitle">Ask me anything about food</div>
-          <div class="chef-empty-sub" id="chefEmptySub">Recipes, techniques, substitutions, nutrition — I'm your personal culinary expert. I always include macros (calories, protein, carbs, fat) when sharing a recipe.</div>
+          <div class="chef-empty-sub" id="chefEmptySub">Recipes, techniques, substitutions, nutrition — I'm your personal culinary expert.</div>
         </div>
       </div>
 
@@ -1259,7 +879,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -1271,9 +890,7 @@
       <div class="pricing-title">Choose your plan</div>
       <div class="pricing-sub">Start free, upgrade when you're ready.</div>
     </div>
-
     <div class="pricing-grid">
-      <!-- FREE -->
       <div class="pricing-card">
         <div class="plan-name">Free</div>
         <div class="plan-price">$0<span class="plan-period">/month</span></div>
@@ -1285,10 +902,8 @@
           <div class="plan-feature muted">✗ Chef AI</div>
           <div class="plan-feature muted">✗ Priority generation</div>
         </div>
-        <button class="plan-btn plan-btn-secondary" onclick="showMain()">Current plan</button>
+        <button class="plan-btn plan-btn-secondary">Current plan</button>
       </div>
-
-      <!-- BASIC -->
       <div class="pricing-card pricing-card-featured">
         <div class="plan-badge">Most popular</div>
         <div class="plan-name">Basic</div>
@@ -1303,8 +918,6 @@
         </div>
         <button class="plan-btn plan-btn-primary" onclick="checkout('price_1TTTfMCaAJJZTXvh1JcmWTtE')">Get Basic</button>
       </div>
-
-      <!-- PRO -->
       <div class="pricing-card">
         <div class="plan-name">Pro</div>
         <div class="plan-price">$13.99<span class="plan-period">/month</span></div>
@@ -1319,7 +932,6 @@
         <button class="plan-btn plan-btn-primary" onclick="checkout('price_1TTTfjCaAJJZTXvhjOaiAxVr')">Get Pro</button>
       </div>
     </div>
-
     <div style="text-align:center;margin-top:32px">
       <button class="detail-back" onclick="showMain()">← Back to app</button>
     </div>
@@ -1342,6 +954,8 @@
     </div>
   </div>
 </div>
+
+<!-- PLAN MODAL -->
 <div class="overlay" id="planOverlay">
   <div class="modal">
     <div class="modal-header">
@@ -1362,6 +976,7 @@
     </div>
   </div>
 </div>
+
 <footer>NutriChef &nbsp;·&nbsp; AI-generated recipes &nbsp;·&nbsp; For inspiration only</footer>
 
 <script>
@@ -1380,10 +995,10 @@ const TX = {
   en: {
     heroTitle: 'Your ingredients,<br><em>reinvented</em>',
     heroSub: "Tell us what's in your fridge. Get 3 chef-crafted, nutritionist-approved recipes in seconds.",
-    s1tag:' 1', s1title:'Dietary preferences', s1sub:'Optional — select what applies to you',
-    s2tag:'2', s2title:'Your ingredients', s2sub:'Add what you have on hand',
-    s3tag:' 3', s3title:'Your goal', s3sub:'Optional — personalize your recipes',
-goals:['Muscle gain','General health','High protein','Low budget','Weight loss','Energy & sport'],
+    s1tag:'Step 1', s1title:'Dietary preferences', s1sub:'Optional — select what applies to you',
+    s2tag:'Step 2', s2title:'Your ingredients', s2sub:'Add what you have on hand',
+    s3tag:'Step 3', s3title:'Your goal', s3sub:'Optional — personalize your recipes',
+    goals:['Muscle gain','General health','High protein','Low budget','Weight loss','Energy & sport'],
     genBtn:'Generate recipes', loader:'Crafting your recipes…', recipesLabel:'3 recipes for you',
     viewBtn:'View recipe →', saveBtn:'♡ Save', savedBtn:'♥ Saved',
     detailSave:'♡ Save to favorites', detailSaved:'♥ Saved!',
@@ -1393,7 +1008,7 @@ goals:['Muscle gain','General health','High protein','Low budget','Weight loss',
     nutrTitle:'Nutrition', ingTitle:'Ingredients', stepsTitle:'Preparation', tipTitle:'Health tip',
     loginRequired:'Sign in to generate recipes.',
     error:'Something went wrong. Please try again.',
-    favEmpty:'No saved recipes yet',favEmptySub:'Generate recipes and save your favorites.',
+    favEmpty:'No saved recipes yet', favEmptySub:'Generate recipes and save your favorites.',
     loading:'Loading…', signIn:'Sign in', signUp:'Create account',
     noAccount:"Don't have an account?", createOne:'Create one',
     alreadyHave:'Already have an account?',
@@ -1410,8 +1025,8 @@ goals:['Muscle gain','General health','High protein','Low budget','Weight loss',
     heroSub: "Dis-nous ce que tu as dans ton frigo. Reçois 3 recettes santé personnalisées en quelques secondes.",
     s1tag:'Étape 1', s1title:'Tes préférences', s1sub:'Optionnel — sélectionne ce qui te correspond',
     s2tag:'Étape 2', s2title:'Tes ingrédients', s2sub:'Ajoute ce que tu as sous la main',
-   s3tag:'Étape 3', s3title:'Ton objectif', s3sub:'Optionnel — personnalise tes recettes',
-goals:['Prise de masse','Santé générale','Hyper protéiné','Low budget','Perte de poids','Énergie & sport'],
+    s3tag:'Étape 3', s3title:'Ton objectif', s3sub:'Optionnel — personnalise tes recettes',
+    goals:['Prise de masse','Santé générale','Hyper protéiné','Low budget','Perte de poids','Énergie & sport'],
     genBtn:'Générer les recettes', loader:'On prépare tes recettes…', recipesLabel:'3 recettes pour toi',
     viewBtn:'Voir la recette →', saveBtn:'♡ Sauver', savedBtn:'♥ Sauvé',
     detailSave:'♡ Ajouter aux favoris', detailSaved:'♥ Ajouté !',
@@ -1439,7 +1054,7 @@ goals:['Prise de masse','Santé générale','Hyper protéiné','Low budget','Per
     s1tag:'Paso 1', s1title:'Tus preferencias', s1sub:'Opcional — selecciona lo que aplica',
     s2tag:'Paso 2', s2title:'Tus ingredientes', s2sub:'Añade lo que tengas a mano',
     s3tag:'Paso 3', s3title:'Tu objetivo', s3sub:'Opcional — personaliza tus recetas',
-goals:['Ganar músculo','Salud general','Alto en proteína','Bajo presupuesto','Pérdida de peso','Energía & deporte'],
+    goals:['Ganar músculo','Salud general','Alto en proteína','Bajo presupuesto','Pérdida de peso','Energía & deporte'],
     genBtn:'Generar recetas', loader:'Preparando tus recetas…', recipesLabel:'3 recetas para ti',
     viewBtn:'Ver receta →', saveBtn:'♡ Guardar', savedBtn:'♥ Guardado',
     detailSave:'♡ Guardar en favoritos', detailSaved:'♥ ¡Guardado!',
@@ -1476,28 +1091,26 @@ function applyLang() {
   document.getElementById('s2title').textContent = t.s2title;
   document.getElementById('s2sub').textContent = t.s2sub;
   document.getElementById('s3tag').textContent = t.s3tag;
-document.getElementById('s3title').textContent = t.s3title;
-document.getElementById('s3sub').textContent = t.s3sub;
-document.querySelectorAll('.goal-pl').forEach((el, i) => { if (t.goals[i]) el.textContent = t.goals[i]; });
+  document.getElementById('s3title').textContent = t.s3title;
+  document.getElementById('s3sub').textContent = t.s3sub;
   document.getElementById('genBtnText').textContent = t.genBtn;
   document.getElementById('loaderText').textContent = t.loader;
   document.getElementById('recipesLabel').textContent = t.recipesLabel;
   document.getElementById('tryAgain').textContent = t.tryAgain;
   document.querySelectorAll('.pl').forEach((el, i) => { if (t.prefs[i]) el.textContent = t.prefs[i]; });
-  // Chef AI empty state
+  document.querySelectorAll('.goal-pl').forEach((el, i) => { if (t.goals[i]) el.textContent = t.goals[i]; });
   const eTitle = document.getElementById('chefEmptyTitle');
   const eSub = document.getElementById('chefEmptySub');
   if (eTitle) eTitle.textContent = t.chefEmpty;
   if (eSub) eSub.textContent = t.chefEmptySub;
-  // Chef quick suggestions
   const suggs = document.getElementById('chefQuickSuggs');
   if (suggs) {
     suggs.innerHTML = t.chefSuggs.map(s =>
-      '<button class="quick-sugg" onclick="sendSugg(\''+s.q.replace(/'/g,"\\'")+'\')">' + s.icon + ' ' + s.text + '</button>'
+      '<button class="quick-sugg" onclick="sendSugg(\'' + s.q.replace(/'/g, "\\'") + '\')">' + s.icon + ' ' + s.text + '</button>'
     ).join('');
   }
   ['En','Fr','Es'].forEach(l => {
-    const el = document.getElementById('lang'+l);
+    const el = document.getElementById('lang' + l);
     if (el) el.classList.toggle('active', lang === l.toLowerCase());
   });
 }
@@ -1539,20 +1152,29 @@ document.addEventListener('click', e => {
 });
 
 function openAuth(mode) {
-  authMode = mode; const s = mode==='signup'; const t = tx();
+  authMode = mode;
+  const s = mode === 'signup';
+  const t = tx();
   document.getElementById('authTitle').textContent = s ? t.signUp : t.signIn;
   document.getElementById('authSub').textContent = s ? 'Join NutriChef for free' : 'Welcome back to NutriChef';
   document.getElementById('authSubmit').textContent = s ? t.signUp : t.signIn;
-  document.getElementById('authSwitch').innerHTML = s ? t.alreadyHave+' <a onclick="switchAuth()">'+t.signIn+'</a>' : t.noAccount+' <a onclick="switchAuth()">'+t.createOne+'</a>';
+  document.getElementById('authSwitch').innerHTML = s
+    ? t.alreadyHave + ' <a onclick="switchAuth()">' + t.signIn + '</a>'
+    : t.noAccount + ' <a onclick="switchAuth()">' + t.createOne + '</a>';
   document.getElementById('authMsg').className = 'form-msg';
-  document.getElementById('authEmail').value=''; document.getElementById('authPassword').value=''; document.getElementById('authConfirm').value='';
-  document.getElementById('authFirst').value=''; document.getElementById('authLast').value='';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
+  document.getElementById('authConfirm').value = '';
+  document.getElementById('authFirst').value = '';
+  document.getElementById('authLast').value = '';
+  // FIX: Show/hide signup-only fields
   document.getElementById('signupFields').style.display = s ? 'block' : 'none';
   document.getElementById('confirmWrap').style.display = s ? 'block' : 'none';
   document.getElementById('authOverlay').classList.add('visible');
 }
+
 function closeAuth() { document.getElementById('authOverlay').classList.remove('visible'); }
-function switchAuth() { openAuth(authMode==='login'?'signup':'login'); }
+function switchAuth() { openAuth(authMode === 'login' ? 'signup' : 'login'); }
 
 async function handleAuth() {
   const email = document.getElementById('authEmail').value.trim();
@@ -1561,270 +1183,302 @@ async function handleAuth() {
   const first = document.getElementById('authFirst').value.trim();
   const last = document.getElementById('authLast').value.trim();
   const msg = document.getElementById('authMsg');
-  if (!email||!pass) { msg.className='form-msg error'; msg.textContent='Please fill in all fields.'; return; }
-  if (authMode==='signup') {
-    if (!first||!last) { msg.className='form-msg error'; msg.textContent='Please enter your name.'; return; }
-    if (pass!==confirm) { msg.className='form-msg error'; msg.textContent='Passwords do not match.'; return; }
-    if (pass.length<6) { msg.className='form-msg error'; msg.textContent='Password must be at least 6 characters.'; return; }
+
+  if (!email || !pass) { msg.className = 'form-msg error'; msg.textContent = 'Please fill in all fields.'; return; }
+  if (authMode === 'signup') {
+    if (!first || !last) { msg.className = 'form-msg error'; msg.textContent = 'Please enter your name.'; return; }
+    if (pass !== confirm) { msg.className = 'form-msg error'; msg.textContent = 'Passwords do not match.'; return; }
+    if (pass.length < 6) { msg.className = 'form-msg error'; msg.textContent = 'Password must be at least 6 characters.'; return; }
   }
+
   document.getElementById('authSubmit').textContent = 'Loading…';
   let error;
-  if (authMode==='login') {
+  if (authMode === 'login') {
     ({ error } = await sb.auth.signInWithPassword({ email, password: pass }));
   } else {
-    ({ error } = await sb.auth.signUp({ email, password: pass, options: { data: { first_name: first, last_name: last, full_name: first+' '+last } } }));
-    if (!error) { msg.className='form-msg success'; msg.textContent='🎉 Account created! You can now sign in.'; document.getElementById('authSubmit').textContent=tx().signUp; return; }
+    ({ error } = await sb.auth.signUp({
+      email, password: pass,
+      options: { data: { first_name: first, last_name: last, full_name: first + ' ' + last } }
+    }));
+    if (!error) {
+      msg.className = 'form-msg success';
+      msg.textContent = '🎉 Account created! You can now sign in.';
+      document.getElementById('authSubmit').textContent = tx().signUp;
+      return;
+    }
   }
-  if (error) { msg.className='form-msg error'; msg.textContent=error.message; document.getElementById('authSubmit').textContent=authMode==='login'?tx().signIn:tx().signUp; }
-  else { closeAuth(); renderNav(); }
+
+  if (error) {
+    msg.className = 'form-msg error';
+    msg.textContent = error.message;
+    document.getElementById('authSubmit').textContent = authMode === 'login' ? tx().signIn : tx().signUp;
+  } else {
+    closeAuth();
+    renderNav();
+  }
 }
 
 async function logout() {
   document.getElementById('dropdown').classList.remove('open');
-  await sb.auth.signOut(); user=null; renderNav(); showMain();
+  await sb.auth.signOut();
+  user = null; renderNav(); showMain();
 }
 
 // SETTINGS
 function openSettings() {
   document.getElementById('dropdown').classList.remove('open');
-  document.getElementById('sEmail').value = user?.email||'';
-  document.getElementById('sNewPass').value=''; document.getElementById('sConfPass').value='';
-  document.getElementById('emailMsg').className='form-msg'; document.getElementById('passMsg').className='form-msg';
-  ['En','Fr','Es'].forEach(l => { const el=document.getElementById('lang'+l); if(el) el.classList.toggle('active', lang===l.toLowerCase()); });
+  document.getElementById('sEmail').value = user?.email || '';
+  document.getElementById('sNewPass').value = '';
+  document.getElementById('sConfPass').value = '';
+  document.getElementById('emailMsg').className = 'form-msg';
+  document.getElementById('passMsg').className = 'form-msg';
+  ['En','Fr','Es'].forEach(l => {
+    const el = document.getElementById('lang' + l);
+    if (el) el.classList.toggle('active', lang === l.toLowerCase());
+  });
   document.getElementById('settingsOverlay').classList.add('visible');
 }
 function closeSettings() { document.getElementById('settingsOverlay').classList.remove('visible'); }
 
 async function updateEmail() {
-  const v=document.getElementById('sEmail').value.trim(); const m=document.getElementById('emailMsg');
-  if(!v){m.className='form-msg error';m.textContent='Enter a new email.';return;}
-  const{error}=await sb.auth.updateUser({email:v});
-  if(error){m.className='form-msg error';m.textContent=error.message;}
-  else{m.className='form-msg success';m.textContent='✅ Confirmation email sent!';}
+  const v = document.getElementById('sEmail').value.trim();
+  const m = document.getElementById('emailMsg');
+  if (!v) { m.className = 'form-msg error'; m.textContent = 'Enter a new email.'; return; }
+  const { error } = await sb.auth.updateUser({ email: v });
+  if (error) { m.className = 'form-msg error'; m.textContent = error.message; }
+  else { m.className = 'form-msg success'; m.textContent = '✅ Confirmation email sent!'; }
 }
+
 async function updatePassword() {
-  const np=document.getElementById('sNewPass').value, cp=document.getElementById('sConfPass').value;
-  const m=document.getElementById('passMsg');
-  if(!np||!cp){m.className='form-msg error';m.textContent='Fill in both fields.';return;}
-  if(np!==cp){m.className='form-msg error';m.textContent='Passwords do not match.';return;}
-  if(np.length<6){m.className='form-msg error';m.textContent='Min 6 characters.';return;}
-  const{error}=await sb.auth.updateUser({password:np});
-  if(error){m.className='form-msg error';m.textContent=error.message;}
-  else{m.className='form-msg success';m.textContent='✅ Password updated!';document.getElementById('sNewPass').value='';document.getElementById('sConfPass').value='';}
+  const np = document.getElementById('sNewPass').value;
+  const cp = document.getElementById('sConfPass').value;
+  const m = document.getElementById('passMsg');
+  if (!np || !cp) { m.className = 'form-msg error'; m.textContent = 'Fill in both fields.'; return; }
+  if (np !== cp) { m.className = 'form-msg error'; m.textContent = 'Passwords do not match.'; return; }
+  if (np.length < 6) { m.className = 'form-msg error'; m.textContent = 'Min 6 characters.'; return; }
+  const { error } = await sb.auth.updateUser({ password: np });
+  if (error) { m.className = 'form-msg error'; m.textContent = error.message; }
+  else { m.className = 'form-msg success'; m.textContent = '✅ Password updated!'; document.getElementById('sNewPass').value = ''; document.getElementById('sConfPass').value = ''; }
 }
 
 // PAGES
-
- function showMain() {
+function showMain() {
   ['favPage','chefPage','pricingPage','mealPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
   document.getElementById('mainPage').classList.add('visible');
 }
+
 async function showFavorites() {
   document.getElementById('dropdown').classList.remove('open');
-  if(!user){openAuth('login');return;}
-  ['mainPage','chefPage','pricingPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
+  if (!user) { openAuth('login'); return; }
+  ['mainPage','chefPage','pricingPage','mealPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
   document.getElementById('favPage').classList.add('visible');
   await loadFavs();
 }
+
 function showPricing() {
   document.getElementById('dropdown').classList.remove('open');
-  ['mainPage','favPage','chefPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
+  ['mainPage','favPage','chefPage','mealPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
   document.getElementById('pricingPage').classList.add('visible');
-}
-function showComingSoon() {
-  document.getElementById('comingSoonOverlay').classList.add('visible');
 }
 
 // INGREDIENTS
-const ingInput = document.getElementById('ingInput');
-ingInput.addEventListener('keydown', e => { if(e.key==='Enter') addIng(); });
+document.getElementById('ingInput').addEventListener('keydown', e => { if (e.key === 'Enter') addIng(); });
+
 function addIng() {
-  const v=ingInput.value.trim();
-  if(!v||ingredients.includes(v.toLowerCase())){ingInput.value='';return;}
-  ingredients.push(v.toLowerCase()); ingInput.value='';
+  const v = document.getElementById('ingInput').value.trim();
+  if (!v || ingredients.includes(v.toLowerCase())) { document.getElementById('ingInput').value = ''; return; }
+  ingredients.push(v.toLowerCase());
+  document.getElementById('ingInput').value = '';
   renderChips(); updateGenBtn();
 }
-function removeIng(i) { ingredients.splice(i,1); renderChips(); updateGenBtn(); }
+
+function removeIng(i) { ingredients.splice(i, 1); renderChips(); updateGenBtn(); }
+
 function renderChips() {
-  document.getElementById('chips').innerHTML = ingredients.map((ing,i)=>
-    '<div class="chip">'+ing+'<button class="chip-x" onclick="removeIng('+i+')">✕</button></div>'
+  document.getElementById('chips').innerHTML = ingredients.map((ing, i) =>
+    '<div class="chip">' + ing + '<button class="chip-x" onclick="removeIng(' + i + ')">✕</button></div>'
   ).join('');
 }
+
 function togglePref(el, pref) {
-  if(prefs.has(pref)){prefs.delete(pref);el.classList.remove('active');}
-  else{prefs.add(pref);el.classList.add('active');}
+  if (prefs.has(pref)) { prefs.delete(pref); el.classList.remove('active'); }
+  else { prefs.add(pref); el.classList.add('active'); }
 }
-function updateGenBtn() { document.getElementById('genBtn').disabled = ingredients.length===0; }
+
+function updateGenBtn() { document.getElementById('genBtn').disabled = ingredients.length === 0; }
+
 function toggleGoal(el, goal) {
-  document.querySelectorAll('.goal-card-active').forEach(e => e.classList.remove('active', 'goal-card-active'));
+  document.querySelectorAll('#goalGrid .pref-chip').forEach(e => e.classList.remove('active'));
   if (selectedGoal === goal) {
     selectedGoal = null;
   } else {
     selectedGoal = goal;
-    el.classList.add('active', 'goal-card-active');
+    el.classList.add('active');
   }
 }
+
 // GENERATE
 async function generate() {
-  if(ingredients.length===0) return;
-  if(!user) {
-    const e=document.getElementById('errorMsg');
-    e.innerHTML=tx().loginRequired+' <a onclick="openAuth(\'login\')" style="color:var(--accent);font-weight:600;cursor:pointer">Sign in</a>';
+  if (ingredients.length === 0) return;
+  if (!user) {
+    const e = document.getElementById('errorMsg');
+    e.innerHTML = tx().loginRequired + ' <a onclick="openAuth(\'login\')" style="color:var(--accent);font-weight:600;cursor:pointer">Sign in</a>';
     e.classList.add('visible'); return;
   }
   document.getElementById('loader').classList.add('visible');
   document.getElementById('recipesSection').classList.remove('visible');
   document.getElementById('recipeDetail').classList.remove('visible');
-  document.getElementById('tryAgain').style.display='none';
+  document.getElementById('tryAgain').style.display = 'none';
   document.getElementById('errorMsg').classList.remove('visible');
-  document.getElementById('genBtn').disabled=true;
+  document.getElementById('genBtn').disabled = true;
 
   try {
-    const res = await fetch(BACKEND+'/api/recipe', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-     body: JSON.stringify({ingredients, prefs:[...prefs], language:langName, userId: user?.id, goal: selectedGoal})
+    const res = await fetch(BACKEND + '/api/recipe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ingredients, prefs: [...prefs], language: langName, userId: user?.id, goal: selectedGoal })
     });
     const data = await res.json();
-    if(res.status === 429) {
-      const e=document.getElementById('errorMsg');
+    if (res.status === 429) {
+      const e = document.getElementById('errorMsg');
       e.innerHTML = '⏱ ' + data.message + ' <a onclick="showPricing()" style="color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline">Upgrade →</a>';
       e.classList.add('visible');
       document.getElementById('loader').classList.remove('visible');
-      document.getElementById('genBtn').disabled = ingredients.length===0;
+      document.getElementById('genBtn').disabled = ingredients.length === 0;
       return;
     }
-    if(!res.ok) throw new Error(data.error||'Error');
+    if (!res.ok) throw new Error(data.error || 'Error');
     recipes = data.recipes || [data];
     renderCards();
-  } catch {
-    const e=document.getElementById('errorMsg');
-    e.textContent=tx().error; e.classList.add('visible');
+  } catch (err) {
+    const e = document.getElementById('errorMsg');
+    e.textContent = tx().error; e.classList.add('visible');
   } finally {
     document.getElementById('loader').classList.remove('visible');
-    document.getElementById('genBtn').disabled = ingredients.length===0;
+    document.getElementById('genBtn').disabled = ingredients.length === 0;
   }
 }
 
 function renderCards() {
-  const t=tx();
-  document.getElementById('recipeCards').innerHTML = recipes.map((r,i)=>
-    '<div class="recipe-card">'+
-      '<div class="rc-body">'+
-        '<div class="rc-title">'+(r.name||'Recipe')+'</div>'+
-        '<div class="rc-desc">'+(r.description||'')+'</div>'+
-        '<div class="rc-pills">'+
-          (r.time?'<span class="rc-pill">⏱ '+r.time+'</span>':'')+
-          (r.calories?'<span class="rc-pill">🔥 '+r.calories+'</span>':'')+
-          (r.difficulty?'<span class="rc-pill">⚡ '+r.difficulty+'</span>':'')+
-        '</div>'+
-        '<div class="rc-actions">'+
-          '<button class="rc-view" onclick="viewRecipe('+i+')">'+t.viewBtn+'</button>'+
-          '<button class="rc-save" id="rc'+i+'" onclick="saveByIdx('+i+')">'+t.saveBtn+'</button>'+
-    '<button class="rc-save" onclick="openPlanPicker('+i+')">📅 Plan</button>'+
-        '</div>'+
-      '</div>'+
+  const t = tx();
+  document.getElementById('recipeCards').innerHTML = recipes.map((r, i) =>
+    '<div class="recipe-card">' +
+      '<div class="rc-body">' +
+        '<div class="rc-title">' + (r.name || 'Recipe') + '</div>' +
+        '<div class="rc-desc">' + (r.description || '') + '</div>' +
+        '<div class="rc-pills">' +
+          (r.time ? '<span class="rc-pill">⏱ ' + r.time + '</span>' : '') +
+          (r.calories ? '<span class="rc-pill">🔥 ' + r.calories + '</span>' : '') +
+          (r.difficulty ? '<span class="rc-pill">⚡ ' + r.difficulty + '</span>' : '') +
+        '</div>' +
+        '<div class="rc-actions">' +
+          '<button class="rc-view" onclick="viewRecipe(' + i + ')">' + t.viewBtn + '</button>' +
+          '<button class="rc-save" id="rc' + i + '" onclick="saveByIdx(' + i + ')">' + t.saveBtn + '</button>' +
+          '<button class="rc-save" onclick="openPlanPicker(' + i + ')">📅 Plan</button>' +
+        '</div>' +
+      '</div>' +
     '</div>'
   ).join('');
   document.getElementById('recipesSection').classList.add('visible');
-  document.getElementById('tryAgain').style.display='block';
-  document.getElementById('recipesSection').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('tryAgain').style.display = 'block';
+  document.getElementById('recipesSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function viewRecipe(i) {
-  currentRecipe = recipes[i]; const r=currentRecipe; const t=tx();
-  document.getElementById('dTitle').textContent = r.name||'';
-  document.getElementById('dDesc').textContent = r.description||'';
+  currentRecipe = recipes[i]; const r = currentRecipe; const t = tx();
+  document.getElementById('dTitle').textContent = r.name || '';
+  document.getElementById('dDesc').textContent = r.description || '';
   document.getElementById('dPills').innerHTML = [
-    r.time?'<span class="detail-pill">⏱ '+r.time+'</span>':'',
-    r.servings?'<span class="detail-pill">👥 '+r.servings+'</span>':'',
-    r.difficulty?'<span class="detail-pill">⚡ '+r.difficulty+'</span>':'',
-    r.calories?'<span class="detail-pill">🔥 '+r.calories+'</span>':'',
+    r.time ? '<span class="detail-pill">⏱ ' + r.time + '</span>' : '',
+    r.servings ? '<span class="detail-pill">👥 ' + r.servings + '</span>' : '',
+    r.difficulty ? '<span class="detail-pill">⚡ ' + r.difficulty + '</span>' : '',
+    r.calories ? '<span class="detail-pill">🔥 ' + r.calories + '</span>' : '',
   ].join('');
-  const sv=document.getElementById('detailSave');
-  sv.className='detail-save'; sv.textContent=t.detailSave;
+  const sv = document.getElementById('detailSave');
+  sv.className = 'detail-save'; sv.textContent = t.detailSave;
 
-  let body='';
-  if(r.nutrition){
-    body+='<div class="detail-block"><div class="detail-block-title">'+t.nutrTitle+'</div><div class="nutr-row">';
-    for(const[k,label] of Object.entries(t.nutr)){
-      if(r.nutrition[k]) body+='<div class="nutr-item"><div class="nutr-value">'+r.nutrition[k]+'</div><div class="nutr-label">'+label+'</div></div>';
+  let body = '';
+  if (r.nutrition) {
+    body += '<div class="detail-block"><div class="detail-block-title">' + t.nutrTitle + '</div><div class="nutr-row">';
+    for (const [k, label] of Object.entries(t.nutr)) {
+      if (r.nutrition[k]) body += '<div class="nutr-item"><div class="nutr-value">' + r.nutrition[k] + '</div><div class="nutr-label">' + label + '</div></div>';
     }
-    body+='</div></div>';
+    body += '</div></div>';
   }
-  if(r.ingredients?.length){
-    body+='<div class="detail-block"><div class="detail-block-title">'+t.ingTitle+'</div><div class="ing-list">';
-    r.ingredients.forEach(ing=>body+='<div class="ing-item"><div class="ing-dot"></div>'+ing+'</div>');
-    body+='</div></div>';
+  if (r.ingredients?.length) {
+    body += '<div class="detail-block"><div class="detail-block-title">' + t.ingTitle + '</div><div class="ing-list">';
+    r.ingredients.forEach(ing => body += '<div class="ing-item"><div class="ing-dot"></div>' + ing + '</div>');
+    body += '</div></div>';
   }
-  if(r.steps?.length){
-    body+='<div class="detail-block"><div class="detail-block-title">'+t.stepsTitle+'</div><div class="steps-list">';
-    r.steps.forEach((s,i)=>body+='<div class="step-item"><div class="step-num">'+(i+1)+'</div><div class="step-text">'+s+'</div></div>');
-    body+='</div></div>';
+  if (r.steps?.length) {
+    body += '<div class="detail-block"><div class="detail-block-title">' + t.stepsTitle + '</div><div class="steps-list">';
+    r.steps.forEach((s, i) => body += '<div class="step-item"><div class="step-num">' + (i + 1) + '</div><div class="step-text">' + s + '</div></div>');
+    body += '</div></div>';
   }
-  if(r.tip){
-    body+='<div class="detail-block"><div class="detail-block-title">'+t.tipTitle+'</div><div class="tip-box"><div class="tip-icon">💡</div>'+r.tip+'</div></div>';
+  if (r.tip) {
+    body += '<div class="detail-block"><div class="detail-block-title">' + t.tipTitle + '</div><div class="tip-box"><div class="tip-icon">💡</div>' + r.tip + '</div></div>';
   }
-  document.getElementById('dBody').innerHTML=body;
+  document.getElementById('dBody').innerHTML = body;
   document.getElementById('recipesSection').classList.remove('visible');
-  document.getElementById('tryAgain').style.display='none';
+  document.getElementById('tryAgain').style.display = 'none';
   document.getElementById('recipeDetail').classList.add('visible');
-  document.getElementById('recipeDetail').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('recipeDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function backToCards() {
   document.getElementById('recipeDetail').classList.remove('visible');
   document.getElementById('recipesSection').classList.add('visible');
-  document.getElementById('tryAgain').style.display='block';
+  document.getElementById('tryAgain').style.display = 'block';
 }
 
 async function saveCurrentRecipe() {
-  if(!user){openAuth('login');return;}
-  const r=currentRecipe; if(!r) return;
-  const btn=document.getElementById('detailSave'); btn.textContent='Saving…';
-  const{error}=await sb.from('favorites').insert({user_id:user.id,name:r.name,description:r.description,time:r.time,servings:r.servings,difficulty:r.difficulty,calories:r.calories,data:r});
-  if(error){btn.textContent='Error';}
-  else{btn.className='detail-save saved';btn.textContent=tx().detailSaved;}
+  if (!user) { openAuth('login'); return; }
+  const r = currentRecipe; if (!r) return;
+  const btn = document.getElementById('detailSave'); btn.textContent = 'Saving…';
+  const { error } = await sb.from('favorites').insert({ user_id: user.id, name: r.name, description: r.description, time: r.time, servings: r.servings, difficulty: r.difficulty, calories: r.calories, data: r });
+  if (error) { btn.textContent = 'Error'; }
+  else { btn.className = 'detail-save saved'; btn.textContent = tx().detailSaved; }
 }
 
 async function saveByIdx(i) {
-  if(!user){openAuth('login');return;}
-  const r=recipes[i]; const btn=document.getElementById('rc'+i); btn.textContent='Saving…';
-  const{error}=await sb.from('favorites').insert({user_id:user.id,name:r.name,description:r.description,time:r.time,servings:r.servings,difficulty:r.difficulty,calories:r.calories,data:r});
-  if(error){btn.textContent='Error';}
-  else{btn.className='rc-save saved';btn.textContent=tx().savedBtn;}
+  if (!user) { openAuth('login'); return; }
+  const r = recipes[i]; const btn = document.getElementById('rc' + i); btn.textContent = 'Saving…';
+  const { error } = await sb.from('favorites').insert({ user_id: user.id, name: r.name, description: r.description, time: r.time, servings: r.servings, difficulty: r.difficulty, calories: r.calories, data: r });
+  if (error) { btn.textContent = 'Error'; }
+  else { btn.className = 'rc-save saved'; btn.textContent = tx().savedBtn; }
 }
 
 function resetForm() {
   document.getElementById('recipesSection').classList.remove('visible');
   document.getElementById('recipeDetail').classList.remove('visible');
-  document.getElementById('tryAgain').style.display='none';
+  document.getElementById('tryAgain').style.display = 'none';
   document.getElementById('errorMsg').classList.remove('visible');
-  recipes=[]; currentRecipe=null;
-  window.scrollTo({top:0,behavior:'smooth'});
+  recipes = []; currentRecipe = null;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function loadFavs() {
-  const t=tx(); const grid=document.getElementById('favGrid');
-  grid.innerHTML='<div style="color:var(--text2);padding:20px 0;font-size:14px">'+t.loading+'</div>';
-  const{data,error}=await sb.from('favorites').select('*').eq('user_id',user.id).order('created_at',{ascending:false});
-  if(error||!data?.length){
-    grid.innerHTML='<div class="empty-state"><div class="empty-icon">🍽️</div><div class="empty-title">'+t.favEmpty+'</div><div class="empty-sub">'+t.favEmptySub+'</div></div>';
+  const t = tx(); const grid = document.getElementById('favGrid');
+  grid.innerHTML = '<div style="color:var(--text2);padding:20px 0;font-size:14px">' + t.loading + '</div>';
+  const { data, error } = await sb.from('favorites').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+  if (error || !data?.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🍽️</div><div class="empty-title">' + t.favEmpty + '</div><div class="empty-sub">' + t.favEmptySub + '</div></div>';
     return;
   }
-  grid.innerHTML=data.map(f=>
-    '<div class="fav-card"><div class="fav-info">'+
-    '<div class="fav-name">'+f.name+'</div>'+
-    '<div class="fav-desc">'+(f.description||'')+'</div>'+
-    '<div class="fav-pills">'+
-    (f.time?'<span class="fav-pill">⏱ '+f.time+'</span>':'')+
-    (f.calories?'<span class="fav-pill">🔥 '+f.calories+'</span>':'')+
-    (f.difficulty?'<span class="fav-pill">⚡ '+f.difficulty+'</span>':'')+
-    '</div></div><button class="fav-del" onclick="delFav(\''+f.id+'\')">Remove</button></div>'
+  grid.innerHTML = data.map(f =>
+    '<div class="fav-card"><div class="fav-info">' +
+    '<div class="fav-name">' + f.name + '</div>' +
+    '<div class="fav-desc">' + (f.description || '') + '</div>' +
+    '<div class="fav-pills">' +
+    (f.time ? '<span class="fav-pill">⏱ ' + f.time + '</span>' : '') +
+    (f.calories ? '<span class="fav-pill">🔥 ' + f.calories + '</span>' : '') +
+    (f.difficulty ? '<span class="fav-pill">⚡ ' + f.difficulty + '</span>' : '') +
+    '</div></div><button class="fav-del" onclick="delFav(\'' + f.id + '\')">Remove</button></div>'
   ).join('');
 }
 
 async function delFav(id) {
-  await sb.from('favorites').delete().eq('id',id); await loadFavs();
+  await sb.from('favorites').delete().eq('id', id); await loadFavs();
 }
 
 // CHEF AI
@@ -1833,7 +1487,7 @@ let chefUserInitials = 'U';
 
 function showChefAI() {
   document.getElementById('dropdown').classList.remove('open');
-  ['mainPage','favPage','pricingPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
+  ['mainPage','favPage','pricingPage','mealPage'].forEach(id => document.getElementById(id).classList.remove('visible'));
   document.getElementById('chefPage').classList.add('visible');
   if (user) {
     const first = user.user_metadata?.first_name || user.email.split('@')[0];
@@ -1847,7 +1501,7 @@ function clearChat() {
   chefHistory = [];
   const t = tx();
   const msgs = document.getElementById('chefMessages');
-  msgs.innerHTML = '<div class="chef-empty" id="chefEmpty"><div class="chef-empty-icon">🧑‍🍳</div><div class="chef-empty-title" id="chefEmptyTitle">'+t.chefEmpty+'</div><div class="chef-empty-sub" id="chefEmptySub">'+t.chefEmptySub+'</div></div>';
+  msgs.innerHTML = '<div class="chef-empty" id="chefEmpty"><div class="chef-empty-icon">🧑‍🍳</div><div class="chef-empty-title" id="chefEmptyTitle">' + t.chefEmpty + '</div><div class="chef-empty-sub" id="chefEmptySub">' + t.chefEmptySub + '</div></div>';
   document.getElementById('chefQuickSuggs').classList.remove('hidden');
 }
 
@@ -1861,7 +1515,7 @@ function appendAI(text) {
   const msgs = document.getElementById('chefMessages');
   const div = document.createElement('div');
   div.className = 'msg ai';
-  div.innerHTML = '<div class="msg-av">🧑‍🍳</div><div class="msg-content"><div class="msg-bubble">'+fmtMsg(text)+'</div></div>';
+  div.innerHTML = '<div class="msg-av">🧑‍🍳</div><div class="msg-content"><div class="msg-bubble">' + fmtMsg(text) + '</div></div>';
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
@@ -1871,7 +1525,7 @@ function appendUser(text) {
   const msgs = document.getElementById('chefMessages');
   const div = document.createElement('div');
   div.className = 'msg user';
-  div.innerHTML = '<div class="msg-av">'+chefUserInitials+'</div><div class="msg-content"><div class="msg-bubble">'+text+'</div></div>';
+  div.innerHTML = '<div class="msg-av">' + chefUserInitials + '</div><div class="msg-content"><div class="msg-bubble">' + text + '</div></div>';
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
@@ -1925,14 +1579,12 @@ async function sendChef() {
     if (res.status === 403) {
       document.getElementById('chefTyping')?.remove();
       appendAI('🔒 Chef AI is available on **Basic** and **Pro** plans. <a onclick="showPricing()" style="color:var(--accent);cursor:pointer;text-decoration:underline">Upgrade to unlock →</a>');
-      chefHistory.pop();
-      return;
+      chefHistory.pop(); return;
     }
     if (res.status === 429) {
       document.getElementById('chefTyping')?.remove();
       appendAI('⏱ ' + data.message + ' <a onclick="showPricing()" style="color:var(--accent);cursor:pointer;text-decoration:underline">Upgrade to Pro →</a>');
-      chefHistory.pop();
-      return;
+      chefHistory.pop(); return;
     }
     const reply = data.reply || 'Sorry, something went wrong. Please try again!';
     chefHistory.push({ role: 'assistant', content: reply });
@@ -1947,7 +1599,7 @@ async function sendChef() {
   }
 }
 
-// STRIPE CHECKOUT
+// STRIPE
 async function checkout(priceId) {
   if (!user) { openAuth('login'); return; }
   const btn = event.target;
@@ -1960,19 +1612,13 @@ async function checkout(priceId) {
       body: JSON.stringify({ priceId, userId: user.id, userEmail: user.email })
     });
     const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      btn.textContent = 'Error — try again';
-      btn.disabled = false;
-    }
+    if (data.url) { window.location.href = data.url; }
+    else { btn.textContent = 'Error — try again'; btn.disabled = false; }
   } catch {
-    btn.textContent = 'Error — try again';
-    btn.disabled = false;
+    btn.textContent = 'Error — try again'; btn.disabled = false;
   }
 }
 
-// Check success/cancel from Stripe redirect
 window.addEventListener('load', () => {
   const params = new URLSearchParams(window.location.search);
   if (params.get('success') === 'true') {
@@ -1990,6 +1636,7 @@ window.addEventListener('load', () => {
     window.history.replaceState({}, '', '/');
   }
 });
+
 async function openPlanModal() {
   document.getElementById('dropdown').classList.remove('open');
   document.getElementById('planOverlay').classList.add('visible');
@@ -2016,12 +1663,13 @@ async function openPlanModal() {
     ${plan !== 'free' ? `
     <div class="usage-bar-wrap" style="margin-top:12px">
       <div class="usage-bar-label"><span>Chef AI messages</span><span>${data.chatUsed || 0} / ${data.chatLimit === 9999 ? '∞' : data.chatLimit}</span></div>
-      <div class="usage-bar"><div class="usage-bar-fill" style="width:${data.chatLimit === 9999 ? 5 : Math.min(100, Math.round(((data.chatUsed||0)/data.chatLimit)*100))}%"></div></div>
+      <div class="usage-bar"><div class="usage-bar-fill" style="width:${data.chatLimit === 9999 ? 5 : Math.min(100, Math.round(((data.chatUsed || 0) / data.chatLimit) * 100))}%"></div></div>
     </div>` : ''}
   `;
   document.getElementById('planUpgradeBtn').style.display = plan === 'pro' ? 'none' : 'block';
 }
- // MEAL PLANNER
+
+// MEAL PLANNER
 let planRecipe = null;
 
 function showMealPlan() {
@@ -2031,6 +1679,7 @@ function showMealPlan() {
   document.getElementById('mealPage').classList.add('visible');
   renderCalendar();
 }
+
 function openPlanPicker(i) {
   if (!user) { openAuth('login'); return; }
   planRecipe = recipes[i];
@@ -2063,63 +1712,118 @@ let calSelected = null;
 const calMeals = {};
 
 const CAL_MONTHS = {
-  en:['January','February','March','April','May','June','July','August','September','October','November','December'],
-  fr:['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
-  es:['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  fr: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+  es: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 };
 const CAL_DAYS = {
-  en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
-  fr:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
-  es:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
+  en: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+  fr: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
+  es: ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
 };
 const CAL_MEALS = {
-  en:['Breakfast','Lunch','Dinner','Snack'],
-  fr:['Déjeuner','Dîner','Souper','Collation'],
-  es:['Desayuno','Almuerzo','Cena','Merienda']
+  en: ['Breakfast','Lunch','Dinner','Snack'],
+  fr: ['Déjeuner','Dîner','Souper','Collation'],
+  es: ['Desayuno','Almuerzo','Cena','Merienda']
 };
 const MEAL_KEYS = ['breakfast','lunch','dinner','snack'];
 const MEAL_ICONS = ['🌅','☀️','🌙','🍎'];
 const MEAL_COLORS = ['rgba(255,149,0,0.12)','rgba(48,209,88,0.12)','rgba(0,113,227,0.12)','rgba(255,59,48,0.12)'];
 const MEAL_TEXT_COLORS = ['#b05000','#1a7a35','#004499','#c0392b'];
 
-function padCal(n) { return String(n).padStart(2,'0'); }
-function calKey(y,m,d) { return `${y}-${padCal(m+1)}-${padCal(d)}`; }
+function padCal(n) { return String(n).padStart(2, '0'); }
+function calKey(y, m, d) { return `${y}-${padCal(m + 1)}-${padCal(d)}`; }
 
 function changeCalMonth(dir) {
   calMonth += dir;
-  if(calMonth > 11){calMonth=0;calYear++;}
-  if(calMonth < 0){calMonth=11;calYear--;}
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
   calSelected = null;
-  document.getElementById('calDetail').style.display='none';
+  document.getElementById('calDetail').style.display = 'none';
   renderCalendar();
 }
 
 function renderCalendar() {
-  const months = CAL_MONTHS[lang]||CAL_MONTHS.en;
-  const days = CAL_DAYS[lang]||CAL_DAYS.en;
+  const months = CAL_MONTHS[lang] || CAL_MONTHS.en;
+  const days = CAL_DAYS[lang] || CAL_DAYS.en;
   document.getElementById('calTitle').textContent = months[calMonth] + ' ' + calYear;
+
   document.getElementById('calDayLabels').innerHTML = days.map(d =>
     `<div style="text-align:center;font-size:11px;font-weight:600;color:var(--text3);padding:4px 0;">${d}</div>`
   ).join('');
+
   const firstDay = new Date(calYear, calMonth, 1).getDay();
-  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
   const daysInPrev = new Date(calYear, calMonth, 0).getDate();
   const today = new Date();
   const todayKey = calKey(today.getFullYear(), today.getMonth(), today.getDate());
+
   let html = '';
-  for(let i=0;i<firstDay;i++){
-    html+=`<div style="min-height:56px;border-radius:var(--radius);background:var(--bg3);opacity:0.4;padding:6px;"><div style="font-size:12px;color:var(--text3);">${daysInPrev-firstDay+i+1}</div></div>`;
+
+  // Previous month days (filler)
+  for (let i = 0; i < firstDay; i++) {
+    html += `<div class="cal-day prev-month"><div class="cal-day-num" style="color:var(--text3);">${daysInPrev - firstDay + i + 1}</div></div>`;
   }
-  for(let d=1;d<=daysInMonth;d++){
-    const key=calKey(calYear,calMonth,d);
-    const isToday=key===todayKey;
-    const isSelected=calSelected===key;
-    const meals=calMeals[key]||{};
-    const dots=MEAL_KEYS.map((mk,i)=>meals[mk]?`<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${MEAL_TEXT_COLORS[i]};margin:1px;"></span>`:'').join('');
-    html+=`<div onclick="openCalDay('${key}')" style="min-height:56px;border-radius:var(--radius);border:${isSelected?'2px solid var(--text)':isToday?'1.5px solid var(--accent)':'1px solid var(--border)'};background:${isToday?'rgba(0,113,227,0.05)':'var(--bg)'};padding:6px;cursor:pointer;transition:border-color 0.15s;">
-      <div style="font-size:12px;font-weight:${isToday?'700':'500'};
+
+  // Current month days
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = calKey(calYear, calMonth, d);
+    const isToday = key === todayKey;
+    const isSelected = calSelected === key;
+    const meals = calMeals[key] || {};
+    const dots = MEAL_KEYS.map((mk, i) =>
+      meals[mk] ? `<span class="cal-dot" style="background:${MEAL_TEXT_COLORS[i]};"></span>` : ''
+    ).join('');
+
+    html += `<div class="cal-day${isToday ? ' today' : ''}${isSelected ? ' selected' : ''}" onclick="openCalDay('${key}')">
+      <div class="cal-day-num">${d}</div>
+      <div class="cal-dots">${dots}</div>
+    </div>`;
+  }
+
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+async function openCalDay(key) {
+  calSelected = key;
+  renderCalendar();
+
+  const detail = document.getElementById('calDetail');
+  const [y, m, d] = key.split('-').map(Number);
+  const months = CAL_MONTHS[lang] || CAL_MONTHS.en;
+  document.getElementById('calDetailTitle').textContent = `${months[m - 1]} ${d}, ${y}`;
+
+  // Load from backend
+  let dayMeals = calMeals[key] || {};
+  try {
+    const res = await fetch(BACKEND + '/api/meal-plan?userId=' + user.id + '&date=' + key);
+    const data = await res.json();
+    if (data && Array.isArray(data)) {
+      dayMeals = {};
+      data.forEach(item => { dayMeals[item.meal_type] = item.recipe_data; });
+      calMeals[key] = dayMeals;
+    }
+  } catch (e) { /* use cached */ }
+
+  const mealNames = CAL_MEALS[lang] || CAL_MEALS.en;
+  let rows = '';
+  MEAL_KEYS.forEach((mk, i) => {
+    const meal = dayMeals[mk];
+    rows += `<div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:${MEAL_COLORS[i]};">
+      <span style="font-size:20px;">${MEAL_ICONS[i]}</span>
+      <div style="flex:1;">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:${MEAL_TEXT_COLORS[i]};margin-bottom:2px;">${mealNames[i]}</div>
+        <div style="font-size:14px;color:var(--text);">${meal ? meal.name : '<span style="color:var(--text3);font-style:italic;">No meal planned</span>'}</div>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('calMealRows').innerHTML = rows;
+  detail.style.display = 'block';
+}
+
 // INIT
-document.getElementById('loginBtn').style.display='flex';
+document.getElementById('loginBtn').style.display = 'flex';
 applyLang();
 renderNav();
 </script>
