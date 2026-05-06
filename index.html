@@ -1014,6 +1014,7 @@ const TX = {
     loading:'Loading…', signIn:'Sign in', signUp:'Create account',
     noAccount:"Don't have an account?", createOne:'Create one',
     alreadyHave:'Already have an account?',
+    ddSettings:'Settings', ddFavorites:'My Favorites', ddMeal:'Meal planner', ddUpgrade:'Upgrade plan', ddPlan:'My Plan', ddSignout:'Sign out',
     settingsTitle:'Settings', settingsSub:'Manage your preferences',
 settingsLang:'Language', settingsEmail:'Change email', settingsEmailBtn:'Update email',
 settingsPass:'Change password', settingsPassBtn:'Update password',
@@ -1046,6 +1047,7 @@ step1Label:'Step 1', step2Label:'Step 2', planLabel:'📅 Plan',
     loading:'Chargement…', signIn:'Se connecter', signUp:'Créer un compte',
     noAccount:'Pas de compte ?', createOne:'En créer un',
     alreadyHave:'Déjà un compte ?',
+    ddSettings:'Paramètres', ddFavorites:'Mes favoris', ddMeal:'Planificateur de repas', ddUpgrade:'Améliorer le plan', ddPlan:'Mon plan', ddSignout:'Se déconnecter',
     settingsTitle:'Paramètres', settingsSub:'Gérez vos préférences',
 settingsLang:'Langue', settingsEmail:'Changer l\'email', settingsEmailBtn:'Mettre à jour',
 settingsPass:'Changer le mot de passe', settingsPassBtn:'Mettre à jour',
@@ -1078,6 +1080,7 @@ step1Label:'Étape 1', step2Label:'Étape 2', planLabel:'📅 Planifier',
     loading:'Cargando…', signIn:'Iniciar sesión', signUp:'Crear cuenta',
     noAccount:'¿Sin cuenta?', createOne:'Crear una',
     alreadyHave:'¿Ya tienes cuenta?',
+    ddSettings:'Configuración', ddFavorites:'Mis favoritos', ddMeal:'Planificador de comidas', ddUpgrade:'Mejorar plan', ddPlan:'Mi plan', ddSignout:'Cerrar sesión',
     settingsTitle:'Configuración', settingsSub:'Gestiona tus preferencias',
 settingsLang:'Idioma', settingsEmail:'Cambiar email', settingsEmailBtn:'Actualizar',
 settingsPass:'Cambiar contraseña', settingsPassBtn:'Actualizar',
@@ -1152,7 +1155,13 @@ function setLang(code, name) {
   localStorage.setItem('nc_lang', code);
   localStorage.setItem('nc_lang_name', name);
   applyLang();
-}
+const ddItems = document.querySelectorAll('.dd-item');
+  if (ddItems[0]) ddItems[0].childNodes[1].textContent = ' ' + t.ddSettings;
+  if (ddItems[1]) ddItems[1].childNodes[1].textContent = ' ' + t.ddFavorites;
+  if (ddItems[2]) ddItems[2].childNodes[1].textContent = ' ' + t.ddMeal;
+  if (ddItems[3]) ddItems[3].childNodes[1].textContent = ' ' + t.ddUpgrade;
+  if (ddItems[4]) ddItems[4].childNodes[1].textContent = ' ' + t.ddPlan;
+  if (ddItems[5]) ddItems[5].childNodes[1].textContent = ' ' + t.ddSignout;}
 
 // AUTH
 sb.auth.onAuthStateChange((e, session) => {
