@@ -1419,7 +1419,7 @@ async function generate() {
    const res = await fetch(BACKEND + '/api/recipe', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
- body: JSON.stringify({ dish: ingredients.join(', '), ingredients: [], goal: selectedGoal, language: langName, userId: user?.id })
+ body: JSON.stringify({ ingredients: ingredients, goal: selectedGoal, language: langName, userId: user?.id })
 });
 const data = await res.json();
 recipes = data.recipes || [];
