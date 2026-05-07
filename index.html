@@ -1320,42 +1320,78 @@ function showPricing() {
 // INGREDIENTS
 document.getElementById('ingInput').addEventListener('keydown', e => { if (e.key === 'Enter') addIng(); });
 
-function addIng() {
-  const raw = document.getElementById('ingInput').value.trim();
-const v = raw.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  if (!v || ingredients.includes(v.toLowerCase())) { document.getElementById('ingInput').value = ''; return; }
-  ingredients.push(v.toLowerCase());
-  document.getElementById('ingInput').value = '';
-  renderChips(); updateGenBtn();
+function normalizeIngredientKey(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
+
+function addIng() {
+  const input = document.getElementById('ingInput');
+  const raw = input.value.trim();
+  if (!raw) return;
+
+  const parts = raw
+    .split(/[,;\n]+/)
+    .map(v => v.trim())
+    .filter(Boolean);
+
+  const valuesToAdd = parts.length > 1 ? parts : [raw];
+
+  valuesToAdd.forEach(value => {
+    const key = normalizeIngredientKey(value);
+    const exists = ingredients.some(item => normalizeIngredientKey(item) === key);
+    if (!exists) ingredients.push(value);
+  });
+
+  input.value = '';
+  renderChips();
+  updateGenBtn();
+}
+
 async function detectFromPhoto(input) {
   const file = input.files[0];
   if (!file) return;
   input.value = '';
+
   const reader = new FileReader();
   reader.onload = async (e) => {
     const base64 = e.target.result.split(',')[1];
-    const loaderText = document.getElementById('loaderText');
     document.getElementById('loader').classList.add('visible');
+
     try {
       const res = await fetch(BACKEND + '/api/detect-ingredients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: base64, mimeType: file.type })
       });
+
       const data = await res.json();
+
       if (data.ingredients?.length) {
         data.ingredients.forEach(ing => {
-          const v = ing.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-          if (!ingredients.includes(v)) ingredients.push(v);
+          const value = String(ing || '').trim();
+          const key = normalizeIngredientKey(value);
+          const exists = ingredients.some(item => normalizeIngredientKey(item) === key);
+          if (!exists) ingredients.push(value);
         });
-        renderChips(); updateGenBtn();
+
+        renderChips();
+        updateGenBtn();
       }
-    } catch { alert('Could not detect ingredients.'); }
-    finally { document.getElementById('loader').classList.remove('visible'); }
+    } catch {
+      alert('Could not detect ingredients.');
+    } finally {
+      document.getElementById('loader').classList.remove('visible');
+    }
   };
+
   reader.readAsDataURL(file);
 }
+
 function removeIng(i) { ingredients.splice(i, 1); renderChips(); updateGenBtn(); }
 
 function renderChips() {
@@ -1392,35 +1428,50 @@ function toggleGoal(el, goal) {
 
 // GENERATE
 async function generate() {
+  const pendingText = document.getElementById('ingInput').value.trim();
+  if (pendingText) addIng();
+
   if (ingredients.length === 0) return;
+
   if (!user) {
     const e = document.getElementById('errorMsg');
     e.innerHTML = tx().loginRequired + ' <a onclick="openAuth(\'login\')" style="color:var(--accent);font-weight:600;cursor:pointer">Sign in</a>';
-    e.classList.add('visible'); return;
+    e.classList.add('visible');
+    return;
   }
+
   document.getElementById('loader').classList.add('visible');
   document.getElementById('recipesSection').classList.remove('visible');
   document.getElementById('recipeDetail').classList.remove('visible');
   document.getElementById('tryAgain').style.display = 'none';
   document.getElementById('errorMsg').classList.remove('visible');
   document.getElementById('genBtn').disabled = true;
+
   try {
-   const res = await fetch(BACKEND + '/api/recipe', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
- body: JSON.stringify({ ingredients: ingredients, goal: selectedGoal, language: langName, userId: user?.id })
-});
-const data = await res.json();
-recipes = data.recipes || [];
-renderCards();
+    const res = await fetch(BACKEND + '/api/recipe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ingredients,
+        goal: selectedGoal,
+        language: 'auto',
+        userId: user?.id
+      })
+    });
+
+    const data = await res.json();
+    recipes = data.recipes || [];
+    renderCards();
   } catch (err) {
     const e = document.getElementById('errorMsg');
-    e.textContent = tx().error; e.classList.add('visible');
+    e.textContent = tx().error;
+    e.classList.add('visible');
   } finally {
     document.getElementById('loader').classList.remove('visible');
     document.getElementById('genBtn').disabled = false;
   }
 }
+
 function renderCards() {
   const t = tx();
   document.getElementById('recipeCards').innerHTML = recipes.map((r, i) =>
