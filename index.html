@@ -253,6 +253,30 @@
   }
   .add-btn:hover { background: #3a3a3c; }
 
+  .smart-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0 6px;
+  }
+  .smart-example {
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text2);
+    border-radius: 980px;
+    padding: 7px 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .smart-example:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+
   .chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px; }
   .chip {
     display: inline-flex; align-items: center; gap: 6px;
@@ -284,8 +308,7 @@
   .generate-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
 
   .loader { display: none; text-align: center; padding: 40px 0; }
-  .loader.visible { display: block; }
-  .loader-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
+  .loader.visible { display: block; }  .loader-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
   .loader-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: dotPulse 1.4s ease-in-out infinite; }
   .loader-dot:nth-child(2) { animation-delay: 0.2s; }
   .loader-dot:nth-child(3) { animation-delay: 0.4s; }
@@ -311,6 +334,7 @@
     letter-spacing: 0.06em; text-transform: uppercase;
     color: var(--text3); padding: 24px 0 16px;
   }
+
   .recipe-cards { display: grid; gap: 12px; }
   .recipe-card {
     border: 1px solid var(--border); border-radius: var(--radius-lg);
@@ -394,6 +418,7 @@
   @keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: none; } }
 
   .modal-header { padding: 24px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; }
+
   .modal-close { width: 28px; height: 28px; border-radius: 50%; background: var(--bg2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text2); flex-shrink: 0; transition: background 0.15s; }
   .modal-close:hover { background: #e8e8ed; }
   .modal-title { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
@@ -570,7 +595,6 @@
 </style>
 </head>
 <body>
-
 <!-- NAV -->
 <nav>
   <div class="logo" onclick="showMain()">Nutri<em>Chef</em></div>
@@ -650,10 +674,6 @@
       <button class="modal-close" onclick="closeSettings()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-label" id="settingsLangLabel" style="margin-bottom:10px">Language</div>
-     
-      <div class="modal-divider"></div>
-
      <div class="form-label" id="settingsEmailLabel" style="margin-bottom:10px">Change email</div>
       <div class="form-group">
         <input class="form-input" type="email" id="sEmail" placeholder="New email address"/>
@@ -678,9 +698,9 @@
 <!-- MAIN PAGE -->
 <div class="page visible" id="mainPage">
   <div class="hero">
-    <div class="hero-badge">✦ <span>AI-powered</span> healthy recipes</div>
-    <h1 id="heroTitle">Type a dish, ingredient or craving…,<br><em>reinvented</em></h1>
-    <p id="heroSub">Tell us what's in your fridge. Get 3 chef-crafted, nutritionist-approved recipes in seconds.</p>
+    <div class="hero-badge">✦ <span>Smart recipe AI</span> for dishes or ingredients</div>
+    <h1 id="heroTitle">What do you want<br><em>to cook?</em></h1>
+    <p id="heroSub">Type a dish name or whatever ingredients you have. NutriChef detects the language and builds practical recipes around it.</p>
   </div>
 
   <div class="card">
@@ -690,7 +710,7 @@
         <!-- Step 1 -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
           <div style="width:28px;height:28px;border-radius:50%;background:var(--text);color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;" id="stepCircle1">1</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text);" id="s3tag" id="stepCircle1label">Your goal</div>
+          <div style="font-size:11px;font-weight:600;color:var(--text);" id="stepCircle1label">Step 1</div>
         </div>
         <!-- Line -->
         <div style="flex:1;height:2px;background:var(--border);margin:0 8px;margin-bottom:16px;position:relative;">
@@ -699,7 +719,7 @@
         <!-- Step 2 -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
           <div style="width:28px;height:28px;border-radius:50%;background:var(--border);color:var(--text3);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.3s;" id="stepCircle2">2</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text3);transition:color 0.3s;" id="s2tag" id="stepCircle2label">Ingredients</div>
+          <div style="font-size:11px;font-weight:600;color:var(--text3);transition:color 0.3s;" id="stepCircle2label">Step 2</div>
         </div>
       </div>
     </div>
@@ -720,17 +740,21 @@
 
     <!-- INGREDIENTS (step 2) -->
     <div class="card-section">
-      <h2 id="s2title">What do you want to eat?</h2>
-      <p id="s2sub">Type a dish, craving, or ingredient</p>
+      <h2 id="s2title">Describe your dish or ingredients</h2>
+      <p id="s2sub">Examples: creamy chicken pasta, légumes fromage patate pâtes, or arroz con pollo.</p>
       <div class="input-wrap">
-        <input class="text-input" id="ingInput" type="text" placeholder="e.g. creamy pasta, chicken tikka, avocado toast…" autocomplete="off"/>
-       <button class="add-btn" onclick="addIng()">+</button>
-<button class="add-btn" onclick="document.getElementById('imgInput').click()" style="background:var(--accent);width:auto;padding:0 14px;font-size:13px;font-weight:600;border-radius:var(--radius);" title="Détecter les ingrédients depuis une photo">📷 Photo</button>
+        <input class="text-input" id="ingInput" type="text" placeholder="Try: creamy chicken pasta OR pasta, cheese, potatoes" autocomplete="off"/>
+<button class="add-btn" onclick="document.getElementById('imgInput').click()" style="background:var(--accent);width:auto;padding:0 14px;font-size:13px;font-weight:600;border-radius:var(--radius);" title="Detect ingredients from a photo">📷 Photo</button>
 <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="detectFromPhoto(this)"/>
+      </div>
+      <div class="smart-examples">
+        <button class="smart-example" onclick="useExample('pâtes crémeuses au poulet et légumes')">French dish</button>
+        <button class="smart-example" onclick="useExample('vegetables, cheese, potatoes, pasta')">Ingredient list</button>
+        <button class="smart-example" onclick="useExample('pasta cremosa con pollo')">Spanish dish</button>
       </div>
       <div class="chips" id="chips"></div>
 <div id="photoZone" onclick="document.getElementById('imgInput').click()" style="margin-top:10px;border:2px dashed var(--border2);border-radius:var(--radius);padding:16px;text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text2);font-size:13px;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
-  📷 Prendre une photo &nbsp;·&nbsp; 🖼️ Choisir dans la photothèque &nbsp;·&nbsp; 📁 Déposer un fichier
+  📷 Take a photo &nbsp;·&nbsp; 🖼️ Choose from library &nbsp;·&nbsp; 📁 Drop a file
 </div>
     </div>
     <!-- FOOTER -->
@@ -773,7 +797,6 @@
     </div>
   </div>
 </div>
-
 <!-- MEAL PLAN PAGE -->
 <div class="page" id="mealPage">
   <div class="page-hero">
@@ -893,8 +916,8 @@
         <div class="plan-features">
           <div class="plan-feature">✓ 3 recipes per day</div>
           <div class="plan-feature">✓ Save favorites</div>
-          <div class="plan-feature">✓ 3 languages</div>
-          <div class="plan-feature muted">✗ Chef AI</div>
+          <div class="plan-feature">✓ Automatic language detection</div>
+          <div class="plan-feature muted">✗ Full Chef AI</div>
           <div class="plan-feature muted">✗ Priority generation</div>
         </div>
         <button class="plan-btn plan-btn-secondary">Current plan</button>
@@ -907,7 +930,7 @@
         <div class="plan-features">
           <div class="plan-feature">✓ 30 recipes per day</div>
           <div class="plan-feature">✓ Save favorites</div>
-          <div class="plan-feature">✓ 3 languages</div>
+          <div class="plan-feature">✓ Automatic language detection</div>
           <div class="plan-feature">✓ Chef AI — 6 messages / 2.5h</div>
           <div class="plan-feature muted">✗ Priority generation</div>
         </div>
@@ -920,7 +943,7 @@
         <div class="plan-features">
           <div class="plan-feature">✓ Unlimited recipes</div>
           <div class="plan-feature">✓ Save favorites</div>
-          <div class="plan-feature">✓ 3 languages</div>
+          <div class="plan-feature">✓ Automatic language detection</div>
           <div class="plan-feature">✓ Chef AI — unlimited</div>
           <div class="plan-feature">✓ Priority generation</div>
         </div>
@@ -973,25 +996,23 @@
 </div>
 
 <footer>NutriChef &nbsp;·&nbsp; AI-generated recipes &nbsp;·&nbsp; For inspiration only</footer>
-
 <script>
 const SUPABASE_URL = 'https://fafxhblmlvbwuxjivoid.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhZnhoYmxtbHZid3V4aml2b2lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDM3NzEsImV4cCI6MjA5Mjk3OTc3MX0.hh6xbuiRbLPaFx_9YYAu3Gvlj-U8X2XckCD9XzmkSUI';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmYWZ4aGJsbWx2Ynd1eGppdm9pZCIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzc3NDAzNzcxLCJleHAiOjIwOTI5Nzk3NzF9.hh6xbuiRbLPaFx_9YYAu3Gvlj-U8X2XckCD9XzmkSUI';
 const BACKEND = 'https://nutrichef-backend-production.up.railway.app';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let ingredients = [], prefs = new Set(), recipes = [], currentRecipe = null, user = null, authMode = 'login';
 let selectedGoal = null;
-let lang = localStorage.getItem('nc_lang') || 'en';
-let langName = localStorage.getItem('nc_lang_name') || 'English';
+let lang = 'en';
+let langName = 'English';
 
 const TX = {
  en: {
-    heroTitle: 'Your ingredients,<br><em>reinvented</em>',
-    heroSub: "Tell us what's in your fridge. Get 3 chef-crafted, nutritionist-approved recipes in seconds.",
-    s2tag:'Step 1', s2title:'What do you want to eat?', s2sub:'Type a dish, ingredient or craving…',
-    s2tag:'Step 2', s2title:'What do you want to eat?', s2sub:'Type a dish, ingredient or craving…',
+    heroTitle: 'What do you want<br><em>to cook?</em>',
+    heroSub: 'Type a dish name or whatever ingredients you have. NutriChef detects the language and builds practical recipes around it.',
+    s2tag:'Step 2', s2title:'Describe your dish or ingredients', s2sub:'Examples: creamy chicken pasta, légumes fromage patate pâtes, or arroz con pollo.',
     s3tag:'Step 3', s3title:'Your goal', s3sub:'Optional — personalize your recipes',
     goals:['Weight loss','Muscle gain','High protein','Low budget','General health','Vegetarian'],
     genBtn:'Generate recipes', loader:'Crafting your recipes…', recipesLabel:'6 recipes for you',
@@ -1007,105 +1028,40 @@ const TX = {
     loading:'Loading…', signIn:'Sign in', signUp:'Create account',
     noAccount:"Don't have an account?", createOne:'Create one',
     alreadyHave:'Already have an account?',
-    ddSettings:'Settings', ddFavorites:'My Favorites', ddMeal:'Meal planner', ddUpgrade:'Upgrade plan', ddPlan:'My Plan', ddSignout:'Sign out', photoBtn:'📷 Take a photo · 🖼️ Choose from library · 📁 Drop a file',
+    ddSettings:'Settings', ddFavorites:'My Favorites', ddMeal:'Meal planner', ddUpgrade:'Upgrade plan', ddPlan:'My Plan', ddSignout:'Sign out',
     settingsTitle:'Settings', settingsSub:'Manage your preferences',
-    settingsLang:'Language', settingsEmail:'Change email', settingsEmailBtn:'Update email',
+    settingsEmail:'Change email', settingsEmailBtn:'Update email',
     settingsPass:'Change password', settingsPassBtn:'Update password',
     step1Label:'Step 1', step2Label:'Step 2', planLabel:'📅 Plan',
     chefEmpty:'Ask me anything about food',
-    chefEmptySub:'Recipes, techniques, substitutions, nutrition — I\'m your personal culinary expert.',
+    chefEmptySub:'Recipes, techniques, substitutions, nutrition — I\\'m your personal culinary expert.',
     chefSuggs:[
       {icon:'🥛', text:'How to make béchamel?', q:'How do I make a béchamel sauce from scratch?'},
       {icon:'🥩', text:'Perfect medium-rare steak', q:'How do I cook a perfect medium-rare steak?'},
       {icon:'🧅', text:'Caramelize onions', q:'How do I properly caramelize onions?'},
     ],
-  },
-  fr: {
-    heroTitle: 'Tes recettes,<br><em>réinventées</em>',
-    heroSub: "Tape un plat, un ingrédient ou une envie. Reçois 6 recettes personnalisées en quelques secondes.",
-    s1tag:'Étape 1', s1title:'Tes préférences', s1sub:'Optionnel — sélectionne ce qui te correspond',
-    s2tag:'Étape 2', s2title:'Qu\'est-ce que tu veux manger ?', s2sub:'Un plat, un ingrédient, une envie…',
-    s3tag:'Étape 3', s3title:'Ton objectif', s3sub:'Optionnel — personnalise tes recettes',
-    goals:['Perte de poids','Prise de masse','Hyper protéiné','Low budget','Santé générale','Végétarien'],
-    genBtn:'Générer les recettes', loader:'On prépare tes recettes…', recipesLabel:'6 recettes pour toi',
-    viewBtn:'Voir la recette →', saveBtn:'♡ Sauver', savedBtn:'♥ Sauvé',
-    detailSave:'♡ Ajouter aux favoris', detailSaved:'♥ Ajouté !',
-    tryAgain:'↩ Recommencer', backBtn:'← Retour aux recettes',
-    prefs:['Sans gluten','Végétarien','Riche en protéines','Faible en calories','Prise de masse','Sans lactose'],
-    nutr:{proteines:'Protéines',glucides:'Glucides',lipides:'Lipides',fibres:'Fibres'},
-    nutrTitle:'Nutrition', ingTitle:'Ingrédients', stepsTitle:'Préparation', tipTitle:'Conseil santé',
-    loginRequired:'Connecte-toi pour générer des recettes.',
-    error:'Une erreur est survenue. Réessaie.',
-    favEmpty:'Aucun favori pour l\'instant', favEmptySub:'Génère des recettes et sauvegarde tes favorites.',
-    loading:'Chargement…', signIn:'Se connecter', signUp:'Créer un compte',
-    noAccount:'Pas de compte ?', createOne:'En créer un',
-    alreadyHave:'Déjà un compte ?',
-    ddSettings:'Paramètres', ddFavorites:'Mes favoris', ddMeal:'Planificateur de repas', ddUpgrade:'Améliorer le plan', ddPlan:'Mon plan', ddSignout:'Se déconnecter', photoBtn:'📷 Prendre une photo · 🖼️ Choisir dans la photothèque · 📁 Déposer un fichier',
-    settingsTitle:'Paramètres', settingsSub:'Gérez vos préférences',
-    settingsLang:'Langue', settingsEmail:'Changer l\'email', settingsEmailBtn:'Mettre à jour',
-    settingsPass:'Changer le mot de passe', settingsPassBtn:'Mettre à jour',
-    step1Label:'Étape 1', step2Label:'Étape 2', planLabel:'📅 Planifier',
-    chefEmpty:'Pose-moi toutes tes questions sur la cuisine',
-    chefEmptySub:'Recettes, techniques, substitutions, nutrition — je suis ton expert culinaire personnel.',
-    chefSuggs:[
-      {icon:'🥛', text:'Comment faire une béchamel ?', q:'Comment faire une sauce béchamel maison ?'},
-      {icon:'🥩', text:'Steak parfait saignant', q:'Comment cuire un steak parfaitement saignant ?'},
-      {icon:'🧅', text:'Caraméliser des oignons', q:'Comment bien caraméliser des oignons ?'},
-    ],
-  },
-  es: {
-    heroTitle: 'Tus recetas,<br><em>reinventadas</em>',
-    heroSub: "Escribe un plato, ingrediente o antojo. Obtén 6 recetas personalizadas en segundos.",
-    s1tag:'Paso 1', s1title:'Tus preferencias', s1sub:'Opcional — selecciona lo que aplica',
-    s2tag:'Paso 2', s2title:'¿Qué quieres comer?', s2sub:'Un plato, un ingrediente, un antojo…',
-    s3tag:'Paso 3', s3title:'Tu objetivo', s3sub:'Opcional — personaliza tus recetas',
-    goals:['Pérdida de peso','Ganar músculo','Alto en proteína','Bajo presupuesto','Salud general','Vegetariano'],
-    genBtn:'Generar recetas', loader:'Preparando tus recetas…', recipesLabel:'6 recetas para ti',
-    viewBtn:'Ver receta →', saveBtn:'♡ Guardar', savedBtn:'♥ Guardado',
-    detailSave:'♡ Guardar en favoritos', detailSaved:'♥ ¡Guardado!',
-    tryAgain:'↩ Empezar de nuevo', backBtn:'← Volver a las recetas',
-    prefs:['Sin gluten','Vegetariano','Alto en proteína','Bajo en calorías','Ganar músculo','Sin lactosa'],
-    nutr:{proteines:'Proteínas',glucides:'Carbohidratos',lipides:'Grasas',fibres:'Fibra'},
-    nutrTitle:'Nutrición', ingTitle:'Ingredientes', stepsTitle:'Preparación', tipTitle:'Consejo de salud',
-    loginRequired:'Inicia sesión para generar recetas.',
-    error:'Algo salió mal. Inténtalo de nuevo.',
-    favEmpty:'Sin recetas guardadas aún', favEmptySub:'Genera recetas y guarda tus favoritas.',
-    loading:'Cargando…', signIn:'Iniciar sesión', signUp:'Crear cuenta',
-    noAccount:'¿Sin cuenta?', createOne:'Crear una',
-    alreadyHave:'¿Ya tienes cuenta?',
-    ddSettings:'Configuración', ddFavorites:'Mis favoritos', ddMeal:'Planificador de comidas', ddUpgrade:'Mejorar plan', ddPlan:'Mi plan', ddSignout:'Cerrar sesión', photoBtn:'📷 Tomar una foto · 🖼️ Elegir de la biblioteca · 📁 Soltar un archivo',
-    settingsTitle:'Configuración', settingsSub:'Gestiona tus preferencias',
-    settingsLang:'Idioma', settingsEmail:'Cambiar email', settingsEmailBtn:'Actualizar',
-    settingsPass:'Cambiar contraseña', settingsPassBtn:'Actualizar',
-    step1Label:'Paso 1', step2Label:'Paso 2', planLabel:'📅 Planificar',
-    chefEmpty:'Pregúntame cualquier cosa sobre cocina',
-    chefEmptySub:'Recetas, técnicas, sustituciones, nutrición — soy tu experto culinario personal.',
-    chefSuggs:[
-      {icon:'🥛', text:'¿Cómo hacer bechamel?', q:'¿Cómo hago una salsa bechamel desde cero?'},
-      {icon:'🥩', text:'Bistec perfecto al punto', q:'¿Cómo cocino un bistec perfecto al punto?'},
-      {icon:'🧅', text:'Caramelizar cebollas', q:'¿Cómo caramelizo bien las cebollas?'},
-    ],
-}
+  }
 };
 
-const tx = () => TX[lang] || TX.en;
+const tx = () => TX.en;
+
 function applyLang() {
   const t = tx();
   document.getElementById('heroTitle').innerHTML = t.heroTitle;
   document.getElementById('heroSub').textContent = t.heroSub;
-  const s2tagEl = document.getElementById('s2tag');
-  const s3tagEl = document.getElementById('s3tag');
-  if (s2tagEl) s2tagEl.textContent = t.s2title || 'Ingredients';
-  if (s3tagEl) s3tagEl.textContent = t.s3title || 'Your goal';
+  const sc1 = document.getElementById('stepCircle1label');
+  const sc2 = document.getElementById('stepCircle2label');
+  if (sc1) sc1.textContent = t.step1Label || 'Step 1';
+  if (sc2) sc2.textContent = t.step2Label || 'Step 2';
   document.getElementById('s2title').textContent = t.s2title;
   document.getElementById('s2sub').textContent = t.s2sub;
+  document.getElementById('ingInput').placeholder = 'Try: creamy chicken pasta OR pasta, cheese, potatoes';
   document.getElementById('s3title').textContent = t.s3title;
   document.getElementById('s3sub').textContent = t.s3sub;
   document.getElementById('genBtnText').textContent = t.genBtn;
   document.getElementById('loaderText').textContent = t.loader;
   document.getElementById('recipesLabel').textContent = t.recipesLabel;
   document.getElementById('tryAgain').textContent = t.tryAgain;
-  document.querySelectorAll('.pl').forEach((el, i) => { if (t.prefs[i]) el.textContent = t.prefs[i]; });
   document.querySelectorAll('.goal-pl').forEach((el, i) => { if (t.goals[i]) el.textContent = t.goals[i]; });
   const eTitle = document.getElementById('chefEmptyTitle');
   const eSub = document.getElementById('chefEmptySub');
@@ -1118,44 +1074,27 @@ function applyLang() {
     ).join('');
   }
   const smt = document.getElementById('settingsModalTitle');
-const sms = document.getElementById('settingsModalSub');
-const sll = document.getElementById('settingsLangLabel');
-const sel = document.getElementById('settingsEmailLabel');
-const seb = document.getElementById('settingsEmailBtn');
-const spl = document.getElementById('settingsPassLabel');
-const spb = document.getElementById('settingsPassBtn');
-const sc1 = document.getElementById('stepCircle1label');
-const sc2 = document.getElementById('stepCircle2label');
-if(smt) smt.textContent = t.settingsTitle;
-if(sms) sms.textContent = t.settingsSub;
-if(sll) sll.textContent = t.settingsLang;
-if(sel) sel.textContent = t.settingsEmail;
-if(seb) seb.textContent = t.settingsEmailBtn;
-if(spl) spl.textContent = t.settingsPass;
-if(spb) spb.textContent = t.settingsPassBtn;
-if(sc1) sc1.textContent = t.step1Label;
-if(sc2) sc2.textContent = t.step2Label;
-document.querySelectorAll('.plan-btn-label').forEach(el => el.textContent = t.planLabel);
-const photoZone = document.getElementById('photoZone');
-  if (photoZone) photoZone.textContent = t.photoBtn;
-  const t2 = tx();
+  const sms = document.getElementById('settingsModalSub');
+  const sel = document.getElementById('settingsEmailLabel');
+  const seb = document.getElementById('settingsEmailBtn');
+  const spl = document.getElementById('settingsPassLabel');
+  const spb = document.getElementById('settingsPassBtn');
+  if(smt) smt.textContent = t.settingsTitle;
+  if(sms) sms.textContent = t.settingsSub;
+  if(sel) sel.textContent = t.settingsEmail;
+  if(seb) seb.textContent = t.settingsEmailBtn;
+  if(spl) spl.textContent = t.settingsPass;
+  if(spb) spb.textContent = t.settingsPassBtn;
+  document.querySelectorAll('.plan-btn-label').forEach(el => el.textContent = t.planLabel);
+  const photoZone = document.getElementById('photoZone');
+  if (photoZone) photoZone.textContent = '📷 Take a photo · 🖼️ Choose from library · 📁 Drop a file';
   const ddItems = document.querySelectorAll('.dd-item');
-  if (ddItems[0]) { ddItems[0].innerHTML = '<span class="dd-icon">⚙️</span> ' + t2.ddSettings; ddItems[0].onclick = openSettings; }
-  if (ddItems[1]) { ddItems[1].innerHTML = '<span class="dd-icon">❤️</span> ' + t2.ddFavorites; ddItems[1].onclick = showFavorites; }
-  if (ddItems[2]) { ddItems[2].innerHTML = '<span class="dd-icon">📅</span> ' + t2.ddMeal; ddItems[2].onclick = showMealPlan; }
-  if (ddItems[3]) { ddItems[3].innerHTML = '<span class="dd-icon">⭐</span> ' + t2.ddUpgrade; ddItems[3].onclick = showPricing; }
-  if (ddItems[4]) { ddItems[4].innerHTML = '<span class="dd-icon">💎</span> ' + t2.ddPlan; ddItems[4].onclick = openPlanModal; }
-  if (ddItems[5]) { ddItems[5].innerHTML = '<span class="dd-icon">↗</span> ' + t2.ddSignout; ddItems[5].onclick = logout; }
-  ['En','Fr','Es'].forEach(l => {
-    const el = document.getElementById('lang' + l);
-    if (el) el.classList.toggle('active', lang === l.toLowerCase());
-  });
-}
-function setLang(code, name) {
-  lang = code; langName = name;
-  localStorage.setItem('nc_lang', code);
-  localStorage.setItem('nc_lang_name', name);
-  applyLang();
+  if (ddItems[0]) { ddItems[0].innerHTML = '<span class="dd-icon">⚙️</span> ' + t.ddSettings; ddItems[0].onclick = openSettings; }
+  if (ddItems[1]) { ddItems[1].innerHTML = '<span class="dd-icon">❤️</span> ' + t.ddFavorites; ddItems[1].onclick = showFavorites; }
+  if (ddItems[2]) { ddItems[2].innerHTML = '<span class="dd-icon">📅</span> ' + t.ddMeal; ddItems[2].onclick = showMealPlan; }
+  if (ddItems[3]) { ddItems[3].innerHTML = '<span class="dd-icon">⭐</span> ' + t.ddUpgrade; ddItems[3].onclick = showPricing; }
+  if (ddItems[4]) { ddItems[4].innerHTML = '<span class="dd-icon">💎</span> ' + t.ddPlan; ddItems[4].onclick = openPlanModal; }
+  if (ddItems[5]) { ddItems[5].innerHTML = '<span class="dd-icon">↗</span> ' + t.ddSignout; ddItems[5].onclick = logout; }
 }
 
 // AUTH
@@ -1174,13 +1113,14 @@ function renderNav() {
     document.getElementById('ddEmail').textContent = user.email;
     document.getElementById('loginBtn').style.display = 'none';
     document.getElementById('avatarWrap').style.display = 'block';
-} else {
+  } else {
     document.getElementById('loginBtn').style.display = 'inline-flex';
     document.getElementById('avatarWrap').style.display = 'none';
-}
+  }
 }
 
 function toggleDropdown() { document.getElementById('dropdown').classList.toggle('open'); }
+
 document.addEventListener('click', e => {
   const wrap = document.getElementById('avatarWrap');
   const dd = document.getElementById('dropdown');
@@ -1203,7 +1143,6 @@ function openAuth(mode) {
   document.getElementById('authConfirm').value = '';
   document.getElementById('authFirst').value = '';
   document.getElementById('authLast').value = '';
-  // FIX: Show/hide signup-only fields
   document.getElementById('signupFields').style.display = s ? 'block' : 'none';
   document.getElementById('confirmWrap').style.display = s ? 'block' : 'none';
   document.getElementById('authOverlay').classList.add('visible');
@@ -1257,10 +1196,11 @@ async function handleAuth() {
 async function logout() {
   document.getElementById('dropdown').classList.remove('open');
   await sb.auth.signOut();
-  user = null; renderNav(); showMain();
+  user = null;
+  renderNav();
+  showMain();
 }
 
-// SETTINGS
 function openSettings() {
   document.getElementById('dropdown').classList.remove('open');
   document.getElementById('sEmail').value = user?.email || '';
@@ -1268,12 +1208,9 @@ function openSettings() {
   document.getElementById('sConfPass').value = '';
   document.getElementById('emailMsg').className = 'form-msg';
   document.getElementById('passMsg').className = 'form-msg';
-  ['En','Fr','Es'].forEach(l => {
-    const el = document.getElementById('lang' + l);
-    if (el) el.classList.toggle('active', lang === l.toLowerCase());
-  });
   document.getElementById('settingsOverlay').classList.add('visible');
 }
+
 function closeSettings() { document.getElementById('settingsOverlay').classList.remove('visible'); }
 
 async function updateEmail() {
@@ -1284,7 +1221,6 @@ async function updateEmail() {
   if (error) { m.className = 'form-msg error'; m.textContent = error.message; }
   else { m.className = 'form-msg success'; m.textContent = '✅ Confirmation email sent!'; }
 }
-
 async function updatePassword() {
   const np = document.getElementById('sNewPass').value;
   const cp = document.getElementById('sConfPass').value;
@@ -1318,7 +1254,13 @@ function showPricing() {
 }
 
 // INGREDIENTS
-document.getElementById('ingInput').addEventListener('keydown', e => { if (e.key === 'Enter') addIng(); });
+document.getElementById('ingInput').addEventListener('input', updateGenBtn);
+document.getElementById('ingInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    generate();
+  }
+});
 
 function normalizeIngredientKey(value) {
   return String(value || '')
@@ -1352,6 +1294,14 @@ function addIng() {
   updateGenBtn();
 }
 
+function useExample(value) {
+  const input = document.getElementById('ingInput');
+  ingredients = [];
+  input.value = value;
+  renderChips();
+  updateGenBtn();
+  input.focus();
+}
 async function detectFromPhoto(input) {
   const file = input.files[0];
   if (!file) return;
@@ -1391,7 +1341,6 @@ async function detectFromPhoto(input) {
 
   reader.readAsDataURL(file);
 }
-
 function removeIng(i) { ingredients.splice(i, 1); renderChips(); updateGenBtn(); }
 
 function renderChips() {
@@ -1406,11 +1355,12 @@ function togglePref(el, pref) {
 }
 
 function updateGenBtn() {
-  const hasIng = ingredients.length > 0;
+  const hasPendingText = document.getElementById('ingInput').value.trim().length > 0;
+  const hasIng = ingredients.length > 0 || hasPendingText;
   document.getElementById('genBtn').disabled = !hasIng;
   const line = document.getElementById('progressLine');
   const c2 = document.getElementById('stepCircle2');
-  const l2 = document.getElementById('s2tag');
+  const l2 = document.getElementById('stepCircle2label');
   if (line) line.style.width = hasIng ? '100%' : '0%';
   if (c2) { c2.style.background = hasIng ? 'var(--text)' : 'var(--border)'; c2.style.color = hasIng ? 'white' : 'var(--text3)'; }
   if (l2) l2.style.color = hasIng ? 'var(--text)' : 'var(--text3)';
@@ -1471,7 +1421,6 @@ async function generate() {
     document.getElementById('genBtn').disabled = false;
   }
 }
-
 function renderCards() {
   const t = tx();
   document.getElementById('recipeCards').innerHTML = recipes.map((r, i) =>
@@ -1487,14 +1436,15 @@ function renderCards() {
         '<div class="rc-actions">' +
           '<button class="rc-view" onclick="viewRecipe(' + i + ')">' + t.viewBtn + '</button>' +
           '<button class="rc-save" id="rc' + i + '" onclick="saveByIdx(' + i + ')">' + t.saveBtn + '</button>' +
-       '<button class="rc-save plan-btn-label-wrap" onclick="openPlanPicker(' + i + ')"><span class="plan-btn-label">📅 Plan</span></button>' +
-'</div>' +
+          '<button class="rc-save plan-btn-label-wrap" onclick="openPlanPicker(' + i + ')"><span class="plan-btn-label">📅 Plan</span></button>' +
+        '</div>' +
+      '</div>' +
     '</div>'
   ).join('');
-document.getElementById('recipesSection').classList.add('visible');
+
+  document.getElementById('recipesSection').classList.add('visible');
   document.getElementById('tryAgain').style.display = 'block';
   document.getElementById('recipesSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
- 
 }
 async function fetchWebRecipes(query) {
   try {
@@ -1973,3 +1923,5 @@ renderNav();
 </script>
 </body>
 </html>
+
+
